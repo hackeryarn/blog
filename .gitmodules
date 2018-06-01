@@ -1,3 +1,7 @@
 [submodule "themes/even"]
 	path = themes/even
 	url = git@github.com:olOwOlo/hugo-theme-even.git
+[submodule "public"]
+	path = public
+	url = git@github.com:hackeryarn/hackeryarn.github.io.git
+	branch = master
