@@ -1,5 +1,5 @@
 ---
-title: "Universally Testable Dependencies in JavaScript"
+title: "Universally testable dependencies in JavaScript"
 date: 2018-06-01
 draft: true
 categories: [JavaScript, Testing]
@@ -15,7 +15,12 @@ This article will guide you through a simple technique that can be applied
 to any JavaScript code base, frontend or backend, independent of frameworks
 and libraries.
 
-## Why do you need DI?
+The technique I am going to demonstrate is arguably not true DI since the
+dependencies are still managed by the module using them. However, it
+solves the dependency problem for testing which is the focus of this
+article.
+
+# Why do you need DI?
 At the most basic level, you need DI to avoid testing your dependencies.
 Not testing dependencies is a good idea for two reasons:
 
@@ -32,7 +37,7 @@ heavy.
 Because of these reasons. Avoiding testing dependencies will make your
 tests less complicated and ensure they are running fast.
 
-## Setting up your code to enable DI
+# Setting up your code to enable DI
 *I am using ES6 and Jest throughout this guide. However, you can easily
 adapt this technique to any JavaScript setup.*
 
@@ -53,7 +58,7 @@ directly. Instead, you call the appropriate dependency on the `deps` object.
 
 ```javascript
 export default (x, y) => {
-    deps.longRunningFunction(x, y)
+    return deps.longRunningFunction(x, y)
 }
 ```
 
@@ -63,6 +68,56 @@ Without too much extra code, you have the same level of testability across
 node application using `require` syntax and front end application using
 ES6 `import` syntax.
 
-## Using the `deps` object in your tests
+# Using the `deps` object in your tests
+Now that your module using and exporting all the dependencies. Your tests have
+easy access to mock or completely replace anything in the `deps` object.
 
-## Wrapping up
+```javascript
+import * as myModule from './myModule';
+
+const deps = myModule.deps;
+const result = 4
+
+describe('myModule', () => {
+    let got;
+
+    beforeAll(() => {
+        deps.longRunningFunction = jest.fn().mockReturnValue(result);
+        got = myModule.default(2, 2);
+    });
+    
+    it('calls longRunningFunction with correct arguments', () => {
+        expect(deps.longRunningFunction).toBeCalledWith(2, 2);
+    });
+    
+    it('returns the correct result', () => {
+        expect(got).toEqual(result);
+    });
+});
+```
+
+The `beforeAll` block is the most important piece of code. Because
+we are using functions from the `deps` object in our module code, we can
+just replace `deps.longRunningFunction` with anything we want before invoking
+the module's default function.
+
+In the example we are using Jest's built in mock `jest.fn()` which let's us do
+a couple neat things. We can return a mock value to verify that it is being
+returned correctly. And we can ensure the function is called with the
+expected arguments.
+
+The best part about testing in this way is that we don't have to worry about
+the libraries spying functions staying up to date with the JavaScript
+specifications, too often spies don't work the same for all module syntaxes. 
+In fact, we don't have to use the mocks at all! We could write our
+own function with custom validators and pass it in as
+`deps.longRunningFunction`.
+
+# Wrapping up
+This technique helped me greatly when maintaining long running or large
+JavaScript projects. It provides a minimal code approach that is easy to
+follow even if you are brand new to the code base.
+
+I hope that you found this approach useful and less complicated than other 
+DI approaches. Happy testing!
+
