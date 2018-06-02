@@ -1,5 +1,5 @@
 ---
-title: How Lodash worked itself out of a job
+title: How Lodash Worked Itself Out of a Job
 date: 2017-06-25
 draft: false
 categories: [JavaScript]
@@ -27,7 +27,7 @@ I will outline some of the benefits I saw in using pure ES6 instead of Lodash.
 The main stumbling point in this transition can be browser support but most teams use
 transpilers such as Babel, so this isn't a concern anymore.
 
-## Library size
+## Library Size
 
 This should come as no surprise, but Lodash is a big library. In fact, if you
 modularize your application, chances are it's bigger than your codebase. However, you can import only the modules you need if you have the propper plugins setup, such as [babel-plugin-lodash](https://github.com/lodash/babel-plugin-lodash) or [lodash-webpack-plugin](https://github.com/lodash/lodash-webpack-plugin). 
@@ -35,7 +35,7 @@ modularize your application, chances are it's bigger than your codebase. However
 ES6, on the other hand, won't add much bloat by default. It's efficiently transpiled into your code and only slightly increases transpiled size, plus chances are you have to use it
 anyways to gain other ownderful features.
 
-## Clean code
+## Clean Code
 
 Clean code is a big one. Let's take a look at what Lodash provides:
 
@@ -99,14 +99,14 @@ This example barely scratches the surface of what's available with a transpiler
 and ES6. Much of the functionaly of Lodash is present in ES6. Please
 take a look at the standard [Array](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array) and [Object](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object) methods available for more. 
 
-# Where lodash is still ahead
+# Where lodash is Still Ahead
 
 I can't go without saying that the nested object manipulation which Lodash
 provides is far superior to what's available in ES6. The problem is that
 we need to import the entirity of Lodash's core in order to get just a portion
 of the functionality that we will use. However, there is a solution.
 
-# Don't pick a side
+# Don't Pick a Side
 
 You might be thinking that you have a hard choice to make here. Well the good
 news is, there is a middle ground that can yield the best of both worlds!
@@ -157,7 +157,7 @@ more generically to allow for more reuse.
 
 As it has been mentioned in the comments, much of the functionality of Ramda is actually available in Lodash through the recen addition of [lodash-fp](https://github.com/lodash/lodash/wiki/FP-Guide). I think both options are fine choices to imporove code reuse.
 
-# Consider your options
+# Consider Your Options
 
 I don't mean to say that you should ditch Lodash and runaway from it like you
 probably should with jQuery. What I want to bring to light is that there are

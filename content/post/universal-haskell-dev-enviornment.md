@@ -1,5 +1,5 @@
 ---
-title: Easy universal Haskell development environment
+title: Easy Universal Haskell Development Environment
 date: 2016-02-06
 draft: false
 categories: [Haskell]
@@ -14,7 +14,7 @@ Traditional methods included:
 * Required using a text editor like [Vim](http://www.vim.org/) or [Emacs](https://www.gnu.org/software/emacs/). These are incredible tools and productivity boosters, if you take the time to learn them. Which is a pretty major time commitment in itself *I do suggest you learn one of these eventually, or use the vim/emacs mode of another tool.*
 * Complex package management through [Cabal-Install](https://wiki.haskell.org/Cabal-Install). This tool caused either version hell from everything being installed globally or caused you to have to re-install all your dependencies for every project.
 
-## Tools of the trade
+# Tools of The Trade
 We will be using these tools to solve the above problems and make the installation completely system agnostic. That's right, this installation process with work on any platform OS X, Linux, and even Windows.
 
 1. [Stack](http://docs.haskellstack.org/) is probably the single biggest win for Haskell in the last year. It makes everything from freshly installing Haskell to creating and building new projects a no brainer.
@@ -22,7 +22,7 @@ We will be using these tools to solve the above problems and make the installati
 
 Those are the two major tools you will need to install and everything else is done through packages for them. Go ahead and install these from their respective websites.
 
-## The setup
+# The Setup
 Now let's crack open the terminal and configure our environment. All the commands will remain the same regardless of your operating system. 
 
 Let's start by installing Haskell, or GHC to be more specific. Stack does not come GHC but it does come with an easy way to install it.

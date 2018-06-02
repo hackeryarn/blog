@@ -1,5 +1,5 @@
 ---
-title: ClojureScript setup for Leiningen project with Emacs
+title: ClojureScript Setup for Leiningen Project With Emacs
 date: 2017-07-15
 draft: false
 categories: [ClojureScript]
@@ -29,14 +29,14 @@ Leiningen is still the most widely used way to run Clojure applications. I also
 prefer the data driven approach to managing configurations that Leiningen take.
 
 
-# Why is this guide needed?
+# Why is This Guide Needed?
 
 If you have a Clojure project, you can just run `cider-jack-in` and you are
 ready to go. That is not the case with ClojureScript. A few extra tweaks are
 required to get everything running smoothly.
 
 
-# Setting up ClojureScript with Cider
+# Setting up ClojureScript With Cider
 
 The first thing you need is  to include two packages and setup a new
 `nreple-middleware`. I always put these configurations into my dev profile.
@@ -76,6 +76,3 @@ and you will have your two REPLs setup.
 
 If you are using boot or any other setup, please take a look at the great
 [Cider documentation](https://cider.readthedocs.io/en/latest/up_and_running/#clojurescript-usage) on this topic. It covers everything here and more.
-
-
-
