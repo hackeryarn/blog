@@ -7,7 +7,7 @@ tags: [guide, testing]
 ---
 
 JavaScript dependencies are notoriously hard to mock and test across framework
-and environments. However, Dependency Injection(DI) ensures testability. It
+and environments. However, [Dependency Injection](https://en.wikipedia.org/wiki/Dependency_injection<Paste>)(DI) ensures testability. It
 is common in statically typed languages, like Java or Go, but is also useful in
 dynamic languages, like JavaScript.
 
@@ -24,10 +24,10 @@ article.
 At the most basic level, you need DI to avoid testing your dependencies.
 Not testing dependencies is a good idea for two reasons:
 
-Your dependencies should already be tested. This applies to both external
-dependencies and dependencies from your own project. If an external
-dependency doesn't have good testing, you probably shouldn't be using it or
-you could help them and add some tests!
+Your dependencies should already be tested. This applies to dependencies
+external and from your own project. If an external dependency doesn't have
+good testing, you probably shouldn't be using it or you should help them and
+add some tests!
 
 Dependencies can do too much for a test. Since dependencies exist outside of
 your module's control, they can do things that your module shouldn't have to
@@ -38,8 +38,9 @@ Because of these reasons. Avoiding testing dependencies will make your
 tests less complicated and ensure they are running fast.
 
 # Setting up your code to enable DI
-*I am using ES6 and Jest throughout this guide. However, you can easily
-adapt this technique to any JavaScript setup.*
+*I am using [Babel](https://babeljs.io/) and
+[Jest](https://facebook.github.io/jest/) throughout this guide. However,
+you can easily adapt this technique to any JavaScript setup.*
 
 To start off, put all dependencies which should not execute during
 a test into an exported `deps` object.
@@ -101,10 +102,10 @@ we are using functions from the `deps` object in our module code, we can
 just replace `deps.longRunningFunction` with anything we want before invoking
 the module's default function.
 
-In the example we are using Jest's built in mock `jest.fn()` which let's us do
-a couple neat things. We can return a mock value to verify that it is being
-returned correctly. And we can ensure the function is called with the
-expected arguments.
+In the example we are using [Jest's built in mock](https://facebook.github.io/jest/docs/en/mock-functions.html) `jest.fn()`
+which let's us do a couple neat things. We can return a
+mock value to verify that it is being returned correctly. And we can ensure
+the function is called with the expected arguments.
 
 The best part about testing in this way is that we don't have to worry about
 the libraries spying functions staying up to date with the JavaScript
