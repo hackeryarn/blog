@@ -1,7 +1,7 @@
-baseURL = "https://achernyak.me"
+baseURL = "https://hackeryarn.com"
 languageCode = "en"
 defaultContentLanguage = "en"                             # en / zh-cn / ... (This field determines which i18n file to use)
-title = "Artem Chernyak's Blog"
+title = "hackeryarn"
 enableRobotsTXT = true
 enableEmoji = true
 theme = "even"
@@ -14,7 +14,7 @@ googleAnalytics = "UA-72377824-1"      # UA-XXXXXXXX-X
 copyright = ""            # default: author.name ↓        # 默认为下面配置的author.name ↓
 
 [author]                  # essential                     # 必需
-  name = "Artem Chernyak"
+  name = "Artem Cheryank"
 
 [sitemap]                 # essential                     # 必需
   changefreq = "weekly"
@@ -49,7 +49,7 @@ copyright = ""            # default: author.name ↓        # 默认为下面配
   since = "2018"            # Site creation time          # 站点建立时间
 
   # site info (optional)                                  # 站点信息（可选，不需要的可以直接注释掉）
-  logoTitle = "Artem Chernyak"        # default: the title value    # 默认值: 上面设置的title值
+  logoTitle = "hackeryarn"        # default: the title value    # 默认值: 上面设置的title值
   keywords = ["blog", "go", "golang", "js", "javascript", "tech"]
   description = "A tech blog by Artem Chernyak"
 
