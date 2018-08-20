@@ -1,4 +1,10 @@
-# Your Job Isn't Writing Code
+---
+title: Your Job Isn't Writing Code
+date: 2018-08-19
+draft: false
+categories: [Development]
+tags: [guide, opinion]
+---
 
 Every line of code you write is a liability. That line of code you just wrote
 adds complexity to your code base, gives you more nuances to remember, it
