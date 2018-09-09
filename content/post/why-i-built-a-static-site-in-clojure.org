@@ -50,9 +50,8 @@ fly.
 These components are easier to create and use than both Wordpress template and
 React components.
 
-On top of these benefits, I didn't have to learn a special syntax for
-interacting with data. I had the full power of Clojure to interact with the
-components and the data.
+On top of that, I didn't have to learn a special syntax for working with data. I
+had the full power of Clojure to interact with the components and the data.
 
 #+BEGIN_SRC clojure
 (def menu-items
@@ -68,4 +67,8 @@ components and the data.
    (map create-menu-item menu-items)])
 #+END_SRC
 
-I used these features more than I expected.
+~hiccup~ made it easy to build small components for all my reused elements.
+I could quickly try new idea and change design with ease.
+
+The final benefit is the ease of mind provided by Clojure. I know that no
+matter what features we come up with, it will be possible.
