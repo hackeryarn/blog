@@ -1,0 +1,16 @@
+#+title: why-i-built-a-static-site-in-clojure
+#+date: 2017-07-15
+#+draft: false
+#+categories: [Clojure]
+#+tags: [opinion, experience]
+
+* Why I Built a Static Site in Clojure
+I haven't built a purely static site in nearly a decade. But a friend asked me
+to create a site for his new restaurant. And I couldn't let him spend money on
+another atrocity.
+
+
+** Wordpress my Old Friend
+I had fond memories of easy site design with Wordpress and dove right into it.
+Searching for themes. Setting up a Wordpress server. Building out managed
+content. Turns out, I forgot the effort of build a Wordpress site.
