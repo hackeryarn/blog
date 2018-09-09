@@ -5,12 +5,67 @@
 #+tags: [opinion, experience]
 
 * Why I Built a Static Site in Clojure
-I haven't built a purely static site in nearly a decade. But a friend asked me
-to create a site for his new restaurant. And I couldn't let him spend money on
-another atrocity.
+At a summer barbecue, a friend asked if I could build a website for his new
+restaurant. Little did he know, I haven't built a static site in nearly a
+decade. But I couldn't let him spend thousands of dollars on a cookie cutter
+website designed by a firm that knew nothing about the hard work that went into
+opening his restaurant.
 
+We came up with the grand ideas in the best way, over a couple beers. Features
+quickly added up. He wanted to manage content, an Instagram feed, and an easy to
+change restaurant menu. It started sounding like a full Content Management
+System, not just simple website. But all ambitious projects have to start
+somewhere, so we decided to hold off on all these features and just get a clean
+website up and running.
 
-** Wordpress my Old Friend
-I had fond memories of easy site design with Wordpress and dove right into it.
-Searching for themes. Setting up a Wordpress server. Building out managed
-content. Turns out, I forgot the effort of build a Wordpress site.
+With the list of eventual features in mind, I started on the website using
+Wordpress. However, themes were complicated to build. Plugins, like the Instagram
+feed, were hard to customize. And templates were clunky to create and use.
+Recently, I became spoiled by component systems. I couldn't keep going the
+Wordpress route.
+
+Briefly, I considered using ~Next.js~. Most of my day job is in ~React~ so this
+would be familiar ground. But I couldn't justify the weight of ~React~ for a
+website that didn't need dynamic content.
+
+That's when I decided to reach for ~hiccup~, a Clojure library for generating
+server side content. Unlike other server side frameworks, ~hiccup~ let me use
+Clojure data structures to build the pages.
+
+#+BEGIN_SRC clojure
+(html [:span.foo  "bar"])
+#+END_SRC
+
+This made the code shorter. It also made it possible to build components on the
+fly.
+
+#+BEGIN_SRC clojure
+(def header [:h1 "Welcome"])
+
+(html [:div.content
+       header
+       [:p "more content"]])
+#+END_SRC
+
+These components are easier to create and use than both Wordpress template and
+React components.
+
+On top of these benefits, I didn't have to learn a special syntax for
+interacting with data. I had the full power of Clojure to interact with the
+components and the data.
+
+#+BEGIN_SRC clojure
+(def menu-items
+  ["Crab Rangoon"
+   "Pot Stickers"
+   "Miso Soup"])
+
+(defn create-menu-item [menu-item]
+  [:li.menu-item menu-item])
+
+(def menu
+  [:ul
+   (map create-menu-item menu-items)])
+#+END_SRC
+
+I used these features more than I expected.
