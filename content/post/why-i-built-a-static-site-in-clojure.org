@@ -11,64 +11,70 @@ decade. But I couldn't let him spend thousands of dollars on a cookie cutter
 website designed by a firm that knew nothing about the hard work that went into
 opening his restaurant.
 
-We came up with the grand ideas in the best way, over a couple beers. Features
-quickly added up. He wanted to manage content, an Instagram feed, and an easy to
-change restaurant menu. It started sounding like a full Content Management
-System, not just simple website. But all ambitious projects have to start
-somewhere, so we decided to hold off on all these features and just get a clean
-website up and running.
+We started coming up with the ideas right away, over a couple beers.
+He wanted manageable content, an Instagram feed, and an easy to change restaurant
+menu. It quickly started sounding like a full on Content Management System and
+not a simple website. I had to real in this ambitious projects before it
+became a feature sink. So we decided to hold off on these features and deliver
+a beautiful static site.
 
-With the list of eventual features in mind, I started on the website using
-Wordpress. However, themes were complicated to build. Plugins, like the Instagram
-feed, were hard to customize. And templates were clunky to create and use.
-Recently, I became spoiled by component systems. I couldn't keep going the
-Wordpress route.
+With the list of dream features in mind, I started on the website using
+~Wordpress~~. It could accommodate all the dream features, and I've used it in the
+past. However, themes were complicated to build. Plugins, like the Instagram
+feed, were ugly and hard to customize. And templates were clunky to use.
+I couldn't continue with the ~Wordpress~ route. I was spoiled by component based
+systems.
 
-Briefly, I considered using ~Next.js~. Most of my day job is in ~React~ so this
-would be familiar ground. But I couldn't justify the weight of ~React~ for a
-website that didn't need dynamic content.
+Next, I considered using ~Next.js~. Most of my day job is in React, so it's
+familiar ground. But I couldn't justify the weight of React for a
+website that didn't need dynamic content, and there is no option for built in
+CMS.
 
 That's when I decided to reach for ~hiccup~, a Clojure library for generating
-server side content. Unlike other server side frameworks, ~hiccup~ let me use
-Clojure data structures to build the pages.
+server side content. ~hiccup~ let me use Clojure data structures to build my pages.
 
 #+BEGIN_SRC clojure
+;; generating a span element with the class `foo` and content of `bar`
 (html [:span.foo  "bar"])
 #+END_SRC
 
-This made the code shorter. It also made it possible to build components on the
-fly.
+This short syntax let me express more with less code. I also had components.
 
 #+BEGIN_SRC clojure
+;; defining an `h1` variable with the content `Welcome`
 (def header [:h1 "Welcome"])
 
+;; using `header` variable inside a `div` with an additional paragraph
 (html [:div.content
        header
        [:p "more content"]])
 #+END_SRC
 
-These components are easier to create and use than both Wordpress template and
-React components.
+I could define functions or plain variables. Then use them as components in my
+templates.
 
 On top of that, I didn't have to learn a special syntax for working with data. I
-had the full power of Clojure to interact with the components and the data.
+had the full power of Clojure to interact with data and components themselves.
 
 #+BEGIN_SRC clojure
+;; defining data for the menu
 (def menu-items
   ["Crab Rangoon"
    "Pot Stickers"
    "Miso Soup"])
 
+;; creating a function to generate a list elment from the provided `menu-item`
 (defn create-menu-item [menu-item]
   [:li.menu-item menu-item])
 
+;; generating an unordered list by mapping over the `menu-items` data
 (def menu
   [:ul
    (map create-menu-item menu-items)])
 #+END_SRC
 
-~hiccup~ made it easy to build small components for all my reused elements.
-I could quickly try new idea and change design with ease.
+I could do all this with a concise syntax that is simpler than Wordpress
+templates and shorter that React components.
 
 The final benefit is the ease of mind provided by Clojure. I know that no
-matter what features we come up with, it will be possible.
+matter what features we dream up, it will be possible with this general purpose language.
