@@ -8,13 +8,13 @@
 At a summer barbecue, a friend asked if I could build a website for his new
 restaurant. But what he didn't know was that I haven't built a static site in nearly a
 decade. However I couldn't let him spend thousands of dollars on a cookie cutter
-website designed by a firm that knew nothing about the restaurant.
+website designed by a firm that knew nothing about his restaurant.
 
 We started coming up with ideas right away over a couple of beers.
 He wanted manageable content, an Instagram feed, and an easy to change restaurant
 menu. It quickly started sounding like a full on Content Management System and
 not a simple website. I had to reel in this ambitious project before it
-became a feature sink. So we decided to just delivera beautiful static site.
+became a feature sink. So we decided to just make a beautiful static site.
 
 I started using ~Wordpress~ to build the website because I've used it in the past
 and it's easy to expand. With a list of dream features in mind, a basic website quicky emerged.
