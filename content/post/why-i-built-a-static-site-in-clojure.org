@@ -1,8 +1,9 @@
 #+title: why-i-built-a-static-site-in-clojure
 #+date: 2017-07-15
-#+draft: false
-#+categories: [Clojure]
-#+tags: [opinion, experience]
+
+#+hugo_draft: false
+#+hugo_categories: [Clojure]
+#+hugo_tags: [opinion, experience]
 
 * Why I Built a Static Site in Clojure
 At a summer barbecue, a friend asked if I could build a website for his new
