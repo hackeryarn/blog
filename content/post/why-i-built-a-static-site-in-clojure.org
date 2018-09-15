@@ -18,11 +18,11 @@ became a feature sink. So we decided to just delivera beautiful static site.
 
 With the list of dream features in mind, I started on the website using
 ~Wordpress~~. It could accommodate a growing website, and I've used it in the
-past. However, themes were complicated to build. Plugins, like the Instagram
-feed, were ugly and difficult to customize. And templates were clunky to use.
-I couldn't continue with the ~Wordpress~ route. 
+past. However, themes were complicated to build. Plugins were ugly and difficult to
+customize. And templates were clunky to use. I couldn't continue with the ~Wordpress~ route. 
 
-Having been spoiled by component based systems, I decided to try ~Next.js~. I use React in my day job, so it's
+Having been spoiled by component based systems, I decided to try ~Next.js~. 
+I use React in my day job, so it's
 familiar ground, but I couldn't justify the complexity for a
 website that didn't need dynamic content. Also, ~Next.js~ had no CMS support.
 
