@@ -1,11 +1,11 @@
-#+title: why-i-built-a-static-site-in-clojure
-#+date: 2017-07-15
+---
+title: Why I Built a Static Site in Clojure
+date: 2018-09-15
+draft: false
+categories: [Clojure]
+tags: [opinion, experience]
+---
 
-#+hugo_draft: false
-#+hugo_categories: [Clojure]
-#+hugo_tags: [opinion, experience]
-
-* Why I Built a Static Site in Clojure
 At a summer barbecue, a friend asked if I could build a website for his new
 restaurant. But what he didn't know was that I haven't built a static site in nearly a
 decade. However I couldn't let him spend thousands of dollars on a cookie cutter
@@ -22,11 +22,11 @@ and it's easy to expand. With a list of dream features in mind, a basic website 
 But as it grew, themes became complicated to build. Plugins were ugly and difficult to
 customize. And templates were clunky to use. I couldn't continue with the ~Wordpress~ route. 
 
-Having been spoiled by component based systems, I decided to try ~Next.js~. 
+Having been spoiled by component based systems, I decided to try [[https://github.com/zeit/next.js/][Next.js]].
 I use React in my day job, so it's familiar ground, but I couldn't justify the
 complexity for a website that didn't need dynamic content. Also, ~Next.js~ had no CMS support.
 
-That's when I decided to reach for ~hiccup~, a Clojure library for generating
+That's when I decided to reach for [[https://github.com/weavejester/hiccup][hiccup]], a Clojure library for generating
 server side content. ~hiccup~ let me use Clojure data structures to build my pages.
 
 #+BEGIN_SRC clojure
