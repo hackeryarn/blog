@@ -6,3 +6,4 @@
 [submodule "themes/even"]
 	path = themes/even
 	url = git@github.com:olOwOlo/hugo-theme-even.git
+    branch = master
