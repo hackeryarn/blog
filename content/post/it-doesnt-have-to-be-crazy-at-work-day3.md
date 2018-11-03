@@ -4,7 +4,7 @@ date: 2018-11-03
 draft: false
 categories: [Books]
 tags: [books]
-url: /books/it-doesnt-have-to-be-crazy-at-work/day2
+url: /books/it-doesnt-have-to-be-crazy-at-work/day3
 ---
 
 # You work with people
