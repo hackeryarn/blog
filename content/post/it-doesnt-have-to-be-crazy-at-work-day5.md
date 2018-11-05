@@ -1,6 +1,6 @@
 ---
 title: It Doesn't Have to be Crazy at Work - Day 5
-date: 2018-11-0k
+date: 2018-11-05
 draft: false
 categories: [Books]
 tags: [books]
