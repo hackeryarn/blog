@@ -15,7 +15,8 @@ This passion echoes across disciplines. No matter the vocation, there are those 
 
 You should find at least one such activity to spice up your life.
 
----
+{{<figure src="/img/shadow-divers.jpeg" alt="Shadow Divers" link="https://amzn.to/2JIUG0h">}}
+
 Book: [Shadow Divers](https://amzn.to/2JIUG0h)
 
 Pages: 1-21
