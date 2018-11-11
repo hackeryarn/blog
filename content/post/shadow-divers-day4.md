@@ -19,5 +19,5 @@ Taking on the tasks no one likes, giving everything to every job, and learning t
 
 Book: [Shadow Divers](https://amzn.to/2JIUG0h)
 
-Pages: 41-67
+Pages: 67-92
 
