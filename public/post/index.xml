@@ -6,20 +6,10 @@
     <description>Recent content in Posts on hackeryarn</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en</language>
-    <lastBuildDate>Sat, 01 Dec 2018 00:00:00 +0000</lastBuildDate>
+    <lastBuildDate>Fri, 30 Nov 2018 00:00:00 +0000</lastBuildDate>
     
 	<atom:link href="https://hackeryarn.com/post/index.xml" rel="self" type="application/rss+xml" />
     
-    
-    <item>
-      <title>Getting to Yes - Day 5</title>
-      <link>https://hackeryarn.com/books/getting-to-yes/day5/</link>
-      <pubDate>Sat, 01 Dec 2018 00:00:00 +0000</pubDate>
-      
-      <guid>https://hackeryarn.com/books/getting-to-yes/day5/</guid>
-      <description>Insist on Using Objective Criteria Don&amp;rsquo;t take offers at face value. Try to figure out the objective reasoning behind the offer. Just asking about the reasoning makes the other person evaluate their position. Once they are in an evaluation mode, it opens up the floor for you to present your reasoning.
-With all the reasoning is on the table, insist on a fair process. Be ready to compromise between two equally worthy criteria.</description>
-    </item>
     
     <item>
       <title>Getting to Yes - Day 4</title>
@@ -345,6 +335,16 @@ In this talk, I cover some of the best features of Phoenix:
       <description>Haskell is notoriously difficult to setup, which probably led to many people being scared away from ever getting started. However, there has been a lot of work done to address these short comings. And there is a way to setup a very pleasant environment thanks to the hard work of many projects.
 Traditional methods included:
  Installing The Haskell Platform, which was a great project in it&amp;rsquo;s time but always seems to lag a few GHC versions behind.</description>
+    </item>
+    
+    <item>
+      <title>Getting to Yes - Day 5</title>
+      <link>https://hackeryarn.com/books/getting-to-yes/day5/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      
+      <guid>https://hackeryarn.com/books/getting-to-yes/day5/</guid>
+      <description>Insist on Using Objective Criteria Don&amp;rsquo;t take offers at face value. Try to figure out the objective reasoning behind the offer. Just asking about the reasoning makes the other person evaluate their position. Once they are in an evaluation mode, it opens up the floor for you to present your reasoning.
+With all the reasoning is on the table, insist on a fair process. Be ready to compromise between two equally worthy criteria.</description>
     </item>
     
   </channel>
