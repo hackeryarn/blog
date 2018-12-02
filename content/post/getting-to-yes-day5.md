@@ -1,6 +1,6 @@
 ---
 title: Getting to Yes - Day 5
-date: 2018-12-1
+date: 2018-12-01
 draft: false
 categories: [Books]
 tags: [books]

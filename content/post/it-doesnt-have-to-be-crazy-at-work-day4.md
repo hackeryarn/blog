@@ -19,4 +19,3 @@ To become better than the norm, you need focus. The only way to gain focus is to
 Book: [It Doesn't Have to be Crazy at Work](https://amzn.to/2DeqNop)
 
 Pages: 146-185
-
