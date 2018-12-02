@@ -2,3 +2,7 @@
 	path = themes/even
 	url = git@github.com:olOwOlo/hugo-theme-even.git
   branch = master
+[submodule "public"]
+	path = public
+	url = git@github.com:hackeryarn/hackeryarn.github.io.git
+	branch = master
