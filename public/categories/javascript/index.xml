@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>JavaScript on hackeryarn</title>
+    <link>https://hackeryarn.com/categories/javascript/</link>
+    <description>Recent content in JavaScript on hackeryarn</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>en</language>
+    <lastBuildDate>Fri, 01 Jun 2018 00:00:00 +0000</lastBuildDate>
+    
+	<atom:link href="https://hackeryarn.com/categories/javascript/index.xml" rel="self" type="application/rss+xml" />
+    
+    
+    <item>
+      <title>Universally Testable Dependencies in JavaScript</title>
+      <link>https://hackeryarn.com/post/universally-testable-dependencies/</link>
+      <pubDate>Fri, 01 Jun 2018 00:00:00 +0000</pubDate>
+      
+      <guid>https://hackeryarn.com/post/universally-testable-dependencies/</guid>
+      <description>JavaScript dependencies are notoriously hard to mock and test across framework and environments. However, Dependency Injection (DI) ensures testability. It is common in statically typed languages, like Java or Go, but is also useful in dynamic languages like JavaScript.
+This article will guide you through a simple technique that can apply to any JavaScript code base, frontend or backend, independent of frameworks and libraries.
+The technique I am going to demonstrate is arguably not true DI, since the dependencies are still managed by the module using them.</description>
+    </item>
+    
+    <item>
+      <title>How Lodash Worked Itself Out of a Job</title>
+      <link>https://hackeryarn.com/post/lodash/</link>
+      <pubDate>Sun, 25 Jun 2017 00:00:00 +0000</pubDate>
+      
+      <guid>https://hackeryarn.com/post/lodash/</guid>
+      <description>I really loved lodash. It brough the joy of compact functional code to JavaScript. Especially 6 years ago when I first embraced it. It was a wonderful library. Back then, there was no ES6, no Babel, and terrible browser incompatabilities ran rampant. Lodash along with jQuery were the saving light of that time.
+I gravitated towards using Lodash because the first language I learned was Scheme. It had functional programing at it&amp;rsquo;s core, and highly influanced how I think about code to this day.</description>
+    </item>
+    
+  </channel>
+</rss>

@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Setup on hackeryarn</title>
+    <link>https://hackeryarn.com/tags/setup/</link>
+    <description>Recent content in Setup on hackeryarn</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>en</language>
+    <lastBuildDate>Sat, 15 Jul 2017 00:00:00 +0000</lastBuildDate>
+    
+	<atom:link href="https://hackeryarn.com/tags/setup/index.xml" rel="self" type="application/rss+xml" />
+    
+    
+    <item>
+      <title>ClojureScript Setup for Leiningen Project With Emacs</title>
+      <link>https://hackeryarn.com/post/clojurescript-setup/</link>
+      <pubDate>Sat, 15 Jul 2017 00:00:00 +0000</pubDate>
+      
+      <guid>https://hackeryarn.com/post/clojurescript-setup/</guid>
+      <description>A good development environment if fundamental to being productive. This is especially true for Lisps. A good environment can greatly speed up your development process and allow you to utilize the full power of Clojure or any other Lisp.
+This tutorial is focused on a ClojureScript environment for a Leiningen based project being developed in Emacs.
+Why Emacs? Emacs has a great setup for most programming languages but really shines when it comes to Lisps, including Clojure.</description>
+    </item>
+    
+    <item>
+      <title>Easy Universal Haskell Development Environment</title>
+      <link>https://hackeryarn.com/post/universal-haskell-dev-enviornment/</link>
+      <pubDate>Sat, 06 Feb 2016 00:00:00 +0000</pubDate>
+      
+      <guid>https://hackeryarn.com/post/universal-haskell-dev-enviornment/</guid>
+      <description>Haskell is notoriously difficult to setup, which probably led to many people being scared away from ever getting started. However, there has been a lot of work done to address these short comings. And there is a way to setup a very pleasant environment thanks to the hard work of many projects.
+Traditional methods included:
+ Installing The Haskell Platform, which was a great project in it&amp;rsquo;s time but always seems to lag a few GHC versions behind.</description>
+    </item>
+    
+  </channel>
+</rss>

@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Guide on hackeryarn</title>
+    <link>https://hackeryarn.com/tags/guide/</link>
+    <description>Recent content in Guide on hackeryarn</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>en</language>
+    <lastBuildDate>Sun, 19 Aug 2018 00:00:00 +0000</lastBuildDate>
+    
+	<atom:link href="https://hackeryarn.com/tags/guide/index.xml" rel="self" type="application/rss+xml" />
+    
+    
+    <item>
+      <title>Your Job Isn&#39;t Writing Code</title>
+      <link>https://hackeryarn.com/post/your-job-isnt-writing-code/</link>
+      <pubDate>Sun, 19 Aug 2018 00:00:00 +0000</pubDate>
+      
+      <guid>https://hackeryarn.com/post/your-job-isnt-writing-code/</guid>
+      <description>Every line of code you write is a liability. That line of code you just wrote adds complexity to your code base, gives you more nuances to remember, it might even be a bug. If code is so expensive and dangerous. What can you do? After all, you are a developer.
+The answer: You must remember your real job&amp;hellip; Delivering value to the users.
+Users don&amp;rsquo;t care what your class hierarchy looks like.</description>
+    </item>
+    
+    <item>
+      <title>Universally Testable Dependencies in JavaScript</title>
+      <link>https://hackeryarn.com/post/universally-testable-dependencies/</link>
+      <pubDate>Fri, 01 Jun 2018 00:00:00 +0000</pubDate>
+      
+      <guid>https://hackeryarn.com/post/universally-testable-dependencies/</guid>
+      <description>JavaScript dependencies are notoriously hard to mock and test across framework and environments. However, Dependency Injection (DI) ensures testability. It is common in statically typed languages, like Java or Go, but is also useful in dynamic languages like JavaScript.
+This article will guide you through a simple technique that can apply to any JavaScript code base, frontend or backend, independent of frameworks and libraries.
+The technique I am going to demonstrate is arguably not true DI, since the dependencies are still managed by the module using them.</description>
+    </item>
+    
+    <item>
+      <title>ClojureScript Setup for Leiningen Project With Emacs</title>
+      <link>https://hackeryarn.com/post/clojurescript-setup/</link>
+      <pubDate>Sat, 15 Jul 2017 00:00:00 +0000</pubDate>
+      
+      <guid>https://hackeryarn.com/post/clojurescript-setup/</guid>
+      <description>A good development environment if fundamental to being productive. This is especially true for Lisps. A good environment can greatly speed up your development process and allow you to utilize the full power of Clojure or any other Lisp.
+This tutorial is focused on a ClojureScript environment for a Leiningen based project being developed in Emacs.
+Why Emacs? Emacs has a great setup for most programming languages but really shines when it comes to Lisps, including Clojure.</description>
+    </item>
+    
+    <item>
+      <title>Efficient CSV Imports in Rails</title>
+      <link>https://hackeryarn.com/post/rails-csv-imports/</link>
+      <pubDate>Sun, 11 Jun 2017 00:00:00 +0000</pubDate>
+      
+      <guid>https://hackeryarn.com/post/rails-csv-imports/</guid>
+      <description>Rails has great capabilities for working CSV files. However, like with many things, the most obvious way is not the most efficient.
+We noticed this when our server had major fluctuations in memory consumption. After digging through metrics, made easy thanks to Prometheus and Grafana. We noticed that the spikes were due to our CSV uploads.
+Examining CSV Import Our processor is responsible for bringing in coordinates from legacy systems and ones that cannot support our API.</description>
+    </item>
+    
+    <item>
+      <title>Easy Universal Haskell Development Environment</title>
+      <link>https://hackeryarn.com/post/universal-haskell-dev-enviornment/</link>
+      <pubDate>Sat, 06 Feb 2016 00:00:00 +0000</pubDate>
+      
+      <guid>https://hackeryarn.com/post/universal-haskell-dev-enviornment/</guid>
+      <description>Haskell is notoriously difficult to setup, which probably led to many people being scared away from ever getting started. However, there has been a lot of work done to address these short comings. And there is a way to setup a very pleasant environment thanks to the hard work of many projects.
+Traditional methods included:
+ Installing The Haskell Platform, which was a great project in it&amp;rsquo;s time but always seems to lag a few GHC versions behind.</description>
+    </item>
+    
+  </channel>
+</rss>

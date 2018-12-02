@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Video on hackeryarn</title>
+    <link>https://hackeryarn.com/tags/video/</link>
+    <description>Recent content in Video on hackeryarn</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>en</language>
+    <lastBuildDate>Tue, 02 Aug 2016 00:00:00 +0000</lastBuildDate>
+    
+	<atom:link href="https://hackeryarn.com/tags/video/index.xml" rel="self" type="application/rss+xml" />
+    
+    
+    <item>
+      <title>Phoenix talk</title>
+      <link>https://hackeryarn.com/post/phoenix-talk/</link>
+      <pubDate>Tue, 02 Aug 2016 00:00:00 +0000</pubDate>
+      
+      <guid>https://hackeryarn.com/post/phoenix-talk/</guid>
+      <description>I recently gave a talk, at the local Fullstack Meetup, on the Phoenix Framework. Phoenix is the de facto web framework for Elixir.
+In this talk, I cover some of the best features of Phoenix:
+ Erlang: The platmor which Elixir and Phoenix are build on. (albeit very brief overview of the major features) Plug: The specification for composable module design that gives Phoenix much of it&amp;rsquo;s power. Ecto: The database integration layer.</description>
+    </item>
+    
+  </channel>
+</rss>

@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Clojure on hackeryarn</title>
+    <link>https://hackeryarn.com/categories/clojure/</link>
+    <description>Recent content in Clojure on hackeryarn</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>en</language>
+    <lastBuildDate>Sat, 15 Sep 2018 00:00:00 +0000</lastBuildDate>
+    
+	<atom:link href="https://hackeryarn.com/categories/clojure/index.xml" rel="self" type="application/rss+xml" />
+    
+    
+    <item>
+      <title>Why I Built a Static Site in Clojure</title>
+      <link>https://hackeryarn.com/post/why-i-built-a-static-site-in-clojure/</link>
+      <pubDate>Sat, 15 Sep 2018 00:00:00 +0000</pubDate>
+      
+      <guid>https://hackeryarn.com/post/why-i-built-a-static-site-in-clojure/</guid>
+      <description>At a summer barbecue, a friend asked if I could build a website for his new restaurant. But what he didn&#39;t know was that I haven&#39;t built a static site in nearly a decade. However I couldn&#39;t let him spend thousands of dollars on a cookie cutter website designed by a firm that knew nothing about his restaurant.
+We started coming up with ideas right away over a couple of beers.</description>
+    </item>
+    
+  </channel>
+</rss>

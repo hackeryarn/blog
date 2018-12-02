@@ -1,0 +1,350 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+  <title>Why I Built a Static Site in Clojure - hackeryarn</title>
+  <meta name="renderer" content="webkit" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+<meta name="theme-color" content="#f8f5ec" />
+<meta name="msapplication-navbutton-color" content="#f8f5ec">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="#f8f5ec">
+
+
+<meta name="author" content="Artem Chernyak" />
+  <meta name="description" content="At a summer barbecue, a friend asked if I could build a website for his new restaurant. But what he didn&#39;t know was that I haven&#39;t built a static site in nearly a decade. However I couldn&#39;t let him spend thousands of dollars on a cookie cutter website designed by a firm that knew nothing about his restaurant.
+We started coming up with ideas right away over a couple of beers." />
+
+  <meta name="keywords" content="blog, tech, ideas" />
+
+
+
+
+
+
+<meta name="generator" content="Hugo 0.47.1" />
+
+
+<link rel="canonical" href="https://hackeryarn.com/post/why-i-built-a-static-site-in-clojure/" />
+
+<link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+<link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+<link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
+<link rel="manifest" href="/manifest.json">
+<link rel="mask-icon" href="/safari-pinned-tab.svg" color="#5bbad5">
+
+
+
+
+
+
+
+<link href="/dist/even.min.css?v=3.2.0" rel="stylesheet">
+
+
+
+
+
+<meta property="og:title" content="Why I Built a Static Site in Clojure" />
+<meta property="og:description" content="At a summer barbecue, a friend asked if I could build a website for his new restaurant. But what he didn&#39;t know was that I haven&#39;t built a static site in nearly a decade. However I couldn&#39;t let him spend thousands of dollars on a cookie cutter website designed by a firm that knew nothing about his restaurant.
+We started coming up with ideas right away over a couple of beers." />
+<meta property="og:type" content="article" />
+<meta property="og:url" content="https://hackeryarn.com/post/why-i-built-a-static-site-in-clojure/" /><meta property="article:published_time" content="2018-09-15T00:00:00&#43;00:00"/>
+<meta property="article:modified_time" content="2018-09-15T00:00:00&#43;00:00"/>
+<meta itemprop="name" content="Why I Built a Static Site in Clojure">
+<meta itemprop="description" content="At a summer barbecue, a friend asked if I could build a website for his new restaurant. But what he didn&#39;t know was that I haven&#39;t built a static site in nearly a decade. However I couldn&#39;t let him spend thousands of dollars on a cookie cutter website designed by a firm that knew nothing about his restaurant.
+We started coming up with ideas right away over a couple of beers.">
+
+
+<meta itemprop="datePublished" content="2018-09-15T00:00:00&#43;00:00" />
+<meta itemprop="dateModified" content="2018-09-15T00:00:00&#43;00:00" />
+<meta itemprop="wordCount" content="461">
+
+
+
+<meta itemprop="keywords" content="opinion,experience," />
+<meta name="twitter:card" content="summary"/>
+<meta name="twitter:title" content="Why I Built a Static Site in Clojure"/>
+<meta name="twitter:description" content="At a summer barbecue, a friend asked if I could build a website for his new restaurant. But what he didn&#39;t know was that I haven&#39;t built a static site in nearly a decade. However I couldn&#39;t let him spend thousands of dollars on a cookie cutter website designed by a firm that knew nothing about his restaurant.
+We started coming up with ideas right away over a couple of beers."/>
+
+<!--[if lte IE 9]>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/classlist/1.1.20170427/classList.min.js"></script>
+<![endif]-->
+
+<!--[if lt IE 9]>
+  <script src="https://cdn.jsdelivr.net/npm/html5shiv@3.7.3/dist/html5shiv.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/respond.js@1.4.2/dest/respond.min.js"></script>
+<![endif]-->
+
+</head>
+<body>
+  <div id="mobile-navbar" class="mobile-navbar">
+  <div class="mobile-header-logo">
+    <a href="/" class="logo">hackeryarn</a>
+  </div>
+  <div class="mobile-navbar-icon">
+    <span></span>
+    <span></span>
+    <span></span>
+  </div>
+</div>
+<nav id="mobile-menu" class="mobile-menu slideout-menu">
+  <ul class="mobile-menu-list">
+    <a href="/">
+        <li class="mobile-menu-item">Home</li>
+      </a><a href="/post/">
+        <li class="mobile-menu-item">Archives</li>
+      </a><a href="/tags/">
+        <li class="mobile-menu-item">Tags</li>
+      </a><a href="/categories/">
+        <li class="mobile-menu-item">Categories</li>
+      </a>
+  </ul>
+</nav>
+  <div class="container" id="mobile-panel">
+    <header id="header" class="header">
+        <div class="logo-wrapper">
+  <a href="/" class="logo">hackeryarn</a>
+</div>
+
+<nav class="site-navbar">
+  <ul id="menu" class="menu">
+    <li class="menu-item">
+        <a class="menu-item-link" href="/">Home</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/post/">Archives</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/tags/">Tags</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/categories/">Categories</a>
+      </li>
+  </ul>
+</nav>
+    </header>
+
+    <main id="main" class="main">
+      <div class="content-wrapper">
+        <div id="content" class="content">
+          <article class="post">
+    
+    <header class="post-header">
+      <h1 class="post-title">Why I Built a Static Site in Clojure</h1>
+
+      <div class="post-meta">
+        <span class="post-time"> 2018-09-15 </span>
+        <div class="post-category">
+            
+              <a href="/categories/clojure/"> Clojure </a>
+            
+          </div>
+        
+        
+      </div>
+    </header>
+
+    
+    
+<div class="post-toc" id="post-toc">
+  <h2 class="post-toc-title">Contents</h2>
+  
+  <div class="post-toc-content always-active">
+    
+  </div>
+</div>
+
+    
+    
+
+    
+    <div class="post-content">
+      <p>At a summer barbecue, a friend asked if I could build a website for his new
+restaurant. But what he didn't know was that I haven't built a static site in nearly a
+decade. However I couldn't let him spend thousands of dollars on a cookie cutter
+website designed by a firm that knew nothing about his restaurant.</p>
+
+<p>We started coming up with ideas right away over a couple of beers.
+He wanted manageable content, an Instagram feed, and an easy to change restaurant
+menu. It quickly started sounding like a full on Content Management System and
+not a simple website. I had to reel in this ambitious project before it
+became a feature sink. So we decided to just make a beautiful static site.</p>
+
+<p>I started using <code>Wordpress</code> to build the website because I've used it in the past
+and it's easy to expand. With a list of dream features in mind, a basic website quicky emerged.
+But as it grew, themes became complicated to build. Plugins were ugly and difficult to
+customize. And templates were clunky to use. I couldn't continue with the <code>Wordpress</code> route.</p>
+
+<p>Having been spoiled by component based systems, I decided to try <a href="https://github.com/zeit/next.js/" title="Next.js">Next.js</a>.
+I use React in my day job, so it's familiar ground, but I couldn't justify the
+complexity for a website that didn't need dynamic content. Also, <code>Next.js</code> had no CMS support.</p>
+
+<p>That's when I decided to reach for <a href="https://github.com/weavejester/hiccup" title="hiccup">hiccup</a>, a Clojure library for generating
+server side content. <code>hiccup</code> let me use Clojure data structures to build my pages.</p>
+
+<pre><code class="language-clojure">;; generating a span element with the class `foo` and content of `bar`
+(html [:span.foo  &quot;bar&quot;])
+</code></pre>
+
+<p>This short syntax let me express more with less code. I also had components.</p>
+
+<pre><code class="language-clojure">;; defining an `h1` variable with the content `Welcome`
+(def header [:h1 &quot;Welcome&quot;])
+
+;; using `header` variable inside a `div` with an additional paragraph
+(html [:div.content
+       header
+       [:p &quot;more content&quot;]])
+</code></pre>
+
+<p>I could define functions or plain variables, then use them as components in my
+templates.</p>
+
+<p>On top of that, I didn't have to learn a special syntax for working with data. I
+had the full power of Clojure to interact with data and components themselves.</p>
+
+<pre><code class="language-clojure">;; defining data for the menu
+(def menu-items
+  [&quot;Crab Rangoon&quot;
+   &quot;Pot Stickers&quot;
+   &quot;Miso Soup&quot;])
+
+;; creating a function to generate a list elment from the provided `menu-item`
+(defn create-menu-item [menu-item]
+  [:li.menu-item menu-item])
+
+;; generating an unordered list by mapping over the `menu-items` data
+(def menu
+  [:ul
+   (map create-menu-item menu-items)])
+</code></pre>
+
+<p>I could do all this with a concise syntax that is simpler than Wordpress
+templates, and shorter than React components.</p>
+
+<p>The final benefit is the ease of mind provided by Clojure. I know that no
+matter what features we dream up, they will be possible with this general purpose language.</p>
+
+    </div>
+
+    
+    
+
+    
+    
+
+    <footer class="post-footer">
+      <div class="post-tags">
+          
+          <a href="/tags/opinion/">opinion</a>
+          
+          <a href="/tags/experience/">experience</a>
+          
+        </div>
+
+      
+      <nav class="post-nav">
+        
+          <a class="prev" href="/books/it-doesnt-have-to-be-crazy-at-work/day1">
+            <i class="iconfont icon-left"></i>
+            <span class="prev-text nav-default">It Doesn&#39;t Have to be Crazy at Work - Day 1</span>
+            <span class="prev-text nav-mobile">Prev</span>
+          </a>
+        
+          <a class="next" href="/post/your-job-isnt-writing-code/">
+            <span class="next-text nav-default">Your Job Isn&#39;t Writing Code</span>
+            <span class="next-text nav-mobile">Next</span>
+            <i class="iconfont icon-right"></i>
+          </a>
+      </nav>
+    </footer>
+  </article>
+        </div>
+        
+  <div id="disqus_thread"></div>
+    <script type="text/javascript">
+    (function() {
+      
+      
+      if (window.location.hostname === 'localhost') return;
+
+      var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+      var disqus_shortname = 'achernyak';
+      dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+      (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+    })();
+    </script>
+    <noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+
+  
+
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="social-links">
+      <a href="https://twitter.com/hackeryarn" class="iconfont icon-twitter" title="twitter"></a>
+      <a href="https://www.linkedin.com/in/achernyak" class="iconfont icon-linkedin" title="linkedin"></a>
+      <a href="https://github.com/hackeryarn" class="iconfont icon-github" title="github"></a>
+  <a href="https://hackeryarn.com/index.xml" type="application/rss+xml" class="iconfont icon-rss" title="rss"></a>
+</div>
+
+<div class="copyright">
+  <span class="power-by">
+    Powered by <a class="hexo-link" href="https://gohugo.io">Hugo</a>
+  </span>
+  <span class="division">|</span>
+  <span class="theme-info">
+    Theme - 
+    <a class="theme-link" href="https://github.com/olOwOlo/hugo-theme-even">Even</a>
+  </span>
+
+  
+
+  <span class="copyright-year">
+    &copy; 
+    2018
+    <span class="heart">
+      <i class="iconfont icon-heart"></i>
+    </span>
+    <span class="author">Artem Chernyak</span>
+  </span>
+</div>
+    </footer>
+
+    <div class="back-to-top" id="back-to-top">
+      <i class="iconfont icon-up"></i>
+    </div>
+  </div>
+  
+<script src="/lib/highlight/highlight.pack.js?v=20171001"></script><script type="text/javascript" src="/lib/jquery/jquery-3.2.1.min.js"></script>
+  <script type="text/javascript" src="/lib/slideout/slideout-1.0.1.min.js"></script>
+  
+
+
+<script type="text/javascript" src="/dist/even.min.js?v=3.2.0"></script>
+
+
+<script type="application/javascript">
+var doNotTrack = false;
+if (!doNotTrack) {
+	window.ga=window.ga||function(){(ga.q=ga.q||[]).push(arguments)};ga.l=+new Date;
+	ga('create', 'UA-72377824-1', 'auto');
+	
+	ga('send', 'pageview');
+}
+</script>
+<script async src='https://www.google-analytics.com/analytics.js'></script>
+
+
+
+
+
+
+
+</body>
+</html>
