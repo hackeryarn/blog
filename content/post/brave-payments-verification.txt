@@ -1,8 +1,0 @@
----
-draft: false
-url: /.well-known/.well-known/brave-payments-verification.txt
----
-This is a Brave Payments publisher verification file.
-
-Domain: hackeryarn.com
-Token: bfba7d62dce9dc57cca50a4feec625830037ae57bd735e3709a458e34b7e76c0
