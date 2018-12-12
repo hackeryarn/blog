@@ -7,8 +7,6 @@ tags: [books]
 url: /books/principles/day3
 ---
 
-# Principles Day 3
-
 Making many balanced and uncorrelated bets is the best way to minimize your
 risk while keeping the gains. If your bets  become correlated, you lose
 the benefit of diversification because more of your portfolio can be effected

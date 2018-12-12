@@ -7,8 +7,6 @@ tags: [books]
 url: /books/principles/day1
 ---
 
-# Principles day 1
-
 Principles define how you make decisions in your life. Every day you are
 faced with thousands of decisions. The choices you make are driven by your
 principles whether you realize it or not.

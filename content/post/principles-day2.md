@@ -7,8 +7,6 @@ tags: [books]
 url: /books/principles/day2
 ---
 
-# Principles day 2
-
 No matter how prepared you are, fate is unpredictable and you will face a loss.
 It's unavoidable.
 
