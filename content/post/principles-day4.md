@@ -1,10 +1,10 @@
 ---
-title: Principles - Day 3
-date: 2018-12-12
+title: Principles - Day 4
+date: 2018-12-14
 draft: false
 categories: [Books]
 tags: [books]
-url: /books/principles/day3
+url: /books/principles/day4
 ---
 
 If you want to be successful, you need to leverage everything around you. Your
