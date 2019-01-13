@@ -1,6 +1,6 @@
 ---
 title: Introducing Daily Reading Notes
-date: 2019-12-13
+date: 2019-01-13
 draft: false
 categories: [Books]
 tags: [book]
