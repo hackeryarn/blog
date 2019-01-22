@@ -15,7 +15,7 @@ also provided the opportunity to share more with others.
 
 I plan on keeping this habit going, but this blog isn't the right place for it.
 I want to keep this blog dedicated to tech posts. So I decided to
-create a dedicated site for my [daily reading notes](dailyreadingnotes.com).
+create a dedicated site for my [daily reading notes](https://dailyreadingnotes.com).
 
 If you liked the daily reading notes posts, I hope you enjoy the new site. If
 you were here for the tech posts, I hope keeping this blog dedicated to
