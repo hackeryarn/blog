@@ -14,8 +14,8 @@ published: true
 ---
 
 React and Redux have become the most popular choice for front end projects. They
-bring a lot to the table. React provide fast application, easy ways to create
-shared components, and a plethora of libraries. Redux built on the Elm and Flux
+bring a lot to the table: React provides fast application, easy ways to create
+shared components, and a plethora of libraries. Redux was built on the Elm and Flux
 architecture to create a clear and simple way to manage state. However, Redux
 has its drawbacks.
 
@@ -26,7 +26,7 @@ complex at first glance. But with a well thought out store, you end up with
 tons of simple actions and reducers all of which perform updates, maps,
 or filters.
 
-There are many attempts to combat this. Suggesting range from using
+There are many attempts to combat this. Suggestions range from using
 a new state management library like Mobx, to abandoning React for something
 like Vue. I think these suggestions are like throwing the baby out with the
 bath water. With either choice you are giving up the rich ecosystem around
@@ -40,9 +40,9 @@ This means that you don't have to replace your entire code base. If you already
 have an app running React and Redux, you can incrementally integrate
 Redux-Easy.
 
-To see how well it delivered on this promises, I decided to try it out on the
+To see how well it delivered on these promises, I decided to try it out on the
 classic Todo MVC application. The Redux library even comes with an idiomatic
-example which I used as a starting point to integrate Redux-Easy.
+example, which I used as a starting point to integrate Redux-Easy.
 
 ## Reducing Boilerplate Code
 
