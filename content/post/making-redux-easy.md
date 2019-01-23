@@ -6,39 +6,40 @@ categories: [JavaScript, React, Redux]
 tags: [opinion, experiment, guide]
 ---
 
-React and Redux have become most popular choice for front end projects. They
+React and Redux have become the most popular choice for front end projects. They
 bring a lot to the table. React provide fast application, easy ways to create
 shared components, and a plethora of libraries. Redux built on the Elm and Flux
 architecture to create a clear and simple way to manage state. However, Redux
 has its drawbacks.
 
-In large projects, Redux can bloat your code and become very repetative
-quickly. To support a single store update, you need to create a reducer that's
+In large projects, Redux can bloat your code and become very repetitive. To
+support a single store update, you need to create a reducer that's
 triggered by an action called from your component. This doesn't sound too
 complex at first glance. But with a well thought out store, you end up with
-really simple actions and reducers. They all seem to be simple updates, maps,
+tons of simple actions and reducers all of which perform updates, maps,
 or filters.
 
-I've seen some attempts to combat this. Suggesting range from moving to
-a new state management library like Mobx, to moving to a whole new framework
-like Vue. I think these types of suggestions to solve a problem with verbosity
-is like throwing the baby out with the bath water. That's why I was happy to
-find redux-easy.
+There are many attempts to combat this. Suggesting range from using
+a new state management library like Mobx, to abandoning React for something
+like Vue. I think these suggestions are like throwing the baby out with the
+bath water. With either choice you are giving up the rich ecosystem around
+Redux or React. That's why I was happy to find Redux-Easy.
 
-# Enter redux-easy
+# Enter Redux-Easy
 
-Redux-easy doesn't try to replace Redux. Instead, it removes some of the boiler
-plate and provides helper functions for the many common actions you might want
-to do on your store. The beauty of building on top of Redux is that if you
-already have an existing app, you can incrementally integrate redux-easy.
+Redux-Easy doesn't try to replace Redux. Instead, it removes the boiler
+plate and provides helper functions for the many common actions you will need.
+This means that you don't have to replace your entire code base. If you already
+have an app running React and Redux, you can incrementally integrate
+Redux-Easy.
 
-To see how well it delivered on these promises, I decided to try it out in an
-app. I chose to use redux-easy on the Todo MVC example provided in the official
-Redux repo.
+To see how well it delivered on this promises, I decided to try it out on the
+classic Todo MVC application. The Redux library even comes with an idiomatic
+example which I used as a starting point to integrate Redux-Easy.
 
 ## Reducing Boilerplate Code
 
-Right from the start you can notice the goal of reducing boilerplate.
+Right from the start you will notice the goal of reducing boilerplate.
 Redux-easy simplifies the creation of the store. Instead of manually creating
 the store, passing it to the `Provider`, and wrapping your app in the
 `Provider`. You can use `reduxSetup` to do all this for you:
@@ -61,7 +62,8 @@ reduxSetup({component: <App />, initialState});
 The next area where you get to simplify your code is in the reducer creation.
 Instead of manually grouping all the actions handled by the reducer, and adding
 all the reducer to a single root reducer. You can use `addReducer` which
-manages the root reducer for you and adds the declared handlers no matter where you define them:
+manages the root reducer for you and adds the declared handlers no matter where
+you define them:
 
 ```
 import {addReducer} from 'redux-easy';
@@ -82,10 +84,10 @@ addReducer('addToAge', (state, years) => {
 });
 ```
 
-Finally, you get to simplify wiring up state and dispatch setup for your
+You also get to simplify wiring up state and dispatch setup for your
 components. In vanilla Redux, you have to use `mapDispatchToProps` and
 `mapStateToProps` to pass in the dispatch actions and state. Redux-easy
-provides helpers for you to do this.
+provides helpers that interact directly with your store.
 
 Instead of `mapDispatchToProps`, you can use the provided `dispatch` function
 to fire off your action:
@@ -120,18 +122,18 @@ export default watch(MyComponent, {
 
 ## Helpers for Common Actions
 
-Redux-easy also provide many dispatch helpers that allow you to transform the
+The final pieace of Redux-Easy are the dispatch helpers that let you transform
 state without ever writing a reducer. For simple actions dealing with an single
 entry, you can use `dispatchSet`, `dispatchTransform`, and `dispatchDelete`.
 For actions dealing with arrays, you can use `dispatchPush`, `dispatchFilter`,
 and `dispatchMap`. These act as you would expect and cover 80% of the actions
-you would want to perform on your store.
+you will need to perform on your store.
 
 In the Todo MVC application, these helpers let me remove 5 out of 7 action
-handlers. I was able to keep the code closer to where it was being used,
-complete remove action creators, and be more explicit about what that action was doing.
+handlers, keep the code closer to where it was being used, and
+complete remove action creators.
 
-With actions like `completeTodo`, I was able to reduce the traditional flow
+With actions like `completeTodo`, I reduced the traditional flow
 spread cross 4 files to a single function defined on the component using it:
 
 ```
@@ -144,10 +146,15 @@ completeTodo = (id) => {
 }
 ```
 
+`completeTodo` is an example of modifying an array. It takes the store path to
+the array `'todos'` and a function which will be mapped over the array pulled
+from the path. The dispatch, reducer, and state modifications are all taken
+care of by Redux-Easy from this one function.
+
 ## Conclusion
 
-Redux-easy delivered on it's promise of making redux development easier and
-simpler. Using it I was able to reduce the lines of code by 10% from 503 to
+Redux-easy delivered on it's promise of making redux development shorter and
+simpler. It allowed me to reduce the lines of code by 10% from 503 to
 447, and reduce the number of files by 30% from 20 to 14. Most importantly, it
 made it simpler to reason about the application. I could follow the flow of the
-data much easier and reduce the repetition of similar action handlers.
+data easier and support the same functionaility with less repetition.
