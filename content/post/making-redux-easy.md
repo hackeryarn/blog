@@ -1,9 +1,16 @@
 ---
 title: Making Redux Easy
-date: 2019-01-19
+date: {}
 draft: true
-categories: [JavaScript, React, Redux]
-tags: [opinion, experiment, guide]
+categories:
+  - JavaScript
+  - React
+  - Redux
+tags:
+  - opinion
+  - experiment
+  - guide
+published: true
 ---
 
 React and Redux have become the most popular choice for front end projects. They
@@ -151,7 +158,7 @@ the array `'todos'` and a function which will be mapped over the array pulled
 from the path. The dispatch, reducer, and state modifications are all taken
 care of by Redux-Easy from this one function.
 
-## Conclusion
+# Conclusion
 
 Redux-easy delivered on it's promise of making redux development shorter and
 simpler. It allowed me to reduce the lines of code by 10% from 503 to
