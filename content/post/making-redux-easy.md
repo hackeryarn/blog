@@ -15,8 +15,8 @@ published: true
 
 React and Redux are a top choice for front end projects. React provides fast
 performance, easy ways to create shared components, and a plethora of
-libraries. Redux let's you simplify the management of the state in your
-application. But it has serious drawbacks.
+libraries. Redux lets you simplify state management in your
+application, but it has serious drawbacks.
 
 In large projects, Redux bloat your project with repetitive code. To
 support a single store update, you need to create a reducer that handles an
@@ -27,7 +27,8 @@ with tons of simple actions and reducers that all look alike.
 People went to great length to combat this problem. Suggestions range from using
 a new state management library like Mobx, to abandoning React completely for
 something like Vue. These suggestions are like throwing the baby out
-with the bath water. That's why I was happy to find Redux-Easy.
+with the bath water. That's why I was happy to find a library that didn't make me 
+leave these libraries behind.
 
 # Enter Redux-Easy
 
@@ -37,7 +38,7 @@ base. You can incrementally integrate Redux-Easy.
 
 To see how well it delivered on these promises, I decided to try it with the
 classic Todo MVC application. The Redux library even comes with an idiomatic
-example, that example as a starting point.
+example, which I used as a starting point.
 
 ## Reducing Boilerplate Code
 
