@@ -154,7 +154,7 @@ The dispatch, action, and reducer are all taken care of by
 
 # Conclusion
 
-[Redux-Easy][https://github.com/mvolkmann/redux-easy] delivered on its promise of making [Redux](https://redux.js.org/) development shorter and
+[Redux-Easy](https://github.com/mvolkmann/redux-easy) delivered on its promise of making [Redux](https://redux.js.org/) development shorter and
 simpler. Using it, I removed 5 out of 7 action handlers. I reduce the lines of
 code by 10% from 503 to 447, and the number of files by 30% from 20 to 14.
 
