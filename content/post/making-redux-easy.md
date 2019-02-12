@@ -36,8 +36,8 @@ leave these libraries behind.
 [Redux-Easy](https://github.com/mvolkmann/redux-easy) doesn't try to replace [Redux](https://redux.js.org/) or [React](https://reactjs.org/). Instead, it removes the boilerplate and provides helper functions. You don't need to replace your entire code base. You can incrementally integrate [Redux-Easy](https://github.com/mvolkmann/redux-easy)
 
 To see how well it delivered on these promises, I decided to try it with the
-classic Todo MVC application. The [Redux](https://redux.js.org/) library even comes with an idiomatic
-example, which I used as a starting point.
+classic Todo MVC application. The [Redux](https://redux.js.org/) library even
+comes with an idiomatic example, which I used as a starting point.
 
 ## Reducing Boilerplate Code
 
@@ -160,3 +160,6 @@ code by 10% from 503 to 447, and the number of files by 30% from 20 to 14.
 
 Most importantly, organize the code became simpler. The state logic is
 closer to where it's being used and is easier to follow.
+
+You can find the full version of my TodoMVC using Redux-Easy
+[here](https://github.com/hackeryarn/redux-easy-todomvc).
