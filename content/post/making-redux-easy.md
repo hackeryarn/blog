@@ -1,6 +1,6 @@
 ---
 title: Making Redux Easy
-date: {}
+date: 2019-02-11
 draft: true
 categories:
   - JavaScript
