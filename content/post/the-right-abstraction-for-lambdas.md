@@ -35,11 +35,12 @@ Metz](https://www.sandimetz.com/blog/2016/1/20/the-wrong-abstraction) in that
 "duplication is far cheaper than the wrong abstraction". But that doesn't mean
 you should give up the search for the right abstraction.
 
-Serverless addresses some of these issues by letting you share code in the
+[The Serverless Framework](https://serverless.com/) addresses some of these issues by letting you share code in the
 same project. However, it requires you to completely change how you process
 requests. You can't rely on the same set of battle tested libraries that you
 use everywhere else. If you later decide to switch to a microservice
-architecture, you need to change large portions of your handlers.
+architecture, you need to change large portions of your handlers. [The Serverless 
+Framework](https://serverless.com/) alone isn't enough.
 
 ## The Right Abstractions
 
@@ -87,7 +88,7 @@ servers.
 
 ### Go
 
-If you want to use this technique with Go, Apex gateway provides an easy way to
+If you want to use this technique with Go, [Apex gateway](https://github.com/apex/gateway) provides an easy way to
 translate lambda bound requests. You create your router as normal, pass the
 router to `http.Handle`, and use the gateway to start your server. Everything
 else is taken care of by the library.
@@ -114,7 +115,7 @@ func main() {
 
 ### Node.js and Express
 
-For Express, there is the aws-serverless-express library. It allows you to wrap
+For Express, there is the [aws-serverless-express](https://github.com/awslabs/aws-serverless-express) library. It allows you to wrap
 your normal express app is a server, and proxy it from a serverless
 handler.
 
