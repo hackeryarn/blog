@@ -1,7 +1,7 @@
 ---
 title: The Right Abstraction for Lambdas
-date: {}
-draft: true
+date: 2019-02-23
+draft: false
 categories:
   - Go
   - Golang
@@ -15,7 +15,7 @@ categories:
 tags:
   - opinion
   - guide
-published: false
+published: true
 ---
 
 Serverless functions are a great alternative for many light tasks that would
@@ -36,13 +36,13 @@ you should give up the search for the right abstraction.
 [The Serverless Framework](https://serverless.com/) addresses some of these issues by letting you share code in the same project. However, it requires you to completely change how you process
 requests. You can't rely on the same set of battle tested libraries that you
 use would use elsewhere. If you later decide to switch to a microservice
-architecture, you need to change large portions of your handlers. [The Serverless 
+architecture, you need to change large portions of your handlers. [The Serverless
 Framework](https://serverless.com/) alone isn't enough.
 
 ## The Right Abstractions
 
 I think having one action per lambda function is too granular. It
-gets rid of all the tooling built around handling web requests and routing. 
+gets rid of all the tooling built around handling web requests and routing.
 
 A single lambda should handle all the actions on a single resource. The
 function should know how to perform a Create, Read, Update, Delete, along with specialty methods.
