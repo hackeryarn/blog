@@ -1,7 +1,6 @@
 ---
 title: The Right Abstraction for Lambdas
-date: 2019-02-23
-draft: false
+date: 2019-02-24
 categories:
   - Go
   - Golang
