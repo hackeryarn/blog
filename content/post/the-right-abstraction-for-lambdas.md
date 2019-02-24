@@ -18,69 +18,63 @@ tags:
 published: false
 ---
 
-Serverless function are a great alternative for many light tasks that would
-traditionally required a server. They allow you to split up the work across
-mutiple small function. They reduce the cost by letting you only pay
-for what you use. And they require less maintenance than managing your own
+Serverless functions are a great alternative for many light tasks that would
+traditionally required a server. They allow you to split up work across
+mutiple small functions, and you only pay
+for what you use. On top of that, they require less maintenance than managing your own
 server or Kubernetes cluster.
 
 However, the single function per lambda approach can become too granular. Shared
-functionality becomes hard to group together. Your are left with a hard to
-envforce naming convention for lambdas that really belong together. Then
-comes the problem of sharing code between lamdas. Do you need a library just to
-share a few common functions?
+functionality becomes hard to group together. You only have hard to enforce naming convention
+for lambda that belong together. Then comes the problem of sharing code between lamdas. Do you need a library for a few common functions?
 
 I side with [Sandy
 Metz](https://www.sandimetz.com/blog/2016/1/20/the-wrong-abstraction) in that
 "duplication is far cheaper than the wrong abstraction". But that doesn't mean
 you should give up the search for the right abstraction.
 
-[The Serverless Framework](https://serverless.com/) addresses some of these issues by letting you share code in the
-same project. However, it requires you to completely change how you process
+[The Serverless Framework](https://serverless.com/) addresses some of these issues by letting you share code in the same project. However, it requires you to completely change how you process
 requests. You can't rely on the same set of battle tested libraries that you
-use everywhere else. If you later decide to switch to a microservice
+use would use elsewhere. If you later decide to switch to a microservice
 architecture, you need to change large portions of your handlers. [The Serverless 
 Framework](https://serverless.com/) alone isn't enough.
 
 ## The Right Abstractions
 
-I think having a single action per lambda function is too granular. It
-gets rid of all the tooling built around handling web requests and routing. Instead,
-Let a single lambda handle all the actions on a single resource. The
-function should know how to handle a Create, Read, Update, Delete, along with
-any specialty methods.
+I think having one action per lambda function is too granular. It
+gets rid of all the tooling built around handling web requests and routing. 
+
+A single lambda should handle all the actions on a single resource. The
+function should know how to perform a Create, Read, Update, Delete, along with specialty methods.
 
 With this in place, you share the most appropriate logic without needless
-indirection. It creates a great place to break up your code. The actions that
-deal with the same resource are together in one package. Everything else is
-either with its resource or abstracted into a general package.
+indirection. It creates space to break up your code. The actions that
+deal with the same resource are put together in one package. Everything else is
+either tied with its resource or abstracted into a general package.
 
 ## Other Benefits
 
 Having a single lambda handle all the actions of a resource has a hidden
-performance advantage. Users are likely to perform multiple actions on the same
-resource in a short time frame. Since the lambda will be warmed up on the first
-request, the users are likely to see better performance on subsequent actions.
+performance advantage. You see it when users perform multple actions on a single resource - a common scenario. The first action warms up the lambda, so subsequent request have better performance.
 
-The best part is that majority of your app can still follow the same pattern as
-a microservice. If you need to move to a traditional server,
-because the lambda is constantly running or other reasons, the only thing you
+The best part is that the majority of your app can still follow the same pattern as
+a microservice. If you need to move to a traditional server, the only thing you
 need to change is a small wrapper around your router.
 
-Lambdas give you great power. But you need to use them correctly to take
+Lambdas give you great power, but you need to use them correctly to take
 full advantage of it. An abstraction that adds to your code portability and
-usability is the right kind of abstraction to have.
+usability is what you need to successfully work with lambdas.
 
 ## Creating a Multi-Route Lambdas
 
 You will run into a problem when trying to create lambdas that handle multiple
-routes. There isn't a built in mechanism for handling multiple actions in the
+routes. There isn't a built in mechanism for handling more than one actions in the
 context of a lambda. Luckily, there are many efforts in the community to make
-this process easier.
+this scenario possible.
 
-No matter the language you use, these gateways work in a similar fashion.
+No matter the technology you use, the communities create gateways that all work in a similar way.
 They translate the requests intended for a lambda into requests
-that can be handled by a router. You get to use the router and handlers
+that a router can handle. You get to use the router and handlers
 approach you are used to while running your code in a lambda.
 
 The following section shows how to apply this technique across Go and Node.js
@@ -88,9 +82,7 @@ servers.
 
 ### Go
 
-If you want to use this technique with Go, [Apex gateway](https://github.com/apex/gateway) provides an easy way to
-translate lambda bound requests. You create your router as normal, pass the
-router to `http.Handle`, and use the gateway to start your server. Everything
+If you want to use this technique with Go, [Apex gateway](https://github.com/apex/gateway) provides an easy way to translate lambda bound requests. You create your router as normal, pass the router to the `http.Handle` function, and use the gateway to start your server. Everything
 else is taken care of by the library.
 
 ```go
@@ -115,9 +107,7 @@ func main() {
 
 ### Node.js and Express
 
-For Express, there is the [aws-serverless-express](https://github.com/awslabs/aws-serverless-express) library. It allows you to wrap
-your normal express app is a server, and proxy it from a serverless
-handler.
+For Express, there is the [aws-serverless-express](https://github.com/awslabs/aws-serverless-express) library. It allows you to wrap your normal express app is a server, and proxy it from a serverless handler.
 
 ```javascript
 const express = require('express')
