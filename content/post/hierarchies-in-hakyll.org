@@ -1,0 +1,33 @@
+#+TITLE: Hierarchies In a Hakyll Blog
+#+DATE: 2019-03-16
+#+DRAFT: true
+#+CATEGORIES: [Haskell]
+#+TAGS: [guide]
+
+Creating hierarchy in a blog is a useful technique. It allows you to
+have different sections by type of content. It lets users navigate
+by their interests quickly. It makes your blog organized.
+
+My need for a hierarchy came when working on another blog - [[https://dailyreadingnotes.com][Daily Reading
+Notes]]. That blog involves notes on books I read daily. Since each book
+has multiple reading notes, I wanted to allow two forms of navigation: by a
+grouping of all notes for a particular book and by date. The groupings also
+needed to be dynamic. I didn't want to write code
+every time I added a new book.
+
+Hakyll didn't support this out of the box, and I didn't find examples of anyone
+using similar layouts. So, I created my own approach which I am now sharing.
+
+* Structuring the posts directory
+In order to build a dynamic hierarchy, the directory structures needs to support
+association of the book with it's related posts. My approach was to create a
+page for each of the books at the top level with a folder named the same as the
+book page, the naming will become important later on.
+
+#+BEGIN_SRC
+posts
++-- book-title.md
++-- book-title
+|   +-- post1.md
+|   +-- post2.md
+#+END_SRC
