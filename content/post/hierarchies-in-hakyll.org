@@ -20,14 +20,114 @@ using similar layouts. So, I created my own approach which I am now sharing.
 
 * Structuring the posts directory
 In order to build a dynamic hierarchy, the directory structures needs to support
-association of the book with it's related posts. My approach was to create a
-page for each of the books at the top level with a folder named the same as the
-book page, the naming will become important later on.
+association of the book with it's related posts. I took the approach of creating a
+page and a folder, names the same as the book, at the top level for everybook.
+The naming of the folder will become important later.
 
-#+BEGIN_SRC
+#+BEGIN_SRC text
 posts
 +-- book-title.md
 +-- book-title
 |   +-- post1.md
 |   +-- post2.md
 #+END_SRC
+
+* Matching the Routes
+With the dirctory structure in place, we can move on to matching the book
+pages. For this we will want to match all the files in the ~posts~ directory
+while ignoring directories and their contents. We will also set the extention of
+these file to be ~html~. This is necesary because the original files are written
+in markup.
+
+#+BEGIN_SRC haskell
+main :: IO ()
+main =
+hakyll $ do
+match "posts/*" $ do
+    route $ setExtension "html"
+    ...
+#+END_SRC
+
+We will also want to grab all the posts, which are located in any subdirectory
+of posts. We use ~posts/*/*~ as the match string. The first ~*~ tells ~match~ to
+look inside any directory within ~posts~. The second ~*~ tells ~match~ to gets all the files
+inside the subdirectory. These file will also be written in markdown and need their extention set.
+
+#+BEGIN_SRC haskell
+main :: IO ()
+main =
+hakyll $ do
+match "posts/*" $ do
+    route $ setExtension "html"
+    ...
+match "posts/*/*"
+    route $ setExtension "html"
+    ...
+#+END_SRC
+
+* Getting the Posts for a Book
+Now that we are mathing the book pages and the post's pages, we need to group
+the posts by their respective book. For this purpose, we will write a small
+helper function that takes the output of Hakyll's ~getResourceFilePath~.
+
+This function will take the file path of the book page, stip out everything
+but the file name and then add a ~/*~ to the end. Doing this gives us the folder
+path with a glob pattern at the end.
+
+#+BEGIN_SRC haskell
+getBookFolder :: FilePath -> Pattern
+getBookFolder = fromGlob . (++ "/*") . takeWhile (/= '.') . drop 3 . show
+#+END_SRC
+
+We use this function in our book pages matcher to get a list of all the books
+as an input for the ~bookCtx~ that we will create.
+
+#+BEGIN_SRC haskell
+main :: IO ()
+main =
+  hakyll $ do
+    match "posts/*" $ do
+        route $ setExtension "html"
+        compile $ do
+            filepath <- getResourceFilePath
+            posts <- recentFirst =<< loadAll (getBookFolder filepath)
+            let bookCtx = listField "posts" defaultContext (return posts)
+            ...
+#+END_SRC
+
+This is similar to the auto generated example that lists all the posts, but the
+path to fetch the posts from is dynamic based on the file that is being generated.
+
+* Applyting Templates
+The final step is to apply the appropriate templates. The book pages need a new
+template that uses the ~posts~ list context field we generated in the previous
+step. The posts can continue using the default ~post~ template. Both the routes
+will need the default template applied and relativizeUrls helper.
+
+The final output of the two matchers looks like this:
+#+BEGIN_SRC haskell
+main :: IO ()
+main =
+  hakyll $ do
+    match "posts/*" $ do
+      route $ setExtension "html"
+      compile $ do
+        filepath <- getResourceFilePath
+        posts <- recentFirst =<< loadAll (getBookFolder filepath)
+        let bookCtx = listField "posts" defaultContext (return posts)
+        getResourceBody >>= applyAsTemplate bookCtx >>=
+          loadAndApplyTemplate "templates/book.html" bookCtx >>=
+          loadAndApplyTemplate "templates/default.html" bookCtx >>=
+          relativizeUrls
+    match "posts/*/*" $ do
+      route $ setExtension "html"
+      compile $
+        pandocCompiler >>= loadAndApplyTemplate "templates/post.html" postCtx >>=
+        loadAndApplyTemplate "templates/default.html" postCtx >>=
+        relativizeUrls
+#+END_SRC
+
+* Wrapping up
+With these matchers in place, we have a hierarchy of books containing the posts
+related to them. The book page can be made to look like: [[https://dailyreadingnotes.com/posts/tides.html][the Tides book page]].
+While all the posts keep the same style.
