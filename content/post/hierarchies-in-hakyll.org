@@ -1,8 +1,8 @@
 #+TITLE: Hierarchies In a Hakyll Blog
-#+DATE: 2019-03-16
-#+DRAFT: true
-#+CATEGORIES: [Haskell, Hakyll]
-#+TAGS: [guide, haskell, hakyll]
+#+DATE: 2019-03-27
+#+DRAFT: false
+#+CATEGORIES: Haskell Hakyll
+#+TAGS: guide haskell hakyll
 
 Creating hierarchy in a blog is a useful technique. It allows you to
 have different sections by type of content. It lets users navigate
@@ -57,11 +57,11 @@ main :: IO ()
 main =
 hakyll $ do
 match "posts/*" $ do
-    route $ setExtension "html"
-    ...
+  route $ setExtension "html"
+  ...
 match "posts/*/*"
-    route $ setExtension "html"
-    ...
+  route $ setExtension "html"
+  ...
 #+END_SRC
 
 * Getting the Posts for a Book
@@ -88,12 +88,12 @@ main :: IO ()
 main =
   hakyll $ do
     match "posts/*" $ do
-        route $ setExtension "html"
-        compile $ do
-            filepath <- getResourceFilePath
-            posts <- recentFirst =<< loadAll (getBookFolder filepath)
-            let bookCtx = listField "posts" defaultContext (return posts)
-            ...
+      route $ setExtension "html"
+      compile $ do
+        filepath <- getResourceFilePath
+        posts <- recentFirst =<< loadAll (getBookFolder filepath)
+        let bookCtx = listField "posts" defaultContext (return posts)
+        ...
 #+END_SRC
 
 This ~compile~ block is similar to the auto generated example that lists all the
