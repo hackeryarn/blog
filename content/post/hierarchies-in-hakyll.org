@@ -1,8 +1,8 @@
 #+TITLE: Hierarchies In a Hakyll Blog
 #+DATE: 2019-03-16
 #+DRAFT: true
-#+CATEGORIES: [Haskell]
-#+TAGS: [guide]
+#+CATEGORIES: [Haskell, Hakyll]
+#+TAGS: [guide, haskell, hakyll]
 
 Creating hierarchy in a blog is a useful technique. It allows you to
 have different sections by type of content. It lets users navigate
@@ -135,5 +135,5 @@ related to them. We can add books by creating a new page and folder with the
 name of the book. This setup made it easy for me to maintain a hierarchical site.
 I hope it does the same for you.
 
-The final result of a book page looks like this: [[https://dailyreadingnotes.com/posts/tides.html][the Tides book page]]. The full
+The final result of a book page looks like this: [[https://dailyreadingnotes.com/posts/the-lean-startup.html][The Lean Startup book page]]. The full
 code for [[https://dailyreadingnotes.com/][Daily Reading Notes]] is available on [[https://github.com/hackeryarn/daily-reading-notes/tree/develop][github]].
