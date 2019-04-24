@@ -41,6 +41,11 @@ copyright = ""            # default: author.name ↓        # 默认为下面配
   weight = 40
   identifier = "categories"
   url = "/categories/"
+[[menu.main]]
+  name = "Donate"
+  weight = 50
+  identifier = "donate"
+  url = "https://liberapay.com/hackeryarn"
 
 [params]
   version = "3.x"           # Used to give a friendly message when you have an incompatible update
