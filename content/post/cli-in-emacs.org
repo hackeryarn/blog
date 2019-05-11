@@ -1,0 +1,105 @@
+#+TITLE: Why I Use Emacs in 2019
+#+DATE: 2019-05-xx
+#+DRAFT: true
+#+CATEGORIES: Emacs 
+#+TAGS: guide emacs
+
+A few months ago, Gabriel Gonzalez wrote an [[http://www.haskellforall.com/2018/10/detailed-walkthrough-for-beginner.html][excellent article]] on getting started
+creating useful tools with Haskell. He used an example of a small CLI tool meant
+to align the equals signs of a multi-line text input. Then he demonstrate how it
+can be used from vim to format a region of text.
+
+I love the overarching concept in the article: create small tools that can be
+reused. This is directly inline with the Unix philosophy. And I was on board
+with the Gabriel's approach, except I am an Emacs user. 
+
+So in this article, I wanted to show how I combine Emacs with anything that runs
+on the command line.
+
+This combination allows me to write scripts that do complicated work in the
+language best suited for the job. The scripts are written in a reusable way so
+they could be run directly from the command line, from a CI build, or from a
+text editor. Then I can write a little elisp to integrate the scripts with
+Emacs.
+
+* Taking an action on a region
+
+This is the scenario Gabriel uses in his article. You select a region and run
+a command on it's contents. The output of the command replaces the selected region.
+
+The command we will use is the one Gabriel implemented, ~align-equals~. If you
+want to see the implementation, and learn a little about Haskell, you can read
+his [[http://www.haskellforall.com/2018/10/detailed-walkthrough-for-beginner.html][article]]. Here is the CLI usage of the command:
+
+#+begin_src bash
+$ ./align-equals
+  foo = 1
+  a = 2
+  asdf = 3
+  <Ctrl-D>
+  foo  = 1
+  a    = 2
+  asdf = 3
+#+end_src
+
+We could run this program on a region with the built in
+~shell-command-on-region~, and that would work fine for this example. However,
+we often need to pass arguments to a function and that's when I like to write a
+small wrapper. Also we could automatically execute the wrapper function under
+specific conditions. More on this later in the article.
+
+
+To create the wrapper, we need to combine a couple elisp components. we start
+our function by expecting the beginning and ending of the region as arguments.
+We get those arguments by specifying the region(~r~) flag for the ~interactive~
+function. This function supports [[https://www.gnu.org/software/emacs/manual/html_node/elisp/Interactive-Codes.html#Interactive-Codes][many options]] that allow it to grab arguments
+from different contexts.
+
+Having our region bounds, we call ~shell-command-on-region~ which, as the name
+suggests, executes a shell command on a region specified by the beginning and
+ending arguments passed to it. It then takes the shell command to execute, and
+two flags which specify that the region should be replaced by the command
+output. 
+
+The short function looks like this:
+
+#+begin_src elisp
+(defun align-equals (b e) 
+  (interactive "r")
+  (shell-command-on-region b e "align-equals" t t))
+#+end_src
+
+This wrapper enables us to pass in any arguments we may need to the CLI
+function, and we can invoke it with a since call to ~<M-x> align-equals~.
+
+* Take action on the buffer
+
+A common scenario I run into, is wanting to run a tool on the whole file. This
+normally comes in two variants. I either want to modify the content of the file
+in some way, like using a beautifier. Or I want to produce an output based on
+the file content, like getting totals or showing lint errors.
+
+Again, there are built in ways to do this. You could reuse
+~shell-command-on-region~ for this purpose, but a wrapper lets us do more with
+our shell command.
+
+** Replacing buffer contents
+   
+For this purpose we can reuse ~shell-command-on-region~ while grabbing the
+~point-min~ and ~point-max~ -- the start and end of the buffer respectively.
+
+#+begin_src elisp
+(defun align-buffer ()
+  (interactive)
+  (shell-command-on-region (point-min) (point-max) "align-equals" t t))
+#+end_src
+
+This time, we don't need to have any parameters or pass an arguments to the
+~interactive~. 
+
+To use this command, we can invoke it with ~<M-x> align-buffer~ from anywhere in
+the buffer we wan to align. This make the command quick to run. 
+
+**  Displaying output of a shell command
+
+ 
