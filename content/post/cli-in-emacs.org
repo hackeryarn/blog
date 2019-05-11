@@ -79,8 +79,7 @@ normally comes in two variants. I either want to modify the content of the file
 in some way, like using a beautifier. Or I want to produce an output based on
 the file content, like getting totals or showing lint errors.
 
-Again, there are built in ways to do this. You could reuse
-~shell-command-on-region~ for this purpose, but a wrapper lets us do more with
+Again, there are built in ways to do this, but a wrapper lets us do more with
 our shell command.
 
 ** Replacing buffer contents
@@ -102,4 +101,50 @@ the buffer we wan to align. This make the command quick to run.
 
 **  Displaying output of a shell command
 
- 
+Other times you want to see the output a shell command, like when running a
+linter or build tool. 
+
+Let's use ~eslint~ -- a popular tool for linting JavaScript code. ~eslint~ takes
+a file name, and not the buffer content like our previous command. We can use
+the built in ~buffer-name~ function to get the name of the ~current-buffer~.
+Once we have the name, we pass it to the ~eslint~ program. We use the
+~shell-command~ variant for simply running the command and logging the output.
+
+#+begin_src elisp
+(defun run-eslint ()
+  (interactive)
+  (let ((current-file (buffer-name (current-buffer))))
+    (shell-command (concat "eslint " current-file))))
+#+end_src
+
+Now we can execute ~run-eslint~ in any JavaScript file and see the results of
+executing the command. 
+
+Seeing the results lets us manually fix the issues ourselves, but ~eslint~ comes
+with a handy ~--fix~ flag that will automatically fix simple problems. Then we
+can work through the more complicated errors from our output buffer.
+
+To add this flag you only need to change the ~shell-command~ line. 
+
+#+begin_src elisp
+    (shell-command (concat "eslint --fix" current-file))))
+#+end_src
+
+* Running Command Automatically
+  
+We have a useful ~run-eslit~ function now, but we need to run it manually every
+time we want to execute it. Wouldn't it be nice to run it automatically, every
+time we save a file? 
+
+There are two facilities that makes automatic function execution precise and
+safe: modes and hooks.
+
+Modes allow us to know what context we are in. For example ~run-eslint~ should
+only run when we are editing JavaScript files. Therefore, we need to setup our
+hook to only execute in ~js-mode~.
+
+Hooks let us run actions when specific events happen. To accomplish our goal, we
+will use two types of hooks. A mode hook, which lets us enable a functionality
+only when the specified mode is active, sepcifically ~js-mode-hook~. And an
+action hook, which executes a function when a user performs a specific action.
+In our case we will use the ~on-save-hook~.
