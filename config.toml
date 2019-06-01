@@ -13,6 +13,11 @@ disqusShortname = "achernyak"      # disqus_shortname
 googleAnalytics = "UA-72377824-1"      # UA-XXXXXXXX-X
 copyright = ""            # default: author.name ↓        # 默认为下面配置的author.name ↓
 
+pygmentsOptions = "linenos=table"
+pygmentsCodefences = true
+pygmentsUseClasses = true
+pygmentsCodefencesGuessSyntax = true
+
 [author]                  # essential                     # 必需
   name = "Artem Chernyak"
 
@@ -48,7 +53,7 @@ copyright = ""            # default: author.name ↓        # 默认为下面配
   url = "https://liberapay.com/hackeryarn"
 
 [params]
-  version = "3.x"           # Used to give a friendly message when you have an incompatible update
+  version = "4.x"           # Used to give a friendly message when you have an incompatible update
   debug = false             # If true, load `eruda.min.js`. See https://github.com/liriliri/eruda
 
   since = "2018"            # Site creation time          # 站点建立时间

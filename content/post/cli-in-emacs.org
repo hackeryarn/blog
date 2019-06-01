@@ -27,7 +27,7 @@ For this example, we will use the command from Gabrial's article,
 you can read his [[http://www.haskellforall.com/2018/10/detailed-walkthrough-for-beginner.html][article]]. Or you can follow along while keeping the below
 command's usage in mind:
 
-#+begin_src bash
+#+BEGIN_SRC bash
 $ align-equals
   foo = 1
   a = 2
@@ -36,7 +36,7 @@ $ align-equals
   foo  = 1
   a    = 2
   asdf = 3
-#+end_src
+#+END_SRC
 
 Emacs has a built in command, ~shell-command-on-region~, which executes the
 specified command on the selected region. This would work for our example, but
@@ -58,11 +58,11 @@ executes a shell command on a region specified by the beginning(~b~) and
 ending(~e~) arguments. We also supply the shell command to execute, and two
 flags which make the command replace the selected region. 
 
-#+begin_src elisp
+#+BEGIN_SRC elisp
 (defun align-equals (b e) 
   (interactive "r")
   (shell-command-on-region b e "align-equals" t t))
-#+end_src
+#+END_SRC
 
 We can expand the CLI command in this wrapper to take any number or arguments
 and flags. No matter how we change it, we can still invoke it with one command:
@@ -84,11 +84,11 @@ This time, we don't need to pass any arguments to ~interactive~. Instead, we use
 ~shell-command-on-region~ with the results of calling ~point-min~ and
 ~point-max~ -- the start and end of the buffer, respectively.
 
-#+begin_src elisp
+#+BEGIN_SRC elisp
 (defun align-buffer ()
   (interactive)
   (shell-command-on-region (point-min) (point-max) "align-equals" t t))
-#+end_src
+#+END_SRC
 
 ~align-buffer~ aligns the entire buffer without the need to manually select a
 region. This makes the it less error prone and easier to execute. We can't
@@ -96,6 +96,8 @@ select the region incorrectly, because we don't need to anymore. We only need to
 execute ~<M-x> align-buffer~.
 
 ** Displaying The Output of a Shell Command
+   
+For this examples, let's use ~eslint~, a popular tool for linting JavaScript
 code. 
 
 ~eslint~ is different from our previous command. It takes a file name, not the
@@ -106,12 +108,12 @@ get the buffer name by using the ~buffer-name~ function. Once we have the name,
 we merge it with the string ~eslint~ to create the final command, and pass it to
 ~shell-command~. This logs the output to a dedicate shell command buffer.
 
-#+begin_src elisp
+#+BEGIN_SRC elisp
 (defun run-eslint ()
   (interactive)
   (let ((current-file (buffer-name (current-buffer))))
     (shell-command (concat "eslint " current-file))))
-#+end_src
+#+END_SRC
 
 Now we can execute ~run-eslint~ in any JavaScript file and see the results of
 executing the command. 
@@ -121,9 +123,9 @@ that automatically fixes simple problems.
 
 To add this flag you only need to change the string you pass to ~shell-command~.
 
-#+begin_src elisp
+#+BEGIN_SRC elisp
     (shell-command (concat "eslint --fix" current-file))))
-#+end_src
+#+END_SRC
 
 With that change, the simple issues get fixed automatically and we get a
 log of the complex issues to fix manually.
@@ -156,11 +158,11 @@ activated. But ~before-save-hook~ needs the ~LOCAL~ option. This only runs the
 action in the buffer it was activated in. Without this flag, ~eslint~ would run
 on every file after we opened any JavaScript file.
 
-#+begin_src elisp
+#+BEGIN_SRC elisp
   (add-hook 'js-mode-hook
             (lambda ()
               (add-hook 'before-save-hook 'run-eslint nil t)))
-#+end_src
+#+END_SRC
 
 * Going Further
 
