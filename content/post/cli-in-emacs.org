@@ -1,38 +1,41 @@
-#+TITLE: Why I Use Emacs in 2019
+#+TITLE: CLI Commands in Emacs
 #+DATE: 2019-05-xx
 #+DRAFT: true
 #+CATEGORIES: Emacs 
 #+TAGS: guide emacs
 
 A few months ago, Gabriel Gonzalez wrote an [[http://www.haskellforall.com/2018/10/detailed-walkthrough-for-beginner.html][excellent article]] on getting started
-creating useful tools with Haskell. He used an example of a small CLI tool meant
-to align the equals signs of a multi-line text input. Then he demonstrate how it
-can be used from vim to format a region of text.
+creating useful tools with Haskell. He used an example of a small CLI tool that
+aligns the equals signs of a multi-line text input. Then he demonstrate how to
+integrate it with vim to format a region of text.
 
-I love the overarching concept in the article: create small tools that can be
-reused. This is directly inline with the Unix philosophy. And I was on board
-with the Gabriel's approach, except I am an Emacs user. 
+I love the overarching concept in the article: create small tools that are
+useful in multiple contexts. This is directly inline with the Unix philosophy.
 
-So in this article, I wanted to show how I combine Emacs with anything that runs
-on the command line.
+The only problem I had with his integration, is that I am an Emacs user. So in
+this article, I wanted to show how I combine Emacs with other tools that runs on
+the command line.
 
-This combination allows me to write scripts that do complicated work in the
-language best suited for the job. The scripts are written in a reusable way so
-they could be run directly from the command line, from a CI build, or from a
-text editor. Then I can write a little elisp to integrate the scripts with
-Emacs.
+This combination allows me to write scripts that are reusable, independent, and
+can be written in a language best suited for the job. Then I can use elisp to
+integrate them into the editor. Emacs not only allows me to do what Gabriel did,
+but with a few lines of Elisp, it allows me to automatically run scripts when
+I save file of a specific type.
 
-* Taking an action on a region
+* Taking action on a region
 
-This is the scenario Gabriel uses in his article. You select a region and run
-a command on it's contents. The output of the command replaces the selected region.
+Gabriel uses the scenario of taking an action on a region. This involves
+selecting a region and running a cli command on it's contents. The output of the
+command replaces the selected region.
 
-The command we will use is the one Gabriel implemented, ~align-equals~. If you
-want to see the implementation, and learn a little about Haskell, you can read
-his [[http://www.haskellforall.com/2018/10/detailed-walkthrough-for-beginner.html][article]]. Here is the CLI usage of the command:
+For this example, we will use the command from Gabrial's article,
+~align-equals~. To see the full implementation and learn a little Haskell, 
+you can read his [[http://www.haskellforall.com/2018/10/detailed-walkthrough-for-beginner.html][article]].
+
+Here is the CLI usage of the command:
 
 #+begin_src bash
-$ ./align-equals
+$ align-equals
   foo = 1
   a = 2
   asdf = 3
@@ -42,26 +45,25 @@ $ ./align-equals
   asdf = 3
 #+end_src
 
-We could run this program on a region with the built in
-~shell-command-on-region~, and that would work fine for this example. However,
-we often need to pass arguments to a function and that's when I like to write a
-small wrapper. Also we could automatically execute the wrapper function under
-specific conditions. More on this later in the article.
+Emacs has a built in command, ~shell-command-on-region~, which executes the
+specified command on the selected region. This would work for our example, but
+it requires two commands. First you execute ~shell-command-on-region~, then you
+provide the command you want to run. If the cli command needs flags or
+arguments, it becomes tedious to put in every time. Wouldn't it be nice if we
+could select a region and only run one command?
 
+To accomplish this, we need a wrapper. This implementation combines a couple
+elisp components. We start our function by expecting the beginning and ending of
+the region as arguments. The region(~r~) flag passed to ~interactive~ ensure
+that the correct arguments get passed in.
 
-To create the wrapper, we need to combine a couple elisp components. we start
-our function by expecting the beginning and ending of the region as arguments.
-We get those arguments by specifying the region(~r~) flag for the ~interactive~
-function. This function supports [[https://www.gnu.org/software/emacs/manual/html_node/elisp/Interactive-Codes.html#Interactive-Codes][many options]] that allow it to grab arguments
-from different contexts.
+~interactive~ supports [[https://www.gnu.org/software/emacs/manual/html_node/elisp/Interactive-Codes.html#Interactive-Codes][many more options]] that I encourage you to explore on your
+own.
 
-Having our region bounds, we call ~shell-command-on-region~ which, as the name
-suggests, executes a shell command on a region specified by the beginning and
-ending arguments passed to it. It then takes the shell command to execute, and
-two flags which specify that the region should be replaced by the command
-output. 
-
-The short function looks like this:
+With our region bounds ready, we call ~shell-command-on-region~ to
+executes a shell command on a region specified by the beginning(~b~) and
+ending(~e~) arguments. We also supply the shell command to execute, and two
+flags which make the command replace the selected region. 
 
 #+begin_src elisp
 (defun align-equals (b e) 
@@ -69,8 +71,9 @@ The short function looks like this:
   (shell-command-on-region b e "align-equals" t t))
 #+end_src
 
-This wrapper enables us to pass in any arguments we may need to the CLI
-function, and we can invoke it with a since call to ~<M-x> align-equals~.
+We can expand the CLI command in this wrapper to take any number or arguments
+and flags. No matter how we change it, we can still invoke it with one command:
+~<M-x> align-equals~.
 
 * Take action on the buffer
 
@@ -80,12 +83,13 @@ in some way, like using a beautifier. Or I want to produce an output based on
 the file content, like getting totals or showing lint errors.
 
 Again, there are built in ways to do this, but a wrapper lets us do more with
-our shell command.
+our shell commands.
 
 ** Replacing buffer contents
    
-For this purpose we can reuse ~shell-command-on-region~ while grabbing the
-~point-min~ and ~point-max~ -- the start and end of the buffer respectively.
+This time, we don't need to pass any arguments to ~interactive~. Instead, we use
+~shell-command-on-region~ with the results of calling ~point-min~ and
+~point-max~ -- the start and end of the buffer, respectively.
 
 #+begin_src elisp
 (defun align-buffer ()
@@ -93,22 +97,23 @@ For this purpose we can reuse ~shell-command-on-region~ while grabbing the
   (shell-command-on-region (point-min) (point-max) "align-equals" t t))
 #+end_src
 
-This time, we don't need to have any parameters or pass an arguments to the
-~interactive~. 
+We can use this command to align the entire buffer. All we need to do is invoke
+it with ~<M-x> align-buffer~ from anywhere in the buffer. This new command is
+faster to execute and less error prone than the previous version, since we don't
+have to select a region manually.
 
-To use this command, we can invoke it with ~<M-x> align-buffer~ from anywhere in
-the buffer we wan to align. This make the command quick to run. 
+** Displaying output of a shell command
 
-**  Displaying output of a shell command
+For this examples, let's use ~eslint~, a popular tool for linting JavaScript
+code. ~eslint~ takes a file name, not the buffer contents like our previous
+command.
 
-Other times you want to see the output a shell command, like when running a
-linter or build tool. 
-
-Let's use ~eslint~ -- a popular tool for linting JavaScript code. ~eslint~ takes
-a file name, and not the buffer content like our previous command. We can use
-the built in ~buffer-name~ function to get the name of the ~current-buffer~.
-Once we have the name, we pass it to the ~eslint~ program. We use the
-~shell-command~ variant for simply running the command and logging the output.
+Once again, we don't accept any arguments and pass nothing to ~interactive~. We
+get the buffer name by using the ~buffer-name~ function. Once we have the name,
+we merge it with the string ~eslint~ to create the final command, and pass it to
+~shell-command~. Then, we
+invoke it with ~shell-command~. This logs the output to a dedicate
+shell command buffer.
 
 #+begin_src elisp
 (defun run-eslint ()
@@ -120,15 +125,17 @@ Once we have the name, we pass it to the ~eslint~ program. We use the
 Now we can execute ~run-eslint~ in any JavaScript file and see the results of
 executing the command. 
 
-Seeing the results lets us manually fix the issues ourselves, but ~eslint~ comes
-with a handy ~--fix~ flag that will automatically fix simple problems. Then we
-can work through the more complicated errors from our output buffer.
+Seeing the results is a good start. But ~eslint~ comes with a handy ~--fix~ flag
+that automatically fixes simple problems.
 
-To add this flag you only need to change the ~shell-command~ line. 
+To add this flag you only need to change the string you pass to ~shell-command~.
 
 #+begin_src elisp
     (shell-command (concat "eslint --fix" current-file))))
 #+end_src
+
+With that change, the simple issues get fixed automatically and you get a
+log of the more complex issues to fix manually.
 
 * Running Command Automatically
   
@@ -140,11 +147,31 @@ There are two facilities that makes automatic function execution precise and
 safe: modes and hooks.
 
 Modes allow us to know what context we are in. For example ~run-eslint~ should
-only run when we are editing JavaScript files. Therefore, we need to setup our
-hook to only execute in ~js-mode~.
+only run when we are editing JavaScript files. Therefore, we need to setup make
+sure we are inside ~js-mode~ before execution.
 
 Hooks let us run actions when specific events happen. To accomplish our goal, we
 will use two types of hooks. A mode hook, which lets us enable a functionality
-only when the specified mode is active, sepcifically ~js-mode-hook~. And an
-action hook, which executes a function when a user performs a specific action.
-In our case we will use the ~on-save-hook~.
+only when a specific mode is active, ~js-mode-hook~ will do this for ~js-mode~.
+And an action hook, which executes a function when a user performs a specific
+action. We will use ~before-save-hook~ to run ~run-eslint~ every time a
+JavaScript file is saved. This hook also needs the ~LOCAL~ options set. Without
+it our function would run on every file after we open a JavaScript file once.
+
+#+begin_src elisp
+  (add-hook 'js-mode-hook
+            (lambda ()
+              (add-hook 'before-save-hook 'run-eslint nil t)))
+#+end_src
+
+* Conclusion
+
+I only scratched the surface of what's possible with Elisp. Projects like [[https://magit.vc/][magit]]
+provide amazing examples of extending basic CLI tools.
+
+Magit is a wrapper around git. It doesn't change what git does. Instead, it adds
+on text manipulation and file awareness that Emacs is good at. If you need
+inspiration for how to integrate other tools into Emacs, look no further. 
+
+I hope that I provided you with some inspiration and a few new tricks. Happy
+hacking.
