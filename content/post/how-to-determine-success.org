@@ -1,0 +1,39 @@
+#+TITLE: How to Determine Success
+#+DATE: 2019-08-01
+#+DRAFT: true
+#+TAGS: guide thoughts
+
+Many engineers and their managers want to measure the quality and effectiveness
+of their work. They get cauch up in code coverage reports, burn down charts,
+and yearly goals. They do so with the best intentions, but these metrics only
+get them part of they way to the two metrics that really matter.
+
+Did their work deliver measurable changes? And did they stay within the
+constraints?
+
+Everyone is familiar with the concept of measurable results. But most people
+measure the wrong things.
+
+I won't go much into this topic here because others have written extensively
+about it.
+
+The second question may come as a surprise. As engineers we have an averssion to
+constraints. We will always find a shiny new tool that could make this a lot
+easier. Something unexpected will always comes up. We would need at least double
+the time to deliver the perfect solution. However, what separates the great
+engineers from the average is their ability to stay work within the constraints.
+
+** The Right Tool for The Job
+
+The notion of "the right tool for the job" echoes through every office.
+Unfortunately, it gets misunderstood almost as often as it gets uttered.
+
+*Right* doesn't mean perfect. It means that the tool enables you to accomplish
+the job without wasting your time or requiring lots of upfront work. It can even
+competely changed depending on the person or the team.
+
+If a team knows nothing about a language used to implement the perfect tool for
+their use case, the cost may be too high. They could spend weeks learning how to
+get to the solution. Where as if they pick a library in their prefered language
+that gets them 80% there, they will accomplish the task while only incurring a
+minor burder.
