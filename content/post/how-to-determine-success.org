@@ -1,29 +1,65 @@
-#+TITLE: How to Determine Success
+#+TITLE: Appreciate your Constraints
 #+DATE: 2019-08-01
 #+DRAFT: true
 #+TAGS: guide thoughts
 
-Many engineers and their managers want to measure the quality and effectiveness
-of their work. They get cauch up in code coverage reports, burn down charts,
-and yearly goals. They do so with the best intentions, but these metrics only
-get them part of they way to the two metrics that really matter.
+Many engineers want to measure the quality and effectiveness of their work. They
+turn to code coverage reports, burn down charts, and yearly goals with the best
+intention. However, these metrics only get them part of they way. 
 
-Did their work deliver measurable changes? And did they stay within the
-constraints?
+These surface level metrics provide quantitative data about how much work gets
+done, but they fail to tie these metrics to a meaningful outcome. They miss out
+on the two most meaningful questions they could ask.
 
-Everyone is familiar with the concept of measurable results. But most people
-measure the wrong things.
+Did my work deliver measurable changes?
 
-I won't go much into this topic here because others have written extensively
-about it.
+Did I stay within constraints?
 
-The second question may come as a surprise. As engineers we have an averssion to
-constraints. We will always find a shiny new tool that could make this a lot
-easier. Something unexpected will always comes up. We would need at least double
-the time to deliver the perfect solution. However, what separates the great
-engineers from the average is their ability to stay work within the constraints.
+Everyone is familiar with the concept of measurable results. Others have written
+and talked extensively on how to measure the right thing, so I won't go into
+that here. <provide links>
 
-** The Right Tool for The Job
+But the second question may come as a surprise. As engineers we have an averssion to
+constraints. We always try to find a way to free ourselves of them, or at least
+loosen the constraints, often through new tools.
+
+As we dive down the rabbit hole for the search of perfection -- timeline double,
+bugs get introduced, and the whole project comes to a screeching halt because
+of the mountain of tech debt we built up.
+
+OK, most of the time it doesn't get that bad, but the price of searching for
+perfect is very real. That's why the best engineers stay within the constraints
+while still delivering the most value possible.
+
+In this article I want to cover the common constraints developers deal with
+every day and provide advice on dealing with them.
+** Not Enough Time
+Whether a bug came up, an outage happened, or we just underestimated a work, we
+constantly come up against time constraints. It's the nature of the job when
+working in an unstructured domain with a high level of complexity. 
+
+The easy solution is push back the feature. We can finish it at the beginning of
+next sprint because we work in small increments... Or at least we should. In my
+experience, time constraints rarely become an issue if the tasks are kept small.
+No one gets upset if we continue to deliver some improvements to the system.
+
+Time constraints become an issue when we bite off a bigger chunk than we can
+handle. When the timeline is up and we have nothing to show, we might be just
+one pesky bug away from shipping the whole feature. But are we sure there isn't
+another bug lurking after this one? 
+
+When you realize you picked up too much work stop. Instead of working late
+nights or taking your chances, break up the story. See if there are smaller
+chunks that deliver value hidden underneath all your work. You might have
+already implemented one of them. That's your deliverable.
+
+By having something to delivery, you make headway in this iteration and you set
+clear expectations for the next one. The stake holders are happy they got some
+features, and you get the time to finish the feature properly.
+** Missing Requirements
+** Changing Requirements
+** Unrealistic Expectations
+** The Right Tool for the Job
 
 The notion of "the right tool for the job" echoes through every office.
 Unfortunately, it gets misunderstood almost as often as it gets uttered.
