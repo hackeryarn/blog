@@ -4,35 +4,42 @@
 #+TAGS: guide thoughts
 
 Many engineers want to measure the quality and effectiveness of their work. They
-turn to code coverage reports, burn down charts, and yearly goals with the best
-intention. However, these metrics only get them part of they way. 
+turn to code coverage, burn down charts, and yearly goals, with the best
+intention.
 
-These surface level metrics provide quantitative data about how much work gets
-done, but they fail to tie these metrics to a meaningful outcome. They miss out
-on the two most meaningful questions they could ask.
+The metrics they gather provide quantitative data about how much work got done
+and if what was planned got delivered, but they fail to tie the work to the
+outcome. What good are 1,000 lines of code if the user never uses the
+feature? These metrics distract from the two question every professional
+should ask:
 
 Did my work deliver measurable changes?
 
-Did I stay within constraints?
+Did I stay within the constraints?
 
 Everyone is familiar with the concept of measurable results. Others have written
-and talked extensively on how to measure the right thing, so I won't go into
-that here. <provide links>
+and talked extensively on how to measure the right thing. <provide links>
 
-But the second question may come as a surprise. As engineers we have an averssion to
-constraints. We always try to find a way to free ourselves of them, or at least
-loosen the constraints, often through new tools.
+But the second question, about constraints, may come as a surprise. As
+engineers we have an averssion to constraints. In reality, however, it's not the
+engineer that finds the best new tool that's viewed as an expert, it's the
+engineer that gets amazing results with what's right in front of him.
 
-As we dive down the rabbit hole for the search of perfection -- timeline double,
-bugs get introduced, and the whole project comes to a screeching halt because
-of the mountain of tech debt we built up.
+As we dive down the rabbit hole of new tools in search of perfection -- timeline
+double, bugs get introduced, and the whole project comes to a screeching halt
+because of the mountain of tech debt we built up.
 
-OK, most of the time it doesn't get that bad, but the price of searching for
-perfect is very real. That's why the best engineers stay within the constraints
-while still delivering the most value possible.
+The expert engineer, on the other hand, keeps the introductions of new tools
+small. He doesn't pull in a library for left pad because he knows how to write
+that code quickly. His scope for new bugs is small so even if he introduces one
+he can quickly find and fix it, in his own code. 
 
-In this article I want to cover the common constraints developers deal with
-every day and provide advice on dealing with them.
+OK, most of the time the search for new tools doesn't get that bad, and the expert
+engineer is only a fable. But the price of searching for perfect is very real,
+and we should strive to be more like the expert engineer. 
+
+In this article I want to cover the constraints I had to deal with in my
+career and the techniques I found to dealing with them.
 ** Not Enough Time
 Whether a bug came up, an outage happened, or we just underestimated a work, we
 constantly come up against time constraints. It's the nature of the job when
@@ -106,3 +113,12 @@ their use case, the cost may be too high. They could spend weeks learning how to
 get to the solution. Where as if they pick a library in their prefered language
 that gets them 80% there, they will accomplish the task while only incurring a
 minor burden.
+** Limitations of Technology
+This is the most surprising are of frustration for people. When you reach a
+technological limitation -- like processing speed, memory limits, rendering
+speed -- it's not time to dispaire. It's time to celebrate. You finally get to
+dust off that old book on algorithms and pull out all the knowledge from your
+degree, if you have one. 
+
+These challenges don't come along too often for most of us. If you are lucky
+enough to find one of these, dive in and enjoy what you will learn. 
