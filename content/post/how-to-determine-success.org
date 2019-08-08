@@ -43,26 +43,26 @@ career and the techniques I found to dealing with them.
 ** Not Enough Time
 Whether a bug came up, an outage happened, or we just underestimated a work, we
 constantly come up against time constraints. It's the nature of the job when
-working in an unstructured domain with a high level of complexity. 
+working in a domain with a lot of complexity. 
 
 The easy solution is push back the feature. We can finish it at the beginning of
 next sprint because we work in small increments... Or at least we should. In my
 experience, time constraints rarely become an issue if the tasks are kept small.
-No one gets upset if we continue to deliver some improvements to the system.
+No one gets upset if features are delivered at the end of each iteration.
 
-Time constraints become an issue when we bite off a bigger chunk than we can
-handle. When the timeline is up and we have nothing to show, we might be just
-one pesky bug away from shipping the whole feature. But are we sure there isn't
-another bug lurking after this one? 
+Time constraints become an issue when we take on too much work at once. When the
+timeline is up and we have nothing to show, is a terrible spot to find
+ourselves. We might have been one bug away from delivering the features, but
+that doesn't matter if the stake holders get nothing.
 
-When you realize you picked up too much work stop. Instead of working late
-nights or taking your chances, break up the story. See if there are smaller
-chunks that deliver value hidden underneath all your work. You might have
-already implemented one of them. That's your deliverable.
+To prevent this situation, you have to break the all or nothing mentality. When
+you realize the task you're working on is too much at once, stop. Reevaluate
+what the requirement are, even go back to the stakeholders.
 
-By having something to delivery, you make headway in this iteration and you set
-clear expectations for the next one. The stake holders are happy they got some
-features, and you get the time to finish the feature properly.
+Figure out the small chunk of work that will bring some value. Pareto principle
+states that 20% of the work holds 80% of the value. When features bloat, it's up
+to you to figure out the 20% that will deliver 80% of the value. Then you can
+revisit the other 80% later, if it's still needed.
 ** Missing Requirements
 If you are not sure what you need to do, stop. It's better to clarify and make
 sure you are delivering value than to add unnecessary complexity or throw away
