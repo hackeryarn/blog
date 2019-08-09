@@ -103,15 +103,21 @@ of this type of feature.
 The notion of "the right tool for the job" echoes through every office.
 Unfortunately, it's misunderstood almost as often as it gets uttered.
 
-*Right* doesn't mean perfect. It means that the tool enables you to accomplish
-the job without wasting your time or requiring lots of upfront work. It can even
-competely changed depending on the person or the team.
+*Right* doesn't mean perfect. It means the tool that enables you to accomplish
+the job without wasting your time. It even changes depending on the person or
+the team.
 
 If a team knows nothing about a language used to implement the perfect tool for
 their use case, the cost may be too high. They could spend weeks learning how to
-get to the solution. Where as if they pick a library in their prefered language
-that gets them 80% there, they will accomplish the task while only incurring a
-minor burden.
+get to the solution. Where as if they use the language they know and add  
+library that gets them 80% of the way there, they will accomplish the task with
+a minor delay.
+
+But keep in mind that every new tool brings challenges and considerations. Your
+team has to learn the tool. You have to make sure the tool is maintained, or has
+clean code so you could take on the maintenance. You have to verify that it
+works well with the rest of your dependencies. If this sounds like too much
+work, consider implementing your own version of the feature you need. 
 ** Limitations of Technology
 This is the most surprising are of frustration for people. When you reach a
 technological limitation -- like processing speed, memory limits, rendering
