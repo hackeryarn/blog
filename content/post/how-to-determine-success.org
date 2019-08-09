@@ -63,46 +63,45 @@ Figure out the small chunk of work that will bring some value. Pareto principle
 states that 20% of the work holds 80% of the value. When features bloat, it's up
 to you to figure out the 20% that will deliver 80% of the value. Then you can
 revisit the other 80% later, if it's still needed.
-** Missing Requirements
-If you are not sure what you need to do, stop. It's better to clarify and make
-sure you are delivering value than to add unnecessary complexity or throw away
-your work.
+** Missing or Changing Requirements
+Before you can be effective you need to have clarity of the expectations. To get
+that clarity you need to ask questions. Your question will result in three
+possible outcomes.
 
-There are two possible outcome when you ask for clarification: what you are
-working on is a high priority and you get clarification right away, or you can't
-get anyone to look at it at the moment. The latter indicates that what you're
-working on isn't not priority. So go to your backlog and pick up the next top
-priority item, there is always more work. Once the original task becomes
-important, you can get clarification.
-** Changing Requirements
-Changing requirements on a top priority item can cause you a headache and
-continuous rewrites. You might be tempted to follow the advice of the previous
-two suggestions, but that will be counterproductive here.
+If the feature is high priority, you will get to have the conversation to need
+and gain clarity. This will let you start work with a better idea of what's
+needed and minimum down time.
 
-When the item is important but the requirements aren't clear it indicates a
-level of complexity that can't be easily imagined without a working
-implementation. That's where you can help.
+A much worse outcome, but all too possible, is that you can't get anyone to look
+at the feature. When this happens you should question the priorities. If it's
+not a high enough priority to define well, it shouldn't be a high enough
+priority for you to work on. The work is endless, your time isn't.
 
-Create a few low effort implementation of the proposed solutions and let the
-users try them out. You can even use fake data to speed things up. Once they
-settle on an option, solidify the implementation and integrate it as a
-full feature of the product.
+The third options, and the one I find most enjoyable, is when the feature is
+high priority but the users and stakeholders aren't sure what they want. You get
+the chance to create low fidelity prototypes, or just sketch out ideas. You also
+gain the opportunity to learn a ton about the users of your application. Use this
+round of rapid feedback a learning opportunity to increase the speed and quality
+of future work.
 ** Unrealistic Expectations
-If you work with a large number of non-technical users, they might have
-unrealistic expectations. "It will only take a couple hours to add
-authentication, right?"
+If your users and stake holders are non-technical, like they often are, you will
+inevitably come up against ridiculous expectations. "It will only take a couple
+hours to add authorization, right?" If your application is well build and easy
+to use, it might be indistinguishable from magic. That's a tribute to the great
+work you've done.
 
-Don't get frustrated by these requests. This is your chance to show your
-expertise. You have you clearly explain what makes the feature complicated and
-give a scope of work. You will find it helpful to compare it to the other top
-priority items.
+So don't get frustrated by these requests. They are another chance for you to
+connect with your users. This time, allow them to understand more about your
+work. Compare the other features to the current features and explain why this
+feature might take longer than another. 
 
 Once the stake holders know the work required, they will give you more time or
 pick a feature that they can have sooner. The important part is, you relieve
-the pressure to rush and leave behind a mess that may never get cleaned up.
+the pressure to rush and you educated the users so next time they know the scope
+of this type of feature.
 ** The Right Tool for the Job
 The notion of "the right tool for the job" echoes through every office.
-Unfortunately, it gets misunderstood almost as often as it gets uttered.
+Unfortunately, it's misunderstood almost as often as it gets uttered.
 
 *Right* doesn't mean perfect. It means that the tool enables you to accomplish
 the job without wasting your time or requiring lots of upfront work. It can even
