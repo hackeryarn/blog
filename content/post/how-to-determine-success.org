@@ -118,12 +118,27 @@ team has to learn the tool. You have to make sure the tool is maintained, or has
 clean code so you could take on the maintenance. You have to verify that it
 works well with the rest of your dependencies. If this sounds like too much
 work, consider implementing your own version of the feature you need. 
-** Limitations of Technology
-This is the most surprising are of frustration for people. When you reach a
-technological limitation -- like processing speed, memory limits, rendering
-speed -- it's not time to dispaire. It's time to celebrate. You finally get to
-dust off that old book on algorithms and pull out all the knowledge from your
-degree, if you have one. 
+** Technological Limitations
+This is the most surprising area of frustration. Many of us have gone to school,
+or spent vast amount of time, to learn about optimizations, data structures, and
+algorithms. We learned about these things precisely so we could deal with
+technological limitation.
 
-These challenges don't come along too often for most of us. If you are lucky
-enough to find one of these, dive in and enjoy what you will learn. 
+When you reach a technological limitation -- like processing speed, memory
+limits, rendering speed -- it's not time to dispaire. It's time to celebrate.
+You finally get to dust off your old book and figure out a really tough problem.
+
+The important part for those you work with is to set realistic expectations.
+There won't be a quick solution. If you really need to overcome this problem,
+it will take a significant time investment. 
+
+Once the expectations are set and you get to start this work, consider yourself
+lucky. These challenges don't come along often. So dive in and enjoy what you
+will learn.
+
+** Wrap Up
+This isn't an exhaustive list of constraints you will face. This is just a list
+of the once I find myself frustrated with most often. I hope that this list will
+serve as a reminder to you, and myself, that we are all lucky to work in a field
+that allows us to solve problems every day. To enjoy the process, we just have
+to expand our scope of what problems we are solving.
