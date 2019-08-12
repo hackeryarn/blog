@@ -12,9 +12,9 @@ delivered, but they fail to tie the work to outcome. What good are 1,000
 lines of code if the users never use the feature? These metrics distract from
 the two question every professional should ask:
 
-Did my work deliver measurable change?
+- Did my work deliver measurable change?
 
-Did I stay within the constraints?
+- Did I stay within the constraints?
 
 Everyone is familiar with the concept of measurable results. Others have written
 and talked extensively on how to measure the right thing. <provide links>
