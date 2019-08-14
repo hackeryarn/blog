@@ -1,5 +1,5 @@
-#+TITLE: Embrace The Constraints
-#+DATE: 2019-08-01
+#+TITLE: Embrace Your Constraints
+#+DATE: 2019-08-14
 #+DRAFT: false
 #+TAGS: thoughts practices
 
@@ -88,7 +88,7 @@ not a high enough priority to define well, it's not high enough priority to work
 on. The work is endless, your time isn't. See what else is needed and select
 a task you can accomplish.
 
-The third options, and the one you stand to gain the most from, is that the
+The third option, and the one you stand to gain the most from, is that the
 feature is high priority but the users aren't sure what they want. When this
 happens, you get the chance to create low fidelity prototypes, explore new
 approaches, and get into a creative mindset. Working through this process with
