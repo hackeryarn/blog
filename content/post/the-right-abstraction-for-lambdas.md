@@ -122,3 +122,31 @@ exports.handler = (event,context) => {
   awsServerlessExpress.proxy(server, event, context)
 }
 ```
+
+### A Word of Warning
+
+There is a scenario where this approach performs worse than multiple lambdas:
+rapid calls to different routes shared by a the same resource.
+
+Let's say we have a shopping app that models multiple actions on a `cart`
+resource. 
+
+When a user checks out, two requests simultaneously fire for every item. The
+first, gets the current price. The second, gets the quantity ordered.
+
+For now, we will ignore the glaring architecture issues with this implementation
+and focus on the performance implications for the lambdas. Both these scenarios
+assume identical conditions and warm lambdas at the start.
+
+If we have a single lambda managing all the actions on the `cart`, as I
+suggested, we will incur a cold start penalty on our second request. Because
+lambda can only process a single request at a time, the second request has to
+spin up a brand new instance of the lambda.
+
+If we have a lambda per action, then each request will get an already warm
+lambda and we will have no performance penalty. 
+
+This is a weakness of my proposed solutions. Just like most, it's not a silver
+bullet. None the less, I still suggest sticking to the approach of multiple
+resources per lambda. Just be aware that if performance is key, you need to
+profile for this scenario.
