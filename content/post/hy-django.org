@@ -1,0 +1,40 @@
+#+TITLE: Django With Hy
+#+DATE: 2020-03-01
+#+DRAFT: true
+#+CATEGORIES: Python Hy
+#+TAGS:  django hy python
+
+[[https://docs.hylang.org/en/stable/][Hy]] introduce a lisp that has direct access to all Python libraries.
+This gives you all the power of macros and the elegant lisp syntax while
+enabling the full power of Python.
+
+Although it's easy enough to use Python libraries in Hy code, you just import
+them as you would in Python, I was weary of using a full framework outside it's
+native language. To prove out this concept, I followed [[https://docs.djangoproject.com/en/3.0/intro/tutorial01/][the official django
+tutorial]] using Hy.
+
+To my surprise I ran into minor issues. The rest of the project worked
+flawlessly.
+
+If you just want to see the code, you can take a look at my [[https://github.com/hackeryarn/hy-django][hy-django]] github
+repo. There you will find the finished project along with branches for each of
+the parts.
+
+* Why Hy with Django?
+I personally love lisp syntax. I find it consistent and simple without odd edge
+cases, like Python lambdas.
+
+With the syntax of course come macros. They allow you to generate code on the
+fly and greatly increase the expressiveness and reduce the repetition in your
+code. After all, as Paul Graham said "The shape of a program should reflect only
+the problem it needs to solve. Any other regularity in the code is a sign, to me
+at least, that I'm using abstractions that aren't powerful enough-- often that
+I'm generating by hand the expansions of some macro that I need to write." And
+Django has plenty of regularly repeating patterns.
+
+If you're a fan of function programming, like I am, then Hy is a saving grace in
+the world of Python. Hy took inspiration from Clojure and Scheme over Python and
+Common Lisp which give it the higher order functions and design patterns
+expected of a functional language.
+
+* Using Hy with Django
