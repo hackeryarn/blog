@@ -65,6 +65,7 @@ $ python manage.py migrate
 
 We will start a little out of order by improving ~was_published_recently~. Since ~__str__~ is a magic method, it will require a little extra work and build on what we will learn when we write ~was_published_recently~.
 
+~polls/models.py~:
 #+begin_src python
 import datetime
 
