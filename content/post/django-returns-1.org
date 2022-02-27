@@ -1,0 +1,151 @@
+#+TITLE: Type safe Django app, Part 1
+#+DATE: 2022-01-22
+#+DRAFT: false
+#+CATEGORIES: Python
+#+TAGS:  django python types
+
+Django is a great framework for web development. Unfortunately, due to the nature of Python and web development in general, it often leads to hard to track down bugs and tangled code. We will take a look at one way to reign this in.
+
+Throughout this series we will follow the [[https://docs.djangoproject.com/en/4.0/intro/tutorial01/][official Django tutorial]] while making the code safer and easier to reason about. We will accomplish this by enlist the help of [[http://mypy-lang.org/][mypy]] (for general type checking) and [[https://github.com/dry-python/returns][returns]] (for containers that will provide safety).
+
+I will not cover the basics of Django or Python. If you ever feel like you don't fully understand the Django portion, you can refer to the official tutorial. The parts of this tutorial will directly correspond to the parts of the official tutorial.
+
+I will explain how we're integrating ~returns~ and the benefits of jumping through some of the extra hoops that it requires. I will not cover the underlying theory behind returns. For that, you can read their excellent documentation.
+
+* What makes code safe?
+
+There are two properties that make a piece of code safe. It has to be *pure* and *complete*.
+
+As an example, ~2 + 2~ is a pure and complete piece of code. Every time we run this code, we will always get back ~4~. If we wanted to, we could even replace this code with ~4~ itself. This is easy to reason about, easy to understand, and easy to test. These properties make a piece of code *pure* and *complete*.
+
+Things get complicated, however, once we introduce functions calls. If we have ~get_two() + get_two()~, some questions immediately start to arise: What kind of thing does ~get_two()~ return? Does ~get_two()~ always return the same thing? Can ~get_two()~ fail?
+
+We can, of course, read the source code to answer these questions. This gives us full understanding of what the abstraction does, but it quickly becomes time consuming and after going a few layers deep it becomes hard to keep everything in our heads. The other option is to blindly trust that the name of the function fully states what it does. This options lets us proceed with using the abstraction, but it could easily get us into trouble -- see the questions above. So what's the solution?
+
+Let us address these problems one at a time.
+
+** What kind of thing does ~get_two()~ return?
+
+As the code stands, we have not way know that ~get_two()~ returns a ~2~, a ~"2.0"~, a ~100, 200~, or any other crazy thing.
+
+~mypy~ can help here:
+
+#+begin_src python
+def get_two() -> int:
+    ...
+#+end_src
+
+This one additions lets us know, right away, that we will get an ~int~. No accidental strings or tuple can sneak into our code.
+
+** Does ~get_two()~ always return the same thing?
+
+This question becomes harder to answer and reason about. This function could return 2 on the first call, but on the second call returns something totally different. This will often happen if a function gets the value from a database, calculates the value based on time, or grabs a random number. If it does any of these things, we have no way of knowing without reading the body.
+
+Let's assume that in this case, we are doing one of the *impure* things mentioned above. So what can we do about it? Well, we can mark the value as impure by using a special container called ~IO~.
+
+#+begin_src python
+def get_two() -> IO[int]:
+    ...
+#+end_src
+
+This container tell all the caller that the function does something more than simply calculate a value. It also requires that any function that uses this return value also returns an ~IO~ container. This is a good thing. It lets us know, without reading the source, that we can't depend on the result always being the same. Although, it should still make us want to read the source to figure out what impure thing a function called ~get_two()~ could be doing.
+
+** Can ~get_two()~ fail?
+
+The final question is especially troubling in Python. Python a lot of python code can throw exceptions without warning. Even simple things like dividing by zero could throw an exception that crashes our applications -- if not handled properly.
+
+We could wrap everything in a giant ~try~ statement, but wouldn't it be nice to know ahead of time that this function could result in an exception?
+
+Throwing an error makes a function *incomplete* because it cannot always return the promised value. Just like with ~IO~ we can use the type system to let all the callers know this. The new container we will use is ~Result~.
+
+#+begin_src python
+def get_two() -> Result[int, Exception]:
+    ...
+#+end_src
+
+This container lets the callers know that we could expect an ~int~ or and ~Exception~. Better yet, it forces the caller to also return a ~Result~ container or to handle the exception.
+
+
+* Starting the project
+Use your favorite method to install Django, and let's dive in right where part [[https://docs.djangoproject.com/en/4.0/intro/tutorial01/][the official tutorial]] starts.
+
+We will start the project just like a typical Django project:
+
+#+begin_src bash
+$ django-admin startproject django_returns
+#+end_src
+
+Next we need to install some dependencies that will allow us to use the type system to its fullest:
+
+- ~mypy~ provides our type system and integrates well with the rest of our dependencies.
+- ~django-stubs~ provides type stubs for Django.
+- ~returns~ provides type safe functional programming facilities.
+
+Once we have the dependencies installed, we need to configure ~returns~ and Django to work smoothly with ~mypy~.
+
+~setup.cfg~:
+#+begin_src ini
+[mypy]
+plugins =
+  returns.contrib.mypy.returns_plugin,
+  mypy_django_plugin.main
+
+[mypy.plugins.django-stubs]
+django_settings_module = "django_returns.settings"
+#+end_src
+
+* Polls app
+We will follow the django tutorial and create the Polls app:
+
+#+begin_src bash
+$ python manage.py startapp polls
+#+end_src
+
+The index view function will look almost the same, except we will add some types.
+
+~polls/view.py~:
+#+begin_src python
+from django.http import HttpRequest, HttpResponse
+
+
+def index(request: HttpRequest) -> HttpResponse:
+    return HttpResponse("Hello, world")
+#+end_src
+
+Giving the ~request~ a type might seem excessive right now, but when we pass it to a function later on, this will make sure that we pass the right thing.
+
+Before we can access our new view, we need to update a couple ~urls.py~ files:
+
+~polls/urls.py~:
+#+begin_src python
+from django.urls import path
+
+from . import views
+
+urlpatterns = [
+    path('', views.index, name='index'),
+]
+#+end_src
+
+~django_returns/urls.py~:
+#+begin_src python
+from django.contrib import admin
+from django.urls import include, path
+
+urlpatterns = [
+    path('polls/', include('polls.urls')),
+    path('admin/', admin.site.urls),
+]
+#+end_src
+
+After these steps, we can access the site at [[http://localhost:8000/polls/]] after running:
+
+#+begin_src bash
+$ python manage.py runserver
+#+end_src
+
+* Wrap up
+
+We covered the goal of this tutorial series along with some basic terminology that we will use throughout. We also setup the base application and got all our dependencies setup. In [[https://hackeryarn.com/post/django-returns-2/][Part 2]], we will actually use the types introduced in ~returns~ and get a glimpse at how they can lead to cleaner code.
+
+If this is your first time using ~mypy~, you should start seeing some nice type hints coming through. This is already a benefit without needing to do anything different in the code. And if you haven't done so already, make sure to get your editor fully setup for types to work properly.
