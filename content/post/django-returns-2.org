@@ -1,0 +1,151 @@
+#+TITLE: Django Returns, Part 2
+
+In [[https://hackeryarn.com/post/django-returns-1/][Part 1]] of this series, we looked at how to setup a python project with types, setup our project, and used some basic types.
+
+In this part we will start working with the database, implement custom database methods, and look at how to use ~returns~ to improve the safety of those methods.
+
+* Into the database
+
+Let's run our initial migrations and get rid of the error that we ignored in the first part.
+
+#+begin_src bash
+$ python manage.py migrate
+#+end_src
+
+Create models for our Polls app. Nothing new here, but notice the nice type hits you get for all the fields thanks to ~django-stubs~.
+
+~polls/models.py~:
+#+begin_src python
+from django.db import models
+
+
+class Question(models.Model):
+    question_text = models.CharField(max_length=200)
+    pub_date = models.DateTimeField('date published')
+
+
+class Choice(models.Model):
+    question = models.ForeignKey(Question, on_delete=models.CASCADE)
+    choice_text = models.CharField(max_length=200)
+    votes = models.IntegerField(default=0)
+#+end_src
+
+Before we can apply these migrations, we need to let Django know about our Polls app.
+
+~django_returns/settings.py~:
+#+begin_src python
+...
+
+INSTALLED_APPS = [
+    # add this
+    'polls.apps.PollsConfig',
+    'django.contrib.admin',
+    'django.contrib.auth',
+    'django.contrib.contenttypes',
+    'django.contrib.sessions',
+    'django.contrib.messages',
+    'django.contrib.staticfiles',
+]
+
+...
+#+end_src
+
+Now, we need to generate and run the migrations for our new models:
+
+#+begin_src bash
+$ python manage.py makemigrations polls
+$ python manage.py migrate
+#+end_src
+
+* Model methods
+
+We will start a little out of order by improving ~was_published_recently~. Since ~__str__~ is a magic method, it will require a little extra work and build on what we will learn when we write ~was_published_recently~.
+
+#+begin_src python
+import datetime
+
+from django.db import models
+from django.utils import timezone
+from returns.io import impure_safe
+
+class Questions(models.Model):
+    # ...
+    @impure_safe
+    def was_published_recently(self) -> bool:
+        return self.pub_date >= timezone.now() - datetime.timedelta(days=1)
+#+end_src
+
+First off, note that when we write methods, we do not add a type to ~self~. We do, however, add a return type to all methods. This one lets us know that we will get back a boolean value.
+
+We also added the ~impure_safe~ decorator. As the name implies, this decorator helps us mark functions that are impure and unsafe. ~was_published_recently~ is impure because it reaches out to the database, where we can't guarantee what we get back, and relies on time, which constantly changes.
+
+~was_published_recently~ is also unsafe because of the dependency on the database. All kinds of things can go wrong when we try to get a value out of a database: the database could be down, the table might not exist, the model fields could have changed, we forgot to run our migrations, etc.
+
+~impure_safe~ doesn't fix these issues, but it lets the caller know that this is no longer a simple function that returns a ~bool~.
+
+If we try to call this functions, we will see that ~impure_safe~ changed our ~bool~ return type to ~IOResultE[bool, Exception]~. This wrapper puts two layers around the ~bool~ value. The first layer, ~Result~, prevents us from getting the value without first checking and handling the ~Exception~. The second layer, ~IO~, prevents us from using the value outside of other ~IO~ functions (we don't want to mix pure and impure code).
+
+Next, we will start our implementation ~__str__~. As mentioned earlier, magic methods are a little tricky to handle. It would be nice if we could just annotate ~__str__~ with ~impure_safe~, but python won't know how to handle our ~IOResultE~ wrapper. So we have to come to a compromise.
+
+~polls/models.py~:
+#+begin_src python
+#...
+
+from returns.unsafe import unsafe_perform_io
+
+
+class Question(models.Model):
+    #...
+
+    @impure_safe
+    def safe_str(self) -> str:
+        return self.question_text
+
+
+class Choice(models.Model):
+    #...
+
+    @impure_safe
+    def safe_str(self) -> str:
+        return self.choice_text
+#+end_src
+
+We create a ~safe_str~ function with the ~impure_safe~ decorator. When we need to get a string representation in our code, we should default to using this function since it has all of our safety improvements.
+
+~safe_str~ helps our code, but we will still need a proper ~__str__~ implementation so we can get nice output at our shell.
+
+Since this functionality is mainly for the shell, this is a good time to fire up a shell session. If we run ~safe_str~ or ~was_published_recentrly~, we will notice that the return value is ~<IOResult: <Success: ...>>~ this is the printable representation of the two wrappers.
+
+We can take off the ~Result~ wrapper by running ~value_or("error message")~. This gives us back a ~<IO: ...>~ value. Unlike ~Result~ which we can unwrap and inspect in a safe manner (as long as we handle any failures), ~IO~ is always unsafe. In order to remove the ~IO~ wrapper we need to run the ominously named ~unsafe_perform_io~.
+
+We should be very careful with ~unsafe_perform_io~. Running ~unsafe_perform_io~ removes all the safety that we worked so hard building up. But because python is, by its nature, unsafe we will need to use it. In order to keep as much safety as possible, however, we must limit its usage to the places where we need to hand off the value to python, Django, or any library outside our control. The ~__str__~ magic method is exactly this kind of place, so it's ok to use ~unsafe_perform_io~ there.
+
+The use of ~unsafe_perform_io~ on the edges of our application is the basis of a common design patter known as imperative shell and functional core. ~returns~ automatically pushes us towards this pattern, and we will see how to further utilize it in the next part.
+
+Now that we know how to remove the our wrappers, we can implement ~__str__~ in the safest possible manner.
+
+~polls/models.py~:
+#+begin_src python
+#...
+
+class Question(models.Model):
+    #...
+
+    def __str__(self) -> str:
+        value = self.safe_str().value_or("No question_text found")
+        return unsafe_perform_io(value)
+
+
+class Choice(models.Model):
+    #...
+
+    def __str__(self) -> str:
+        value = self.safe_str().value_or("No choice_text available")
+        return unsafe_perform_io(value)
+#+end_src
+
+* Wrap up
+
+This part of the Django tutorial introduced the simplest way to work with ~returns~. The benefits seem marginal, if any for now, but the real power of ~returns~ and this type safe approach comes throw when we need to compose multiple functions with different wrappers and properties. That will be the focus of the next part of this tutorial.
+
+In the meantime, I encourage you to go through at least all the shell examples in [[https://docs.djangoproject.com/en/4.0/intro/tutorial02/][the official tutorial]] and explore how our changes made these functions work differently than what you see in the tutorial.
