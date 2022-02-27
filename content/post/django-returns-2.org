@@ -1,4 +1,4 @@
-#+TITLE: Django Returns, Part 2
+#+TITLE: Type safe Django app, Part 2
 #+DATE: 2022-02-27
 #+DRAFT: false
 #+CATEGORIES: Python
