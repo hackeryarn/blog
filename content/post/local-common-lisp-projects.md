@@ -1,8 +1,10 @@
-+++
-title = "Managing local common lisp projects :common-lisp:@micro:"
-date = 2023-10-12
-draft = false
-+++
+---
+title: "Managing local common lisp projects"
+date: 2023-01-11
+tags: ["commonlisp"]
+categories: ["micro", "lisp"]
+draft: false
+---
 
 When I started using lisp, I came from the world of modern dependency managers (npm, pip, maven, and the like). So I started searching for an equivalent in lisp. I quickly came across `quicklisp`. To my surprise, however, `quicklisp` worked differently than these packages. It works more like a dependency cache than true dependency manager, but that is a topic for another article.
 
