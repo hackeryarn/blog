@@ -176,3 +176,6 @@ pygmentsCodefencesGuessSyntax = true
 #  section = ["HTML", "RSS"]
 #  taxonomy = ["HTML", "RSS"]
 #  taxonomyTerm = ["HTML"]
+
+[markup.goldmark.renderer]
+  unsafe = true
