@@ -9,7 +9,7 @@ published: true
 I recently started a new job that gave me the chance to run whatever Linux distribution would make me the most productive. In the face of complete freedom, I decided to re-evaluate my daily driver and see if there was a distribution that would give me the most up-to-date software while maintaining a stable system. The results of my search surprised even me.
 
 ## Background
-I ran Ubuntu as my daily driver for over a decade from (2009-2014) and still use it as a base for my home lab server. I switched from Ubuntu because their package release cycle, even on the latest version, is too slow for my liking. At around the same time, rolling release distros were gaining popularity. So I jumped on the Arch train.
+I have ran Ubuntu on my home lab server for over a decade, and used it a daily driver from 2009-2014. I switched from Ubuntu because their package release cycle, even on the latest version, is too slow for my liking. At around the same time, rolling release distros were gaining popularity. So I jumped on the Arch train.
 
 Throughout the years I ran vanilla Arch, Manjaro, and most recently EndeavourOS. All these flavours of Arch had their own trade offs, but none of them felt quite stable enough. No matter which one I used, a few times a year an update would go so badly that I had to restore my entire system from backup. This made my backup practices much better, but didn't make me excited to use any of them for work.
 
