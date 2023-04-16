@@ -4,13 +4,18 @@ date: 2023-02-20
 published: false
 ---
 
-DRY has become a mantra for some. Any time that they see repetitive code, they want to extract it into its own function so that any modification ripple throughout the codebase. This practice makes sense for low level concepts but starts to quickly break down as code collides with the real world. With practice many developers learn how to just feel and "smell" ways to avoid pitfalls of blindly applying patterns. Just learning it through practice can be a long and torturous journey. In this article I hope to cover a few additional ways to look at repetitive code and show some of the poor applications of DRY.
+DRY has become a mantra throughout the industry. Any time that some developers see repetitive code, they want to extract it into its own function. It has become almost robotic to extract code and few people give a second thought to whether it makes sense all the time.
+
+Unfortunately, poor application of DRY can lead to brittle code where it's scary to change functionality because it could have a huge ripple effect on the rest of the code base. In this article I hope to show how this happens and cover other ways to look for abstractions. And even make an argument that duplication of good is good in the right setting.
 
 ## An example
 
-First off, let's ignore other forms of abstractions like classes, typeclasses, traits, or interfaces. I know how tempting it will be to use a cleaner form of abstraction throughout this article, but doing that would send us down a whole other slew of topics. I will leave it up to you to apply these concepts to whatever abstractions you have. Most of the concepts will be general enough that you can apply them anywhere. Using functions is just the lowest common denominator among different languages.
+First off, let's ignore other forms of abstractions like classes, typeclasses, traits, or interfaces. I know how tempting it will be to use a cleaner form of abstraction throughout this article, but doing that would send us down a whole new set of rabbit holes.
 
-Lets say we have some application code that calculates the salaries of employees. We start out with two types of employees, and as we look over the code we notice some repetition:
+We will stick to using plain functions so that things are easy to reason about and apply more broadly. After all, functions are the common denominator among just about every programming language out there. 
+
+Our example will consist of an application to calculate salaries of employees at different levels. We start out with two types of employees. And even with this little code, we already notice repetition creeping up:
+
 ```python
 def calculate_ic_compensation(employee):
     salary = 0
@@ -29,7 +34,9 @@ def calculate_manager_compensation(employee):
 
 Now, would you want to extract this code into its own function? I know I would. And is the repetition a good enough reason for the extraction?
 
-I would want to extract this function, but not just to DRY up the code. Let's look at the extraction:
+I think that this is absolutely the right case for extraction, but not because of the repetition. There is a more subtle reason why we should extract this code, that we will get to later.
+
+For now, let's proceed with extracting the repetitive code:
 
 ```python
 def calculate_bonus(employee):
@@ -50,17 +57,17 @@ def calculate_manager_compensation(employee):
     # more calculations after...
 ```
 
-When we extract this code, we create a very clear and separate concept. This piece of the calculation deals with only the bonus.
+When we extract this code, we create a clean separation of concerns. We have a single place that deals with bonus calculations and helper functions that use the bonus calculation in their calculation for employee's compensation.
 
 ## How problems arise
 
-So let's say that this code has lived for a few weeks or a few months, and as code does, it grew. We have a few more functions using `calculate_bonus`. Calculations for directors and VPs also started using this same function. This company is all about equality, so everyone so far has the same bonus structure.
+As our code lives for a few weeks or months, and as code does, it grows. We have a few more functions using `calculate_bonus`. Calculations for directors and VPs also started using this same function. This company is all about equality, so everyone so far has the same bonus structure.
 
 But we just got a requirement to handle C-Level employee compensations, and their bonus structure is a little different. For every year that they were with the company, they get an additional $2,000 bonus.
 
 How would you handle this situation?
 
-With the way the code is written right now, we have two options. We can add this logic into the to be written `calculate_clevel_compensation`, or we can expand `calculate_bonus`.
+We have two options. We can add this logic into the new `calculate_clevel_compensation`, or we can expand `calculate_bonus`.
 
 Adding this logic into `calculate_clevel_compensation` doesn't quite feel right. We've isolated our concept of bonus calculation into its own nice little function, so it only make sense to keep all the bonus calculating logic together. Here is how we might expand `calculate_bonus` to handle the new requirement:
 
@@ -79,31 +86,35 @@ def calculate_bonus(employee, clevel=False):
 
 On the surface this looks like a good solution. By providing a default value for `clevel` we avoid having to update the old function invocations, and our new function just has to provide one flag.
 
-So what would happen if another position gets a different bonus structure? We could just add another flag, add another `if`, and make sure all the right places use the flags that they need to. 
+So what would happen if another position gets a different bonus structure? We could just add another flag, add another `if`, and make sure all the right places use the right flags.
 
-And what if there is some shared logic between two of those flags? Or what if multiple flags signal some kind of other special condition? You can see how this innocent function can quickly get out of hand. Some of you probably saw it as soon as they read the function. 
+And what if there is some shared logic between two of those flags? Or what if multiple flags signal some kind of other special condition? You can see how this innocent function can quickly get out of hand.
 
 This solution has two serious drawbacks.
 
-First off, it introduces a new options named `clevel` which has nothing to do with the concept of a bonus calculation. It's related to the role which should be fully encapsulated by the function that calls `calculate_bonus`. This bleeding on concepts makes code significantly harder to follow. Because `clevel` tells us nothing about how it might impact the bonus calculation, we have to read two functions and merge the related concepts in our mind. And if we have more of these types of "helper" functions, we end up having to keep a lot of information in our head while reading a lot of functions spread out across the code base.
+First off, it introduces a new options named `clevel` which has nothing to do with the concept of a bonus calculation. It's related to the role which should be fully encapsulated by the function that calls `calculate_bonus`.
 
-The other problem is closely related to the first, but is more insidious. Having the level as part of the bonus calculation tightly couples this function to working with only functions that deal with levels. We simply can't re-use this function in a context that does not know about employee levels. So if we want to run a simulation to show the impacts of different bonus structures, we have to introduce levels into this simulations even though we don't care about levels when simulating optimal bonus structures. This really kills DRY's promise of re-usability.
+This bleeding over of concepts makes code significantly harder to follow. Because `clevel` tells us nothing about how it might impact the bonus calculation, we have to read two functions and keep track of the related parts in our minds. And if we have more of these types of "helper" functions, we end up having to keep a lot of information in our head while trying to understand a single function.
 
-This are some serious issue, but not all is lost. Let's look at a way that we can identify and fix these types of problems.
+The other problem is closely related to the first, but is more insidious. Having the level as part of the bonus calculation tightly couples this function to working with only functions that deal with levels. We simply can't re-use this function in a context that does not know about employee levels.
+
+So if we want to run a simulation that shows the impacts of different bonus structures, we have to introduce levels into this simulations even though we don't care about levels when simulating optimal bonus structures. This really kills DRY's promise of re-usability.
+
+These are some serious issue, but not all is lost. Let's look at a way that we can identify and fix these types of problems.
 
 ## Abstraction Barriers
 
-A better approach at building abstractions actually comes form a concept significantly older than DRY. Abstraction barriers were first formally introduced in [Structure and Interpretation of Computer Programs](https://sarabander.github.io/sicp/html/2_002e1.xhtml#g_t2_002e1_002e2), published in 1984. Unfortunately, you hear about DRY far more often than about abstraction barriers.
+A better approach of extracting pieces of code comes form a concept significantly older than DRY. Abstraction barriers were first formally introduced in [Structure and Interpretation of Computer Programs](https://sarabander.github.io/sicp/html/2_002e1.xhtml#g_t2_002e1_002e2), published in 1984.
 
-I encourage you to read the section linked above, if you're not afraid of too many parentheses, but for the purpose of this article I can sum up this as: build abstractions in well defined layers. Each layer works at a similar level abstraction and deals with related concepts. Domain driven design tries to drive at a similar concept, but from a purely domain level. I will also mention domains because they can help with knowing when to create a new level.
+I encourage you to read the section linked above, if you're not afraid of too many parentheses. But for the purpose of this article I can sum up this as: build abstractions in well defined layers.
 
-Without reading the linked section above, you might wonder what constitutes a layer. The most basic layer that every program has is the language itself. All the built in functions and operators create an abstraction layer over the machine code that's needed to execute your program. You would almost never want to go down below this level, although there are some times when you might have to.
+Without reading the linked section of SICP, you might wonder what constitutes a layer. The most basic layer that every program has is the language itself. All the built in functions and operators create an abstraction layer over the machine code that executes the program. We would almost never want to go down below this level, although there are some times when we must.
 
-The next most common layer is made up by the libraries that you import. They usually provide further abstraction over the language allowing you to describe your intent in terms that belong to the domain of the library. The layers in your applications should work in almost the same way.
+The next most common layer is made up by the libraries that we import. They usually provide further abstraction over the language allowing us to describe our intent in terms that belong to the domain of the library. The layers in our applications should work in almost the same way.
 
-In our example, we have one layer that deals with the different levels in the company. This layer knows about what needs to be calculated for a certain level and how to combine these calculations. We also created a second layer with our new function. A layer for bonuses. But that's a little too narrow. We really introduced the start of a layer for all financial calculations. 
+When we started our program, we were working in a layer that deals with employees and their levels. By extracting our function, we unintentionally introduced a new layer. The unintentional extraction made this layer look like it was for calculating bonuses, but that's too narrow. We created a layer for working with financial calculations. 
 
-If you prefer to think of it in terms of domains: The first layer belongs to the HR domain. It deals with levels, and what those levels entail. The second layer belongs to accounting. It deals with the details that go into calculating certain concepts, such as bonuses. If we need some clarification on terminology or functionality, this distinction points us towards the right group that we need to talk to.
+If you prefer to think of it in terms of domains: The first layer belongs to the HR domain. It deals with levels, and what those levels entail. The second layer belongs to the accounting domain. It deals with the details that go into calculating certain financial concepts -- bonuses being one of them. If we need clarification on terminology or functionality, this distinction points us towards the right group to talk to.
 
 ## Apply Abstraction Barriers
 
