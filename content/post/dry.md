@@ -118,7 +118,7 @@ If you prefer to think of it in terms of domains: The first layer belongs to the
 
 ## Apply Abstraction Barriers
 
-After identifying these layers, it's clear that we need to have separate terminology at each layer that doesn't allow them to bleed together. And since the programs we write model the real world, we can borrow this terminology from the domain experts:
+After identifying these layers, it becomes easy to see that our terminology doesn't quite match. We should switch `calculate_bonus` to use terminology that only relates to calculations. Let's do this now:
 
 ```python
 def calculate_bonus(employee, yearly_increase=0):
@@ -135,13 +135,27 @@ def calculate_bonus(employee, yearly_increase=0):
 
 We did two things here. We renamed the variable to something that makes more sense in the concept of calculations, and we went from a boolean to passing an integer.
 
-Using a boolean was permissible when the layers were intertwined. But once we separated them, it becomes clear that the amount of the yearly increase has nothing to do with the calculation. Our calculation only needs to know how to use this amount and the amount itself needs to come from the higher level.
+Using a boolean was permissible when the layers were intertwined. But once we separated them, we can see that the amount of the bonus was tied to the level and had nothing to do with the calculation.
 
-This demonstrates the key concept of abstraction barriers that we haven't explicitly mentioned, yet. Each layer can only use the layers below it. This practice keeps the code looking like a neat tree of dependencies instead of a tangled mess. The term spaghetti code refers to the mess we would have if we didn't follow this principle. Calling across layers or up to higher level quickly leads to circular dependencies and concepts becoming tangled with unrelated once (just like we saw when calculations were put int he same layer as the levels logic).
+With this separation, we can freely use `calculate_bonus` for any position. We can even use it in our simulation without adding more concerns, and gaining more control over the `yearly_increase` value.
+
+Some of you might have seen this from the beginning. As people progress in their careers, they tend to develop a "smell" for these types of abstractions. Some even say that it's just something you have to gain through enough experience and enough reading of code. But I believe that thinking in abstraction barriers provides a shortcut to get there. And even if you already developed this 6th sense, having abstraction barriers in your toolbox can help you spot these types of refactors more often.
 
 ## Taking it further
 
-You might have noticed the comments in the original example that stated that each role had more calculations before and after. But our bonus calculation was the first introduction to the calculations layer. So what should we do with all these calculations.
+We covered the basics of abstraction barriers, but there are a few more guiding principles that make abstraction barriers even more powerful.
+
+### Layers create trees
+
+As you might expect, the layers we build each build on top of each other. When working in this way, we need to keep in mind that each layer should only talk to the layers below it. Because creating layers builds out a natural tree, we should respect that with our calls.
+
+Keeping calls always flowing down makes the data flow in our application easy to reason about. But if a middle layer starts calling anywhere it wants, all of a sudden we create a tangled ball of yarn. We might even run into a situation where a higher layer needs to use a lower level but it can't because we've created circular dependencies.
+
+So any time that we see a need for a lower level to call up, we should ask our selves if we are missing a layer that needs to be shared.
+
+### Build complete layers
+
+You might have noticed the comments in the original example that stated that each role had more calculations before and after. But our bonus calculation was the first function to get extracted into the calculations layer. So what should we do with all these other calculations?
 
 Well, we might already have helpers for some of these. In that case, we should review these helper function for any concept sharing and pull them into our calculations domain.
 
@@ -158,17 +172,19 @@ def calculate_clevel_compensation(employee):
     return salary
 ```
 
-You can see that we no longer need to comb through complex logic. This function simply calls to the calculation layer and combines all the returned values with a `+`. That's all that our level calculations should really do. With this layout we can even move things around, insert steps, or remove them with full confidence. 
+We no longer need to comb through logic to get a general understanding of what each calculation is doing. We created a clean data pipeline that builds up the salary one calculation at a time. All our level function needs to do is determine what calculations it needs and how to combine them.
 
-## Small functions over options
+Simplifying this function means that we greatly reduce the mistakes we could make. We can also easily read through it and jump to the right area if issues arise.
 
-The above solution is much clearer, but it's still not perfect. Any time a function takes an optional argument, it should strike us as a red flag. And this might be the most controversial statement int he article. After all, many standard libraries have functions with tons of flags. Python's `print` takes 4 optional arguments after all. But I would argue that it would be better to have multiple functions for the different scenarios instead of having all those options.
+### Prefer small functions
 
-If we have multiple functions, we unlock far more flexibility. Continuing with our example, we get a requirement that under a specific scenario we actually need to look at the full bonus amount before determining the yearly increase. If we try to keep the calculation inside `calculate_bonus`, we would end up adding another flag that while relevant, is starting to morph the function into holding a lot of complexity.
+The above solution is much clearer, but it's still not perfect. Any time a function takes an optional argument, it should raise a red flag.
 
-Multiple flags also hide some of the interactions that they might have with each other. At a certain point questions arise and we are back and needing to read the function with tons of flags before we can understand what it's doing.
+This might be controversial since many standard libraries have functions with tons of flags. Python's `print` takes 4 optional arguments just to output some text. But I would argue that it would be better to have multiple functions for the different scenarios instead of having all those options.
 
-So the solution is to just introduce another function. So our final version of `calculate_clevel_compnsation` looks like:
+If we look at our example now, `calculate_bonus` is doing too much. It's calculating the standard bonus and a yearly bonus, only if we pass in the flag. If we get additional requirements, it could quickly start morphing this function into a complex mess that we were trying to avoid.
+
+So the solution is to just introduce another function, making our final version of `calculate_clevel_compnsation` looks like this:
 
 ```python
 def calculate_clevel_compensation(employee):
@@ -180,18 +196,30 @@ def calculate_clevel_compensation(employee):
     return salary
 ```
 
-## Are we just moving repetition around?
+A final reason to avoid flags, is that they tend to hide interactions that multiple flags might have with each other. Let's say that we get a requirement for a maximum bonus amount. If we encode this into our old `calculate_bonus`, we end up not even seeing that a maximum bonus is a possibility when we look at the level functions. And if we do know about it, we have to look inside that function to answer questions like: Does the `yearly_increase` factor into the maximum bonus?
+
+If we keep nice small functions at the top, on the other hand, we can easily see where a `cap_bonus` function gets applied.
+
+## Repetition has to go somewhere
 
 At this point, you might read all our `calculate_x_compensations` and think that we could dry those up too. After all some steps repeat in every function. But you must resist this urge.
 
-Repetition actually has a use. It gives us flexibility. By having these higher level concepts repeated, we leave the door open to easily modify the steps for each one. This might sound like I am advocating for huge functions, and at a certain level of abstraction I am. We have to have repetition somewhere, and the abstractions barriers that we built earlier give us an easy way to see where it belongs.
+Repetition is a part of building programs. We can try to move it around, but it all ends up somewhere. We should embrace this reality and stop it from spreading all over our code base by isolating it to the top level of our business logic.
 
-The top layer of abstraction is the layer closest to the business domain. This is the layer that is most likely to change frequently, and since repetition gives us flexibility, this is the level that needs the most of it. As we move down our stack of layers, they should become terser and care more about fully encapsulating concepts in nice abstractions.
+This means that if we have a really complex top level function, it might be a 100 line long function that calls out to a bunch of different levels. And that is actually OK.
 
-We should also pay close attention to how often certain levels change as the code base evolves. If we end up having a low level of abstraction change often, we should modify it so that the parts that change often happen at our highest level. If we continue modifying the low level often, we cause huge ripple effects throughout our code base. And the lower the level, the more code depends on it. This is why major version language changes are so painful. They ripple in ways we can't even track.
+If we continue to view our program like a tree, keeping all the calls at the top level helps us keep the tree flat. The flatter we keep our tree, the less ripple effects changing code at lower levels has.
 
-So to thumb this up. I want my lowest level to have functions with just a few lines so that they rarely change. And at my highest level, I am OK with 100 line long functions that handles a complex process. But only if 99% of that functions is built on abstractions that I have created in lower levels. After all if a process is complex we don't want to make it more complex by having to jump around 10 "helper" functions to figure out what's actually going on.
+Have you ever upgraded a base library to a new version that introduced incompatibilities? Or worse, upgraded your language? It's a huge pain that haunts you for the rest of your career. Keeping your code flat makes sure that you don't create the same type of situation in your code base.
+
+Repetition at the top level also has a use. It gives flexibility. By having higher level concepts repeated, we leave the door open to easily modify the steps for each one. This is important as we get closer to the actual business domain.
+
+While some low level concepts are as solid as our universe (I don't how we calculate averages to change any time soon). Our business domain changes all the time. If we are not flexible in meetings these business needs, then any change to our program becomes a huge ordeal.
+
+So if we have a lower level that changes often, we need to look at ways to extract those parts or move the whole layer higher in our hierarchy. Doing this will ensure that we can continue to response to changing requirements quickly.
+
+So to thumb this up. We want the lowest levels to have functions that are so fundamental that they rarely change. And at our highest level, we want functions built almost completely out of lower level abstractions, so they are easy to change, even if they end up being 100 lines of code.
 
 ## In conclusion
 
-The next time you see a concept repeating, try to go beyond just extracting common functionality. Take the time to put it into the appropriate module, rename any options to concepts that belong at the correct abstraction layer, and make your future self grateful to the you of today.
+The next time you see a concept repeating, try to go beyond just extracting common functionality. Take the time to put it into the appropriate module, make it smaller if you can, and make sure that any other related concepts get extracted with it, and be make life a little easier for your future self.
