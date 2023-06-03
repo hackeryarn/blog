@@ -4,7 +4,7 @@ date: 2023-02-20
 published: false
 ---
 
-DRY has become a mantra throughout the industry. Any time repetitive code shows up, DRY gets applied as a cure all. If you even start to question drying up a piece of code, you are viewed as a heretic to the entire industry.
+DRY has become a mantra throughout the industry. Any time repetitive code shows up, DRY gets applied as a cure all. If you even start to question DRYing up a piece of code, you are viewed as a heretic to the entire industry.
 
 Ok, maybe it's not that bad, but many times DRY gets applied without much thought. This careless application of DRY leads to brittle code, making even simple changes scary because they could have a huge ripple effect.
 
@@ -12,9 +12,9 @@ In this article I hope to show how this happens and cover different ways to look
 
 ## An example
 
-First off, to keep things simple, we are only going to just work with functions. I am not going to cover how these concepts work when using classes, typeclasses, traits, or interfaces. I know how tempting it will be to use a cleaner form of abstraction, but doing that would lead us down a whole new set of rabbit holes.
+First off, to keep things simple, we are just going to work with functions. I am not going to cover how these concepts work when using classes, typeclasses, traits, or interfaces. I know how tempting it will be to use a cleaner form of abstraction, but doing that would lead us down a whole new set of rabbit holes.
 
-Our example will consist of an application to calculate salaries of employees at different levels. We start out with two types of employees. And right away we notice repetition creeping up:
+Our example will consist of an application to calculate salaries of employees at different levels. We start out with two types of employees, and right away we notice repetition creeping up:
 
 ```python
 def calculate_ic_compensation(employee):
@@ -103,9 +103,9 @@ This bleeding over of concepts makes code significantly harder to follow. Becaus
 
 The other problem is closely related to the first, but more insidious. Having the level as part of the bonus calculation tightly couples this function to the concept of levels. We lose all ability to apply this function in different contexts.
 
-If we want to run a simulation that shows the impacts of different bonus structures, we have to introduce levels into this simulations even though we don't care about levels when simulating bonus structures. This kills DRY's promise of re-usability.
+If we want to run a simulation that shows the impacts of different bonus structures we currently have to introduce levels into it, but levels should not be taken into consideration when simulating bonus structures. This kills DRY's promise of re-usability.
 
-These are some serious issue, but not all is lost. Let's look at a way that we can identify and fix these problems.
+These are some serious issues, but not all is lost. Let's look at a way that we can identify and fix these problems.
 
 ## Abstraction Barriers
 
@@ -113,19 +113,19 @@ A better approach to breaking up functions comes form a concept significantly ol
 
 I encourage you to read the section linked above if you're not afraid of too many parentheses. But for the purpose of this article I can sum up this concept as: build abstractions in well defined layers.
 
-Without reading the linked section, you might wonder what constitutes a layer. The most basic layer that every program has is the language itself. All the builtin functions and operators create an abstraction layer over the machine code that executes the program. We would almost never want to go below the level of our language, so it is the bottom of our layers stack.
+Without reading the linked section, you might wonder what constitutes a layer. The most basic layer that every program has is the language itself. All the built-in functions and operators create an abstraction layer over the machine code that executes the program. We would almost never want to go below the level of our language, so it is the bottom of our layers stack.
 
 The next most common layer is made up of the libraries that we import. They provide further abstraction over the language and allow working in terms of the library's domain.
 
 The layers that we build should work in a similar manner to libraries. Each one providing a clear and encapsulated domain.
 
-When we started our program, we were working in a layer that dealt with employees and their levels. By extracting our function, we unintentionally introduced a new layer. Because we didn’t put much thought into the extraction, past drying up the code, the layer looked like it dealt with calculating bonuses, but that's too narrow. If we take a closer look, we can see that we started on a layer for financial calculations.
+When we started our program, we were working in a layer that dealt with employees and their levels. By extracting our function, we unintentionally introduced a new layer. Because we didn’t put much thought into the extraction past DRYing up the code, the layer looked like it only dealt with calculating bonuses but that is too narrow. If we take a closer look, we can see that we started on a layer for financial calculations.
 
-If you prefer to think of it in terms of domains: The first layer belongs to the HR domain. It deals with employees, and what their levels entail.
+If you prefer to think of it in terms of domains: The first layer belongs to the HR domain. It deals with employees and what their levels entail.
 
-The second layer belongs to the accounting domain. It deals with the details that go into calculating certain financial concepts -- bonuses being one of them.
+The second layer belongs to the accounting domain: It deals with the details that go into calculating certain financial concepts – bonuses being one of them.
 
-If we need clarification on terminology or functionality, this distinction points us towards the right group to talk to. It also keeps our code closely align to how the real world works. And this is a good thing because our programs should emulate the real world.
+If we need clarification on terminology or functionality, this distinction points us towards the right group to talk to. It also keeps our code closely aligned with how the real world works – something our programs should emulate.
 
 ## Applying Abstraction Barriers
 
@@ -160,7 +160,7 @@ We covered the basics of abstraction barriers, but there are a few more guiding 
 
 ### Seeing your code as a tree
 
-Each layer we create builds on top of the one before it. And each layer consists of multiple modular at the same relative level of abstraction. This creates a tree like relationship between the modules. 
+Each layer we create builds on top of the one before it. And each layer consists of multiple modular ????? at the same relative level of abstraction. This creates a tree like relationship between the modules.
 
 To make things easy to follow and understand, just like with trees in code, layers should only talk to the layers below them. Ideally, each layer should also follow [The Law of Demeter](https://en.m.wikipedia.org/wiki/Law_of_Demeter) and only communicate to the layer immediately below itself. But most of the time simply keeping the communication unidirectional is good enough.
 
@@ -172,7 +172,7 @@ So any time that we see a need for a layer to use one above or adjacent to it, w
 
 In the original example, we left comments for more calculation that happened before and after the duplicate code. The fact that they are called calculations should flag that they are happening in the wrong layer.
 
-We might already have helpers for some of these. In that case, we should review these helper function for any inappropriate level details, like our `clevel` for the bonus calculation, and move parts to the correct layers.
+We might already have helpers for some of these. In that case, we should review these helper functions for any inappropriate level details, like our `clevel` for the bonus calculation, and move parts to the correct layers.
 
 Other parts, however, might be implemented inline with the rest of the level logic. We should carefully review these and make the relevant parts stand alone calculations. Yes, even if we don't see them being reused, we should still move them to the calculations layer.
 
@@ -213,7 +213,7 @@ def calculate_clevel_compensation(employee):
 
 This version makes it even easier to see all the steps.
 
-If this function had multiple optional arguments, splitting it up would have the additional benefit of eliminating any interactions that the multiple arguments might have between each other. 
+If this function had multiple optional arguments, splitting it up would have the additional benefit of eliminating any interactions that the multiple arguments might have between each other.
 
 Let's go back to the version that we started this section with and say that we get a requirement for a maximum bonus amount. We then decide to add another argument to set a maximum bonus. This addition raises all kinds of questions: Do we cap the bonus amount before or after the yearly increase? Should we change the maximum bonus amount if a yearly increase is present? etc. And we can't answer these questions without looking into `calcualte_bonus`. That puts us back at needing to keep multiple functions just to understand how a single function works.
 
@@ -221,7 +221,7 @@ If we keep our functions small, on the other hand, we can easily see where a `ca
 
 ## Repetition has to go somewhere
 
-At this point, you might think that we have a lot of `calculate_x_compensation` functions that are mostly the same. You will feel a strong desire to dry these up, but you must resist the urge.
+At this point, you might think that we have a lot of `calculate_x_compensation` functions that are mostly the same. You will feel a strong desire to DRY these up, but you must resist the urge.
 
 Repetition is a part of building programs. We can try to spread it in different place or even generate it away, but it all ends up somewhere. Instead of fighting with it, we should embrace it as an inevitability. We can even use it to our advantage by becoming intentional with where we put it.
 
