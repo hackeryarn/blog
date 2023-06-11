@@ -1,7 +1,7 @@
 ---
 title: When DRY goes wrong
-date: 2023-02-20
-published: false
+date: 2023-06-10
+published: true
 ---
 
 DRY has become a mantra throughout the industry. Any time repetitive code shows up, DRY gets applied as a cure all. If you even start to question DRYing up a piece of code, you are viewed as a heretic to the entire industry.
@@ -160,7 +160,7 @@ We covered the basics of abstraction barriers, but there are a few more guiding 
 
 ### Seeing your code as a tree
 
-Each layer we create builds on top of the one before it. And each layer consists of multiple modular ????? at the same relative level of abstraction. This creates a tree like relationship between the modules.
+Each layer we create builds on top of the one before it. And each layer consists of multiple modules at the same relative level of abstraction. This creates a tree like relationship between the modules.
 
 To make things easy to follow and understand, just like with trees in code, layers should only talk to the layers below them. Ideally, each layer should also follow [The Law of Demeter](https://en.m.wikipedia.org/wiki/Law_of_Demeter) and only communicate to the layer immediately below itself. But most of the time simply keeping the communication unidirectional is good enough.
 
@@ -172,7 +172,7 @@ So any time that we see a need for a layer to use one above or adjacent to it, w
 
 In the original example, we left comments for more calculation that happened before and after the duplicate code. The fact that they are called calculations should flag that they are happening in the wrong layer.
 
-We might already have helpers for some of these. In that case, we should review these helper functions for any inappropriate level details, like our `clevel` for the bonus calculation, and move parts to the correct layers.
+We might already have helpers for some of these. In that case, we should review these helper functions for any bleed over of details. If we find concepts like the `clevel` for the bonus calculation, we should move them to the correct layers.
 
 Other parts, however, might be implemented inline with the rest of the level logic. We should carefully review these and make the relevant parts stand alone calculations. Yes, even if we don't see them being reused, we should still move them to the calculations layer.
 
@@ -189,15 +189,15 @@ def calculate_clevel_compensation(employee):
 
 When building functions this way, we simplify the work of our higher level functions. This function no longer needs to worry about any complex logic. It only needs to know which calculations to call and how to combine them.
 
-Simplifying this function means that we greatly reduce the mistakes we could make, and we make future modifications much easier. Where we need to add, remove, or re-order the calculations, we can accomplish our goal without worrying about disturbing any other calculation.
+Simplifying this function means that we greatly reduce the possibility of mistakes , and ease future modifications. Whether we need to add, remove, or re-order the calculations, we can quickly identify where to make the change and confidently apply it without worrying about breaking something else.
 
 ### Prefer small functions
 
 The above solution is much clearer, but it's still not perfect. Any time a function takes an optional argument, it should raise a red flag.
 
-This might be controversial since many standard libraries have functions with tons of optional arguments. Python's `print` takes 4 optional arguments just to output some text. But I would argue that having multiple functions for each of the scenarios covered by a flag would make things much clearer.
+This might be controversial since many standard libraries have functions with tons of optional arguments. Python's `print`, as an example, takes 4 optional arguments just to output some text. But I would argue that having multiple functions for each of the scenarios that require flags would make things much clearer.
 
-Let's first look at our example and see if we can spot the issue. `calculate_bonus` is the only function that takes multiple arguments and one of them is optional. It's calculating the standard bonus and a yearly bonus. If you have to use an `and` while describing the purpose a function at a lower layer, it immediately indicates that the function is doing too much.
+Let's first look at our example and see if we can spot the issue. `calculate_bonus` is the only function that takes multiple arguments and one of them is optional. It's calculating the standard bonus and a yearly bonus. If you have to use an `and` while describing the purpose a function, it mean that it's doing too much.
 
 The solution, as you might expect, is to introduce another function. With which our final version of `calculate_clevel_compnsation` will look like this:
 
@@ -211,33 +211,31 @@ def calculate_clevel_compensation(employee):
     return salary
 ```
 
-This version makes it even easier to see all the steps.
+This version makes it even easier to see all the steps. We can now clearly see that there is no interaction between the two functions, and we could even add another step in-between them without going into a different function.
 
-If this function had multiple optional arguments, splitting it up would have the additional benefit of eliminating any interactions that the multiple arguments might have between each other.
+Let's bring a little more focus to the point just mentioned because it is the biggest source of issues with optional arguments. If a function takes multiple optional arguments, it hides how their interactions with each other.
 
-Let's go back to the version that we started this section with and say that we get a requirement for a maximum bonus amount. We then decide to add another argument to set a maximum bonus. This addition raises all kinds of questions: Do we cap the bonus amount before or after the yearly increase? Should we change the maximum bonus amount if a yearly increase is present? etc. And we can't answer these questions without looking into `calcualte_bonus`. That puts us back at needing to keep multiple functions just to understand how a single function works.
+If we go back to our original version, with multiple arguments, and add another argument to set a maximum bonus, it addition raises all kinds of questions: Do we cap the bonus amount before or after the yearly increase? Should we change the maximum bonus amount if a yearly increase is present? etc. And we can't answer these questions without looking into `calcualte_bonus`. That puts us back at keeping track of multiple functions just to understand how a single function works.
 
 If we keep our functions small, on the other hand, we can easily see where a `cap_bonus` function gets applied. And we can understand the interaction without the need to dive into another function.
 
 ## Repetition has to go somewhere
 
-At this point, you might think that we have a lot of `calculate_x_compensation` functions that are mostly the same. You will feel a strong desire to DRY these up, but you must resist the urge.
+I mentioned before that if you have to use an `and` to describe what a function does, than it is doing too much. If we stuck to this axiom everywhere, our programs wouldn't do a whole lot. We have to combine all our functions somewhere. But because repetition complicates our programs, we should strive to minimize where we use it.
 
-Repetition is a part of building programs. We can try to spread it in different place or even generate it away, but it all ends up somewhere. Instead of fighting with it, we should embrace it as an inevitability. We can even use it to our advantage by becoming intentional with where we put it.
-
-The best place to put repetition is in our top layer. Keeping the repetition here means that we have a single place that ties together the various concepts built up throughout the application.
+The right place for repetition is at the top most layer of our program. In our case, that's the `calculate_x_compoenstion` functions. If you look back, you might feel a strong urge to DRY these up. After all, their bodies will look mostly the same. But you must resist this urge.
 
 If we continue to view the program as a tree, having a single place of control keeps the tree flat. The flatter we keep the tree, the less likely it is that modifications to lower layer will have a ripple effect throughout the higher levels.
 
 Have you ever upgraded a base library to a new major version? Or worse, upgraded your language? It's a huge pain that haunts you for the rest of your career. Keeping your code flat makes sure that you don't create the same pain in your code base.
 
-Repetition at the top layer also has a use. It provides flexibility. By having the full operation outlined in one location, even if it's very similar to another, we leave it open for easy modification. This is important as we get closer to the actual business domain.
+Repetition at the top layer also has a use. It provides flexibility. By having the full operation outlined in one place, even if it's very similar to other implementations, leaves it open for modification. This is important as we get closer to the actual business domain.
 
-While some low level concepts are as solid as our universe (I don't expect how we calculate averages to change any time soon). Our business domain changes all the time. If we aren't flexible in meetings these business needs, then any change to our program becomes a huge ordeal.
+While some low level concepts are as solid as our universe (I don't expect how we calculate averages to change any time soon). Our business domain changes all the time. If we aren't flexible in adopting to these needs, then any change to our program becomes a huge ordeal.
 
-In order to keep our application easy to modify, we also need to stay mindful of which parts change the most often. If our lower layer changes frequently, we need to look at ways to move the parts that change up closer to the top of the layer stack. Doing this will ensure that we can continue to respond to changing requirements quickly.
+In order to keep this flexibility, we also need to stay mindful of which parts change the most often. If we start noticing a lower layer changing frequently, we need to look at ways to move the parts that changes closer to the top of the layer stack. Doing this will ensure that we can continue to respond to changing requirements quickly.
 
-So to thumb up the high level direction of the codebase: the lower layers should have functions so fundamental that they almost never change and require the absolute minimum amount of dependencies. The higher layers, on the other hand, should have functions that clearly and fully outline how lower layers get combined, while having very little custom logic.
+So to thumb up the high level direction of the codebase: the lowest layers should have functions so fundamental that they almost never change and require the absolute minimum amount of dependencies. The highest layers, on the other hand, should have functions that clearly and fully outline how lower layers get combined, while having very little custom logic. In-between these two extremes, we should have a spectrum of layers that tries to stay closer to the lowest layers and leave most of the gluing to the top layers.
 
 ## In conclusion
 
