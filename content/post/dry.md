@@ -215,7 +215,7 @@ This version makes it even easier to see all the steps. We can now clearly see t
 
 Let's bring a little more focus to the point just mentioned because it is the biggest source of issues with optional arguments. If a function takes multiple optional arguments, it hides how their interactions with each other.
 
-If we go back to our original version, with multiple arguments, and add another argument to set a maximum bonus, it addition raises all kinds of questions: Do we cap the bonus amount before or after the yearly increase? Should we change the maximum bonus amount if a yearly increase is present? etc. And we can't answer these questions without looking into `calcualte_bonus`. That puts us back at keeping track of multiple functions just to understand how a single function works.
+If we go back to our original version, with multiple arguments, and add another argument to set a maximum bonus, it addition raises all kinds of questions: Do we cap the bonus amount before or after the yearly increase? Should we change the maximum bonus amount if a yearly increase is present? etc. And we can't answer these questions without looking into `calculate_bonus`. That puts us back at keeping track of multiple functions just to understand how a single function works.
 
 If we keep our functions small, on the other hand, we can easily see where a `cap_bonus` function gets applied. And we can understand the interaction without the need to dive into another function.
 
