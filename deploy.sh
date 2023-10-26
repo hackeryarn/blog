@@ -1,3 +1,9 @@
+#!/usr/bin/env bash
+
+set -euo pipefail
+IFS=$'\n\t'
+
+
 echo -e "\033[0;32mDeploying updates to GitHub...\033[0m"
 
 pushd public
@@ -9,7 +15,7 @@ popd
 hugo
 
 # Go To Public folder
-poushd public
+pushd public
 
 # Add changes to git.
 git add .
