@@ -10,7 +10,6 @@ preserveTaxonomyNames = true
 hasCJKLanguage = false     # has chinese/japanese/korean ? # 自动检测是否包含 中文\日文\韩文
 paginate = 5                                              # 首页每页显示的文章数
 disqusShortname = "achernyak"      # disqus_shortname
-googleAnalytics = "UA-72377824-1"      # UA-XXXXXXXX-X
 copyright = ""            # default: author.name ↓        # 默认为下面配置的author.name ↓
 
 pygmentsOptions = "linenos=table"
@@ -94,7 +93,6 @@ pygmentsCodefencesGuessSyntax = true
   baiduPsh = false        # baidu push                  # 百度
   baiduAnalytics = ""      # Baidu Analytics
   baiduVerification = ""   # Baidu Verification
-  googleVrification = "48lVad14itLkhEimujuIJU1bqw99BMi23iy_h4WpPl4"  # Google_Verification         # 谷歌
 
   # Link custom CSS and JS assets
   #   (relative to /static/css and /static/js respectively)
