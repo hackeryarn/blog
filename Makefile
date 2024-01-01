@@ -1,4 +1,11 @@
+.PHONY: init
 init:
 	git submodule update --recursive --remote
+
+.PHONY: deploy
 deploy:
-	./deploy.sh
+	./script/deploy
+
+.PHONY: server
+server:
+	./script/server
