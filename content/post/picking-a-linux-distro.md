@@ -3,7 +3,7 @@ title: Picking a Linux Distro
 date: 2023-02-20
 categories: [Linux]
 tags: [linux,opensuse,micoros]
-published: true
+published: 2023-02-20
 ---
 
 I recently started a new job that gave me the chance to run whatever Linux distribution would make me the most productive. In the face of complete freedom, I decided to re-evaluate my daily driver and see if there was a distribution that would give me the most up-to-date software while maintaining a stable system. The results of my search surprised even me.

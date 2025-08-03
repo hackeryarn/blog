@@ -3,7 +3,7 @@ title: Distrobox in practice
 date: 2023-09-17
 categories: [Linux]
 tags: [linux,distrobox,containers,docker,podman]
-published: true
+published: 2023-09-17
 ---
 
 [Distrobox](https://distrobox.privatedns.org/) is the single piece of software that completely changed the way I work. If you've hear of or used [Vagrant](https://www.vagrantup.com/) and thought it was a great idea but implemented in a really heavy handed manner, then Distrobox is exactly what you've been looking for.

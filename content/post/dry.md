@@ -1,7 +1,7 @@
 ---
 title: When DRY goes wrong
 date: 2023-06-10
-published: true
+published: 2023-06-10
 ---
 
 DRY has become a mantra throughout the industry. Any time repetitive code shows up, DRY gets applied as a cure all. If you even start to question DRYing up a piece of code, you are viewed as a heretic to the entire industry.

@@ -1,8 +1,8 @@
 #+title: Clojure GitHub Actions
 #+DATE: 2023-10-26
 #+DRAFT: false
-#+CATEGORIES: Clojure
-#+TAGS: clojure automation
+#+CATEGORIES[]: Clojure
+#+TAGS[]: clojure automation
 
 I recently took over the maintenance of an open source Clojure project. One of the first things I noticed was the lack CI or CD. These are things that aren't required but can save a lot of work, especially for a public project.
 

@@ -1,7 +1,7 @@
 #+TITLE: Embrace Your Constraints
 #+DATE: 2019-08-14
 #+DRAFT: false
-#+TAGS: thoughts practices
+#+TAGS[]: thoughts practices
 
 Engineers want to measure the quality and effectiveness of their work. They
 turn to code coverage, burn down charts, and yearly goals, with the best

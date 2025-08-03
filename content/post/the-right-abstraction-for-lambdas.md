@@ -14,7 +14,7 @@ categories:
 tags:
   - opinion
   - guide
-published: true
+published: 2019-02-24
 ---
 
 Serverless functions are a great alternative for many light tasks that would

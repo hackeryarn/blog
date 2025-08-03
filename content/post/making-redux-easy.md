@@ -9,7 +9,7 @@ tags:
   - opinion
   - experiment
   - guide
-published: true
+published: 2019-02-11
 ---
 
 [React](https://reactjs.org/) and [Redux](https://redux.js.org/) are a top choice for front end projects. [React](https://reactjs.org/) provides fast

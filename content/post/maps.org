@@ -1,8 +1,8 @@
 #+title: You don't need a map for that
 #+DATE: 2024-01-01
 #+DRAFT: false
-#+CATEGORIES: development
-#+TAGS: opinion
+#+CATEGORIES[]: development
+#+TAGS[]: opinion
 
 One of the most misused data structures is the humble map; hashmap, dictionary, hash table, etc.
 

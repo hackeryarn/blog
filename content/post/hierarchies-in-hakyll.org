@@ -1,8 +1,8 @@
 #+TITLE: Hierarchies In a Hakyll Blog
 #+DATE: 2019-03-27
 #+DRAFT: false
-#+CATEGORIES: Haskell Hakyll
-#+TAGS: guide haskell hakyll
+#+CATEGORIES[]: Haskell Hakyll
+#+TAGS[]: guide haskell hakyll
 
 Creating hierarchy in a blog is a useful technique. It allows you to
 have different sections by type of content. It lets users navigate

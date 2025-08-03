@@ -1,8 +1,8 @@
 #+TITLE: Type safe Django app, Part 2
 #+DATE: 2022-02-27
 #+DRAFT: false
-#+CATEGORIES: Python
-#+TAGS:  django python types
+#+CATEGORIES[]: Python
+#+TAGS[]:  django python types
 
 In [[https://hackeryarn.com/post/django-returns-1/][Part 1]] of this series, we looked at how to setup a python project with types, setup our project, and used some basic types.
 

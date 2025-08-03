@@ -1,8 +1,8 @@
 #+TITLE: Type safe Django app, Part 1
 #+DATE: 2022-01-22
 #+DRAFT: false
-#+CATEGORIES: Python
-#+TAGS:  django python types
+#+CATEGORIES[]: Python
+#+TAGS[]:  django python types
 
 Django is a great framework for web development. Unfortunately, due to the nature of Python and web development in general, it often leads to hard to track down bugs and tangled code. We will take a look at one way to reign this in.
 

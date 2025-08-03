@@ -1,8 +1,8 @@
 #+TITLE: CLI Commands in Emacs
 #+DATE: 2019-06-01
 #+DRAFT: false
-#+CATEGORIES: Emacs 
-#+TAGS: guide emacs
+#+CATEGORIES[]: Emacs 
+#+TAGS[]: guide emacs
 
 A few months ago, Gabriel Gonzalez wrote an [[http://www.haskellforall.com/2018/10/detailed-walkthrough-for-beginner.html][excellent article]] on creating useful
 tools with Haskell. He used an example of a small CLI tool that aligns the
