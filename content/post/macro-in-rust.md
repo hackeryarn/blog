@@ -203,10 +203,95 @@ Let's use the our knowledge of the match syntax to implement the full expression
   }
 ```
 
-That might look a little surprising. You might have noticed the extra set of parenseses around the repetition usage. This extra set of parenseses wraps the repetition in a tuple.
+That might look a little surprising. You might have noticed the extra set of parentheses around the repetition usage. This extra set of parentheses wraps the repetition in a tuple.
 
 Because we have to return mupltiple fields, we had to create some kind of container. Since we can have fields of multiple types, a vector is out of the question. We could lean on `serde` and require a serializer instance, but that introduces a lot of overhead. A tuple gives us a simple wrapper that's easy to destructure and allows us to handle any number of fields with any mix of types.
 
-The careful reader might have also noticed the comma inside the repetition expression: `$( i.$field, )`. That is a literal comma. Since the items in a tuple -- and other data structures -- need to be comma separated, Rust's repetition syntax makes it easy to add those separators. If we put them inside the parenseses, we will get the separator after every item. If we put it outside the parenseses, right before the repetition operator, we will get the separator after every item except the last. With tuples, there is no difference.
+The careful reader might have also noticed the comma inside the repetition expression: `$( i.$field, )`. That is a literal comma. Since the items in a tuple, and other data structures, need to be comma separated, Rust's repetition syntax makes it easy to add those separators. If we put literals inside the parentheses, we will get the separator after every item. If we put them outside the parentheses, right before the repetition operator, we will get the separator after every item except the last. With tuples, there is no difference.
 
+And with that, we can execute our query with a multi select:
+
+```rust
+let results: Vec<(String, i64)> = query!(from db select title, rating);
+// > [("Hate Me", 9), ("Not Like Us", 10), ("Bad Dreams", 10), ("Rockin' the Suburbs", 6), ("Lateralus", 8), ("Lose Control", 9), ("Come as you are", 9)]
+```
+
+We have to specify the type here, but if you were to use the values later, the Rust's compiler can often infer the type.
+
+## Debugging macros
+
+With the repetition operators the macro gets hard to follow, and it's only going to get more complicated. This would be the perfect time to look at how we can debug macros.
+
+Rust comes with everything we need built it. To see what marocs expand to, we can run `RUSTFLAGS="-Ztrace_macros" cargo run` (note that you will need nightly rust version). This gets pretty noisy, however, since rust will expand all the macros in the entire program. To limit what expands, we can use `trace_macros!` macro:
+
+```rust
+trace_macros!(true);
+let results: Vec<(String, i64)> = query!(from db select title, rating);
+trace_macros!(false);
+```
+
+This gives us the exact output of what the macro expands to. Even including the trailing comma:
+
+```text
+// = note: expanding `query! { from db select title, rating }`
+// = note: to `db.into_iter().map(| i | (i.title, i.rating,)).collect()`
+```
+ 
+## Where clause
+
+So far we only have a `select` macro without much querying. Now it's time to change that by adding a where clause:
+
+```rust
+query!(from db select title, rating where rating = 10 and artist = "Teddy Swims");
+```
+
+We actually have all the tools we need to jump a couple steps and supporst a where clause with `=` for comparison and multiple parameters with `and`. We will see later how we can support more operators.
+
+### Matching where clause
+
+```rust
+#[macro_export]
+macro_rules! query {
+    ...
+
+    ( from $db:ident select $( $field:ident ),+ where $($test_field:ident = $value:literal) and + ) => { };
+}
+```
+
+We can leave our match arm for the select only syntax and just create a new arm. This one captures multiple parameter, and uses `and` as the separator. Surprisingly separators don't have to be a single character and can be full words or evele parameter, as we will see later.
+
+### Implementing where clause
+
+```rust
+#[macro_export]
+macro_rules! query {
+    ...
+
+    ( from $db:ident select $( $field:ident ),+ where $($test_field:ident = $value:literal) and + ) => {
+        $db.into_iter()
+            .filter( |i| ($( i.$test_field == $value )&&+ )
+            .map( |i| ($( i.$field, )+) ).collect()
+    };
+}
+```
+
+The implementation should not have anything surprising. We are just adding a call to `.filter` that will only select matching items. One thing to note is that we had to put the `&&` outside the repetitin parentheses. Unlike the tuple syntax, we can't have a dangling `&&` at the end of our conditional and putting it outside the parentheses will skip adding it to the last item.
+
+With this arm implemented our previous select should continue to work and we can put the new `where` syntax to work:
+
+```rust
+let results: Vec<(String, i64)> =
+    query!(from db select title, rating where rating = 10 and artist = "Teddy Swims");
+// [("Bad Dreams", 10)]
+```
+
+As expected, we only get one item. As an additional sanity check, we can expand the macro again with `trace_macos!`:
+
+```rust
+db.into_iter()
+    .filter(| i | i.rating == 10 && i.artist == "Teddy Swims")
+    .map(| i | (i.title, i.rating,)).collect()
+```
+
+And we get the exact result we would expect. Both the condition appear in the `filter` expression, and they are separated by an `&&`.
 
