@@ -218,7 +218,7 @@ let results: Vec<(String, i64)> = query!(from db select title, rating);
 
 We have to specify the type here, but if you were to use the values later, the Rust's compiler can often infer the type.
 
-## Debugging macros
+### Debugging macros
 
 With the repetition operators the macro gets hard to follow, and it's only going to get more complicated. This would be the perfect time to look at how we can debug macros.
 
@@ -275,7 +275,9 @@ macro_rules! query {
 }
 ```
 
-The implementation should not have anything surprising. We are just adding a call to `.filter` that will only select matching items. One thing to note is that we had to put the `&&` outside the repetitin parentheses. Unlike the tuple syntax, we can't have a dangling `&&` at the end of our conditional and putting it outside the parentheses will skip adding it to the last item.
+The only new thing in our emplementation is the use of a new fragment-specifier. The `literal` specifier lets us use the value passed in exactly as it is. A sting will be a string, a number will be a number, etc. This is perfect since we need a value to compare to our field.
+
+ To do the comparison, we add a call to `.filter` that will only select matching items. One thing to note is that we had to put the `&&` outside the repetitin parentheses. Unlike the tuple syntax, we can't have a dangling `&&` at the end of our conditional and putting it outside the parentheses will skip adding it to the last item.
 
 With this arm implemented our previous select should continue to work and we can put the new `where` syntax to work:
 
@@ -295,3 +297,131 @@ db.into_iter()
 
 And we get the exact result we would expect. Both the condition appear in the `filter` expression, and they are separated by an `&&`.
 
+The final step will be to support more operators in our `where` clause. But before we can get to that, we need to look at a concept that we've been using all along but have not talked about.
+
+## Complex where clause
+
+Let's continue with our process from before and use the token trees shortly. To start, here is the syntax that we want:
+
+```rust
+query!(from db select title, rating where rating > 9 or artist = "Tool")
+```
+
+And we can make that work, but it will result in some more complexity than needed. We can actually reduce the complexity by switching our equality operator to Rust's `==` instead of `=`. I know this because I implemented this macro, and it came as a natural choice. I am just trying to save us some time, so we won't go through the long version here. Our final syntax will be:
+
+```rust
+query!(from db select title, rating where rating > 9 or artist == "Tool")
+```
+
+But before we can implement the match arm, we need to talk about a concept that we've skimmed over so far.
+
+### TokeTrees
+
+Token trees are a concept in Rust's AST that makes it easy to work with macros and know what they cover.
+
+Almost every token in the AST (2, "hello", etc.) represents a leaf. `()`, `[]`, and `{}` are special tokens that start a new tree. A macro has to always take and produce a token tree, and that's exactly what our match arms represent. And as far as macros care, all of these are interchangeable. So we could write our match arm as:
+
+```rust
+{ from $db:ident select $( $field:ident ),+ where $($test_field:ident = $value:literal) and + } => (
+    $db.into_iter()
+        .filter( |i| ($( i.$test_field == $value )&&+ )
+        .map( |i| ($( i.$field, )+) ).collect()
+);
+```
+
+Or call our macro as:
+
+```rust
+    query![from db select title, rating where rating = 10 and artist = "Teddy Swims"];
+```
+
+And the compiler is perfectly happy.
+
+This is all neat to know, but for our purpose, token trees have a very important property. They are one of the fragment-specifiers that we can match, and we can put that to great use.
+
+### Matching complex where clause
+
+As promised, we will use TokenTrees right away in our match clause. We will also implement this right away since we have some experience and it will make things easier to talk about:
+
+```rust
+#[macro_export]
+macro_rules! query {
+    ...
+
+    ( from $db:ident select $( $field:ident ),+ where $($where_tree:tt)+ ) => {
+        $db.into_iter()
+            .filter( |i| where_clause!(i; $($where_tree)+) )
+            .map( |i| ($( i.$field, )+) ).collect()
+    };
+}
+```
+
+We use a repeating capture of `tt` (TokenTree) to capture every TokenTree that follows the word `where`. Since every token is either a leaf or separator, `tt` will capture everything. One important caviate here is that macros can't look ahead or behind, so it we use a repeating `tt` capture, we will capture everything. There is no breaking out of a repeating `tt` capture.
+
+We then use a helper macro, `where_clause`, to process the captured token tree. We also pass through `i` using an arbitrary separator `;` that will make the implementation a little clearer. Using helper macros is a common technique that reduces the number of match arms and the complexity of those arms.
+
+Now let's look at the `where_clause` macro that we need to implement. This will need a few clauses, and we will implement them one by one. We will start with matching a single where clause with no `and` or `or`:
+
+```rust
+#[macro_export]
+macro_rules! where_clause {
+    ( $i:ident; $test_field:ident $comp:tt $value:literal ) => {
+        $i.$test_field $comp $value
+    };
+}
+```
+
+That's a lot of captures. The only literal there is `;`. But we've seen all this before. The most surprising thing here is that to capture and use the comparison operator, `$comp`, we have to use `tt`. It took me more time than I care to admit to figure out that operators are not identifiers so we can't use `ident` or any other fragment-specifier to capture it.
+
+### Incremental TT muncher
+
+Then we can implement the other cases in a recursive fashino that works down to the match arm we just implemented:
+
+```rust
+#[macro_export]
+macro_rules! where_clause {
+    ( $i:ident; $test_field:ident $comp:tt $value:literal ) => {
+        $i.$test_field $comp $value
+    };
+
+    ( $i:ident; $test_field:ident $comp:tt $value:literal and $($tail:tt)+ ) => {
+        $i.$test_field $comp $value && where_clause!($i; $($tail)+)
+    };
+
+    ( $i:ident; $test_field:ident $comp:tt $value:literal or $($tail:tt)+ ) => {
+        $i.$test_field $comp $value || where_clause!($i; $($tail)+)
+    };
+}
+```
+
+This shows a common technique in Rust known as the incremental TT muncher. We use the same technique as in our `query` macro to capture everything following an `or` or an `and`. Then we pass that remainder back to `where_clause` and let it continue processing the input. Each time we go through `where_clause`, we produce a valid condition so we know that we can continue to connect them with `&&` and `||` as needed.
+
+### Stepping through complex expansions
+
+That was a lot of abstract code. Luckily, we can use the debugging tools to get a clearer image of how all of this evaluates:
+
+```rust
+let results: Vec<(String, i64)> =
+    query!(from db select title, rating where rating > 9 or artist == "Tool");
+// [("Not Like Us", 10), ("Bad Dreams", 10), ("Lateralus", 8)]
+
+// Expands to:
+// = note: expanding `query! { from db select title, rating where rating > 9 or artist == "Tool" }`
+// = note: to `db.into_iter().filter(| i | where_clause!
+//         (i; rating > 9 or artist == "Tool")).map(| i | (i.title, i.rating,)).collect()`
+// = note: expanding `where_clause! { i; rating > 9 or artist == "Tool" }`
+// = note: to `i.rating > 9 || where_clause! (i; artist == "Tool")`
+// = note: expanding `where_clause! { i; artist == "Tool" }`
+// = note: to `i.artist == "Tool"` 
+```
+
+The expansion becomes quite a bit more complex because we used helper macros, but it still clearly lists out all the steps. I usually have to read these types of expansions in a multi step process:
+
+1. Scan everything from top to bottom to get the general idea of the expansion
+2. Start back from the bottom with the last line
+3. Take the line I am on (`i.artist == "Tool"`)
+4. Look at the expansion above it (`i.rating > 9 || where_clause! (i; artist == "Tool")`)
+5. Substitute the line we started on into this expansion (`i.rating > 9 || i.artist == "Tool"`)
+6. If there are more lines above, go back to step 3 using the substituted expansion from step 5, and repeat this until I am on the last (top most) line
+
+By following this process I can get a clear picture of exactly what each step in the expansion does.
