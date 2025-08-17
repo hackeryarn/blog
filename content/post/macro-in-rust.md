@@ -1,7 +1,7 @@
 ---
 title: "Let's write a macro in Rust"
 date: 2025-07-30
-draft: false
+draft: true
 ---
 
 Macros are required to do some very helpful things in Rust, but this isn't an article about any of those things.
