@@ -6,11 +6,11 @@ draft: false
 
 In the [last part](https://hackeryarn.com/post/rust-macros-1/) we covered the very basics of macros and implemented a single argument query select. This was a good start, but only scratched the surface of what macros can do.
 
-In this part we will implement multi field select and a basic `where` calause. That will get us a partially functioning query macro.
+In this part we will implement multi-field select and a basic `where` calause. That will make our query macro far more useful.
 
 ## Multi-field select
 
-After being able to select one field, the immediate next thing that comes to mind is selecting multiple fields. Just like before, lets start with our invocation syntax:
+After being able to select one field, the immediate next thing that comes to mind is selecting multiple fields. Just like before, lets start with the invocation syntax:
 
 ```rust
 query!(from db select title, rating)
@@ -29,7 +29,7 @@ Continuing to draw inspiratino from SQL, we use a comma separated list of fields
   }
 ```
 
-That's a bit of odd syntax, but if you're familiar with regex, you will notice the use of `+` for denoting the type repetition. Let's look at this syntax in a little more detail before using it in an implementation.
+That's quite a bit of new syntax, but it all breaks down to a single new matching construct.
 
 ### Repetition match syntax
 
@@ -43,7 +43,7 @@ $ ( ... ) sep rep => {
 }
 ```
 
-We need to wrap the repeating match expression in `$()`, add a separator (a comma in our case), and finish it with a repetition operator. The repetition can be one of:
+We need to wrap the repeating match expression in `$()`, add a separator (a comma in our case), and finish it with a repetition operator. The repetition operator should look familiar as they draw inspiration from regex:
 
 - `?` for zero or one
 - `*` for zero or more
@@ -51,9 +51,9 @@ We need to wrap the repeating match expression in `$()`, add a separator (a comm
 
 I chose to use `+` because a blank select makes no sense.
 
-The matcher and expansion get connected by the captured variable, and repeat the same number of times. Everything inside the expansion parentheses (`$()`) repeats, so we need to be careful about any literals that we put into the expression.
+The matcher and expansion connect through the captured variable names, and repeat the same number of times. Everything inside the expansion parentheses (`$()`) repeats, so we need to be careful about any literals that we put into the expression.
 
-Once we have the repeating match, we can use it in the expression with an almost identical syntax.
+Once we have the repeating match, we can use it in the expression.
 
 ### Implementing multi-field select
 
@@ -77,13 +77,13 @@ let results: Vec<(String, i64)> = query!(from db select title, rating);
 // > [("Hate Me", 9), ("Not Like Us", 10), ("Bad Dreams", 10), ("Rockin' the Suburbs", 6), ("Lateralus", 8), ("Lose Control", 9), ("Come as you are", 9)]
 ```
 
-We have to specify the type here, but if you were to use the values later, the Rust's compiler can often infer the type.
+We have to specify the type here, but if you were to use the values later, Rust's compiler can often infer the type.
 
 ### Debugging macros
 
 With the repetition operators the macro gets hard to follow, and it will only get more complicated. This would be the perfect time to look at how we can debug macros.
 
-Rust comes with everything we need built it. To see what marocs expand to, we can run `RUSTFLAGS="-Ztrace_macros" cargo run` (note that you will need nightly rust version). This gets pretty noisy, however, since it expands all macros in the entire program. To limit what expands, we can use a macro `trace_macros!`:
+Rust comes with everything we need built it. To see what marocs expand to, we can run `RUSTFLAGS="-Ztrace_macros" cargo run` (note that you will need nightly rust version). This gets pretty noisy, however, since it expands _all_ macros in the entire program. To limit what expands, we can use a macro `trace_macros!`:
 
 ```rust
 trace_macros!(true);
@@ -98,21 +98,21 @@ This limits the scope to only what we want to analyze and returns the the expect
 // = note: to `db.into_iter().map(| i | (i.title, i.rating,)).collect()`
 ```
 
-The one odd thing about our debug output is the trailing comma in the tuple. Remember how I said that everything in the expansion `$()` repeats? We had a literal comma inside the repetition expansion so it gets included every time. Tuples and other collections allow trailing commas, but we will see some places shortly that do not.
+The one odd thing about our debug output is the trailing comma in the tuple. Remember how I said that everything in the expansion `$()` repeats? We had a literal comma inside the repetition expansion so it gets included every time. Tuples and other collections allow trailing commas, but we will see some places, shortly, that do not.
 
 ## Where clause
 
-So far we only have a `select` macro which is not much of a query without a where clause. Let's make our macro more useful:
+So far we only have a `select` macro which is not much of a query. Let's make our macro more useful:
 
 ```rust
 query!(from db select title, rating where rating = 10 and artist = "Teddy Swims");
 ```
 
-We us `=` for comparison, and `and` as a way to support multiple parameter. Just like with select, we will start by only supporting these two operators and work up to supporting other.
+We us `=` for comparison, and `and` as a way to support multiple comparisons. Just like with select, we will start by only supporting these two operators and work up to supporting others.
 
 ### Matching where clause
 
-We actually already have all the tools we need to match this additional syntax:
+We actually already have all the tools we need to match this new syntax:
 
 ```rust
 #[macro_export]
@@ -123,7 +123,7 @@ macro_rules! query {
 }
 ```
 
-We will leave our earlier `select` without `where` arm as is, and start a new arm that includes `where`. This should look very familiar although slightly expanded. Our second repetition matcher captures two values (`$test_field` and `$value`) and uses a multi character separator (` and `). Both of these demonstrate the power and flexibility of macro matchers.
+We will leave our earlier `select` without `where` arm as is, and start a new arm that includes `where`. This should look very familiar although slightly expanded. Our second repetition matcher captures two values (`$test_field` and `$value`) and uses a multi character separator (` and `) before the repetition operator. Both of these demonstrate the power and flexibility of macro matchers.
 
 The only thing we have not seen yet is the use of a new fragment-specifier. The `literal` specifier lets us use the value exactly as it is. A string will be a string, a number a number, etc.
 
@@ -142,7 +142,9 @@ macro_rules! query {
 }
 ```
 
- To do the comparison, we add a call to `.filter` that will only select matching items. One thing to note is that we had to put the `&&` outside the repetitin parentheses. Unlike the tuple syntax, we can't have a dangling `&&` at the end of our conditional and putting it outside the parentheses will skip adding it to the last item.
+To do the comparison, we add a call to `.filter` that will run the comparison based on the field identifier and the literal. This shows that the `ident` fragment-specifier works for a lot more identifiers than just variables.
+
+One thing to note is that we had to put the `&&` outside the repetition parentheses. Unlike the tuple syntax, we can't have a dangling `&&` at the end of our conditional and putting it outside the parentheses will skip adding it to the last item.
 
 With this arm implemented our previous select should continue to work and we can put the new `where` syntax to work:
 
@@ -164,6 +166,6 @@ And we get the exact result we would expect. Both the condition appear in the `f
 
 ## Conclusion
 
-This part really expands on our macro's functionality and makes it useful in far more scenarios. It also covers all the major concepts of declarative macros. With these tools, you should be able to write a wide range of declarative macros.
+This part expands the macro functionality to far more scenarios. It also covers all the major concepts of declarative macros. With these tools, you should be able to write a wide range of declarative macros.
 
 In the next part we will look at handling multiple operators in our `where` clause. This will push our tools to their limit and we will need to use one of the most powerful pattern for declarative macros.
