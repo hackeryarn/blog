@@ -11,13 +11,13 @@ In this article, I will try to share some of that excitement with you while usin
 
 ## Prior art
 
-Rust's macros build on top of a long legacy of syntax macros primarily seen in the List language family. Unlige Go, C, and Assembly macros, which work as a pre-processor step on raw strings, Rust's macros work dircectly on the AST ([Abstract Syntax Tree](https://en.wikipedia.org/wiki/Abstract_syntax_tree)). This means that Tokenization and AST parsind has already occurred, so you can be sure that the what you work with is at least shaped like hypothetican Rust code.
+Rust's macros build on top of a long legacy of syntax macros primarily seen in the Lisp language family. Unlige Go, C, and Assembly macros, which work as a pre-processor step on raw strings, Rust's macros work dircectly on the AST ([Abstract Syntax Tree](https://en.wikipedia.org/wiki/Abstract_syntax_tree)). This means that Tokenization and AST parsing has already occurred, so you can be sure that the what you work with is at least shaped like hypothetican Rust code.
 
 Unlike the Lisp family of languages, Rust had some additional challenges to overcome with their macro implementation.
 
-Lisp has a syntax that's basically an AST, so it is extremely easy to consume and produce an AST, because it looks like normar code. Rust, on the other hand, looks nothing like List or an AST, so it needs a way to elegantly handle these conversion steps. That's where the `macro_rules!` macro comes in, which will be the focus of this article.
+Lisp has a syntax that's basically an AST, so it is extremely easy to consume and produce an AST, because it looks like normar code. Rust, on the other hand, looks nothing like Lisp or an AST, so it needs a way to elegantly handle these conversion steps. That's where the `macro_rules!` macro comes in, which will be the focus of this article.
 
-The other challenge within `macro_rules!` comes from Rust's goal to provide as much help and correctness as possible. Rust actually supporsts types (technically fragment-specifiers) in macros. We will see more of this later, but it goes towards making macros easier to write, reason about, and maintain.
+The other challenge within `macro_rules!` comes from Rust's goal to provide as much help and correctness as possible. Rust actually supports types (technically fragment-specifiers) in macros. We will see more of this later, but it goes towards making macros easier to write, reason about, and maintain.
 
 Without further ado, let's jump into using `macro_rules!` and declerative macros.
 
