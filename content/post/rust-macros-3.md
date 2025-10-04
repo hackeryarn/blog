@@ -4,9 +4,9 @@ date: 2025-09-28
 draft: false
 ---
 
-In the [last part](https://hackeryarn.com/post/rust-macros-2/) we all the fundamental techniques in writing macros. This enables us to write just about any macro we could think of, but knowing a few tricks can make the process much easier.
+In the [last part](https://hackeryarn.com/post/rust-macros-2/) we covered all the fundamental techniques in writing macros. This enables us to write just about any macro we could think of, but knowing a few tricks can make the process much easier.
 
-In this part, we will build on our `where` clause from the previous article. In the process we will allow the `where` clause to support multiple comparison operator (instead of just `=`) as well as multiple comparison operators (instead of just `and`).
+In this part, we will build on our `where` clause from the previous article. In the process we will allow the `where` clause to support multiple comparison operator (instead of just `=`) as well as multiple ways to join those operators (instead of just `and`).
 
 ## Complex where clause
 
@@ -17,20 +17,20 @@ query!(from db select title, rating where rating = 10 and artist = "Teddy Swims"
 query!(from db select title, rating where rating > 9 or artist = "Tool")
 ```
 
-We can make this work, but it will result in more complexity than needed. The `=` operator means that we need to do a manual translation from `=` to Rust's `==` operator. If we just use `==` in our syntax, we can use the operators directly in our macro since `==`, `<`, `>`, etc. are all built in operators. Our updated syntax will look like:
+We can make this work, but it will result in more complexity than needed. Using the `=` operator means that we need to do a manual translation from `=` to Rust's `==` operator. If we just use `==` in our macro, we can use `==` and other Rust operators directly. Our updated syntax will look like:
 
 ```rust
 query!(from db select title, rating where rating == 10 and artist == "Teddy Swims");
 query!(from db select title, rating where rating > 9 or artist == "Tool")
 ```
 
-But before we can implement the match arm, we need to talk about a concept that we've only skimmed over so far.
+But before we can implement the match arm, we need to talk about a concept that we've only skimmed over, so far.
 
 ### TokeTrees
 
 Token trees are a part of Rust's AST that makes it easy to work with macros by giving them explicit bounds.
 
-Almost every token in the AST (2, "hello", etc.) represents a leaf. `()`, `[]`, and `{}` are special tokens that start a new tree. A macro has to always take and produce a token tree, and that's exactly what our match arms represent. And as far as macros care, all of these are interchangeable. So we could write our match arm as:
+Almost every token in the AST (2, "hello", etc.) represents a leaf. `()`, `[]`, and `{}` are special tokens that start a new tree. A macro has to always take and produce a token tree, and that's exactly what our match arms represent. As far as macros care, all of the tree operators are interchangeable. So we could write our match arm as:
 
 ```rust
 { from $db:ident select $( $field:ident ),+ where $($test_field:ident = $value:literal) and + } => (
@@ -46,9 +46,9 @@ Or call our macro as:
     query![from db select title, rating where rating = 10 and artist = "Teddy Swims"];
 ```
 
-And the compiler is perfectly happy.
+And the compiler is perfectly happy. Although, readers of your code might not be.
 
-This is all neat to know, but for our purpose, token trees have a very important property. They are one of the fragment-specifiers that we can match, and we can take advantage of that to write a very concise macro definition.
+This is all interesting background, but how will it help us write our macro? Token trees are one of the fragment-specifiers that we can match, and we can take advantage of that to write a very concise macro definition.
 
 ### Matching complex where clause
 
@@ -56,7 +56,6 @@ This is all neat to know, but for our purpose, token trees have a very important
 #[macro_export]
 macro_rules! query {
     ...
-
     ( from $db:ident select $( $field:ident ),+ where $($where_tree:tt)+ ) => {
         $db.into_iter()
             .filter( |i| where_clause!(i; $($where_tree)+) )
@@ -103,7 +102,7 @@ macro_rules! where_clause {
 }
 ```
 
-The next two captures only differ in the sparator (`or` and `and`). They both capture all the parts of a single comparison expression and the next set of expressions as a repeatting `tt`, just like we did in our original `where` clause. Then we can put together our conditional from the captures and join it, using `&&` or `||`, with another call to `where_clause!`. This is safe to do because we know that every arm of `where_clause!` will produce a valid conditional expression.
+The next two captures only differ in the separator (`or` and `and`). They both capture all the parts of a single comparison expression and the next set of expressions as a repeating `tt`, just like we did in our original `where` clause. Then we can put together our conditional from the captures and join it, using `&&` or `||`, with another call to `where_clause!`. This is safe to do because we know that every arm of `where_clause!` will produce a valid conditional expression.
 
 
 ### Stepping through complex expansions
