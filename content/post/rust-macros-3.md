@@ -1,6 +1,6 @@
 ---
 title: "Let's write a macro in Rust - Part 3"
-date: 2025-09-28
+date: 2025-10-05
 draft: false
 ---
 
@@ -66,7 +66,7 @@ macro_rules! query {
 
 We use a repeating capture of `tt` (TokenTree) to capture every TokenTree that follows the word `where`. Since every token is either a leaf or separator, `tt` will capture everything. One important caveat here is that macros can't look ahead or behind, so if we use a repeating `tt` capture, we will capture the rest of the macro. There is no breaking out of a repeating `tt` capture.
 
-We then use a helper macro, `where_clause`, to process the captured token tree. We also pass through `i` using an arbitrary separator `;` that will make the implementation a little clearer. Using helper macros is a common technique that reduces the number of match arms a single macro would need to implement.
+We then use a helper macro, `where_clause`, to process the captured token tree. We also pass through `i` using an arbitrary separator `;` which will make the implementation a little cleaner. Using helper macros is a common technique that reduces the number of match arms a single macro needs to implement.
 
 Now let's look at the `where_clause` macro that we need to implement. This will need a few clauses, and we will implement them one by one. We start with matching a single where clause with no `and` or `or`:
 
@@ -79,11 +79,11 @@ macro_rules! where_clause {
 }
 ```
 
-That's a lot of captures. The only literal in there is `;`. But we've seen all this before. The most surprising thing here is that to capture and use the comparison operator, `$comp`, we have to use `tt`. It took me more time than I care to admit to figure out that operators are not identifiers so we can't use `ident` or any other fragment-specifier to capture it.
+That's a lot of captures. The only literal in there, if you look closely enough, is `;`. But we've seen all this before. The most surprising thing here is that to capture and use the comparison operator, `$comp`, we have to use `tt`. It took me a bit of trial and error to figure out that operators are not identifier or any kind of other fragment-specifier, so we have to use the most generic fragment-specifier `tt`.
 
 ### Incremental TT muncher
 
-To implement the other cases, we must use recursion. The arm we just implemented becomes the base case, and the other arms continuously all `where_clause`:
+To implement the other cases, we have to use recursion. The arm we just implemented becomes the base case, and the other arms continuously call `where_clause!`:
 
 ```rust
 #[macro_export]
@@ -102,12 +102,12 @@ macro_rules! where_clause {
 }
 ```
 
-The next two captures only differ in the separator (`or` and `and`). They both capture all the parts of a single comparison expression and the next set of expressions as a repeating `tt`, just like we did in our original `where` clause. Then we can put together our conditional from the captures and join it, using `&&` or `||`, with another call to `where_clause!`. This is safe to do because we know that every arm of `where_clause!` will produce a valid conditional expression.
+The next two captures only differ in the separator (`or` and `and`). They both capture all the parts of a single comparison expression, just like the base case, and capture any remaining expression as a repeating `tt`. Then we can put together our conditional from and join it, using `&&` or `||`, with another call to `where_clause!`. This is safe to do because we know that every arm of `where_clause!` will produce a valid conditional expression.
 
 
 ### Stepping through complex expansions
 
-That was a lot of abstract code. Luckily, we can use the debugging tools to get a clearer image of how all of this evaluates:
+That was a lot of abstract code. Luckily, we can use the debugging tools to get a clearer picture of how all of this evaluates:
 
 ```rust
 let results: Vec<(String, i64)> =
@@ -133,8 +133,11 @@ The expansion becomes quite a bit more complex because we used helper macros, bu
 5. Substitute the line we started on into this expansion (`i.rating > 9 || i.artist == "Tool"`)
 6. If there are more lines above, go back to step 3 using the substituted expansion from step 5, and repeat this until I am on the last (top most) line
 
-By following this process I can get a clear picture of exactly what each step in the expansion does.
+By following this process I can see exactly what each step looks like and spot any problems that might occur.
 
 ## Conclusion
 
-With all these techniques under your belt, you should have no problem figuring out an implementing most declarative macros. There are still more techniques that can help, see [patterns](https://lukaswirth.dev/tlborm/decl-macros/patterns.html)
+With all these techniques under your belt, you should have no problem figuring out and implementing 90% of declarative macros. If you run into more complex scenarios, the Little Book of Rust Macros has great resources including:
+
+- [More declarative macros patterns](https://lukaswirth.dev/tlborm/decl-macros/patterns.html) if you run into very complex scenarios 
+- [Procedural macros section](https://lukaswirth.dev/tlborm/proc-macros.html) if you need to implement derive or decide to work on a full scale DSL macro
