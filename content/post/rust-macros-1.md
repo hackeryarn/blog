@@ -5,19 +5,19 @@ draft: false
 ---
 Macros are required to do some very helpful things in Rust, but this isn't an article about any of those things.
 
-I became ennamored with macros many years ago when I read [Practical Common Lisp](https://gigamonkeys.com/book/) and saw the implementation of a SQL DSL that works with built in data structures. The whole implementation took less than a screen of code and absolutely blew away my expectations of what it took to create DSLs.
+I became enamored with macros many years ago when I read [Practical Common Lisp](https://gigamonkeys.com/book/) and saw the implementation of a SQL Domain Specific Language (DSL) that works with built in data structures. The whole implementation took less than a screen of code and absolutely blew away my expectations of what it took to create DSLs.
 
 In this article, I will try to share some of that excitement with you while using Rust's macro system. Will this be the most practical and useful macro you can write? Absolutely not. I only hope to show you some possibilities of this powerful tool.
 
 ## Prior art
 
-Rust's macros build on top of a long legacy of syntax macros primarily seen in the Lisp language family. Unlige Go, C, and Assembly macros, which work as a pre-processor step on raw strings, Rust's macros work dircectly on the AST ([Abstract Syntax Tree](https://en.wikipedia.org/wiki/Abstract_syntax_tree)). This means that Tokenization and AST parsing has already occurred, so you can be sure that the what you work with is at least shaped like hypothetican Rust code.
+Rust's macros build on top of a long legacy of syntax macros primarily seen in the Lisp language family. Unlike GoLang, C, and Assembly macros, which work as a pre-processor step on raw text, Rust's macros work directly on the AST ([Abstract Syntax Tree](https://en.wikipedia.org/wiki/Abstract_syntax_tree)). This means that Tokenization and AST parsing has already occurred, so you can be sure that the what you work with is at least shaped like hypothetical Rust code.
 
 Unlike the Lisp family of languages, Rust had some additional challenges to overcome with their macro implementation.
 
-Lisp has a syntax that's basically an AST, so it is extremely easy to consume and produce an AST, because it looks like normar code. Rust, on the other hand, looks nothing like Lisp or an AST, so it needs a way to elegantly handle these conversion steps. That's where the `macro_rules!` macro comes in, which will be the focus of this article.
+Lisp has a syntax that's basically an AST, so it is extremely easy to consume and produce an AST, because it looks like normal code. Rust, on the other hand, looks nothing like Lisp or an AST, so it needs a way to elegantly handle these conversion steps. That's where the `macro_rules!` macro comes in, which will be the focus of this article.
 
-The other challenge within `macro_rules!` comes from Rust's goal to provide as much help and correctness as possible. Rust actually supports types (technically fragment-specifiers) in macros. We will see more of this later, but it goes towards making macros easier to write, reason about, and maintain.
+The other challenge with `macro_rules!` comes from Rust's goal to provide as much help and correctness as possible. Rust actually supports types (technically fragment-specifiers) in macros. We will see more of this later, but it goes towards making macros easier to write, reason about, and maintain.
 
 Without further ado, let's jump into using `macro_rules!` and declerative macros.
 
@@ -27,11 +27,11 @@ Since every time we write a macro, we creat a DSL it's important to keep some ru
 
 - Evaluate if you need a macro
 - Design the simplest possible invocation first (determine what your DSL looks like)
-- Try to implement a match arms and adjust the invocation as needed
+- Try to implement a match arm and adjust the invocation as needed
 - Work one match arm at a time
 - Write sub macros where possible
 
-Some of these steps might not mean much to you yet, but we will walk through them a few times while designing our final macro.
+Some of these steps might not mean much to you yet, but we will walkthrough them a few times while designing our final macro.
 
 ### Don't write macros
 
@@ -53,7 +53,7 @@ query!(from db select title)
 
 `db` will be the data structure that we want to query. We will start with supporting a single argument `select` for picking a field from the items in the data structure. Working in the abstract makes it really hard to reason about how we want this structure to work, so let's put together some sample data.
 
-We will borrow the domain from Practical Common Lisp and work with a list of songs. A song is a simple structure:
+We will borrow an example from Practical Common Lisp and work with a list of songs. A song is a simple structure:
 
 ```rust
 struct Song {
@@ -90,7 +90,7 @@ query!(from db select title)
 
 ### Our first match arm
 
-Now that we know what we want our dsl to look like and what it should output, we can start working on our macro. Let's look at the implementation and fill in the gaps from there:
+Now that we know what we want our DSL to look like and what it should output, we can start working on our macro. Let's look at the implementation and fill in the gaps from there:
 
 ```rust
 #[macro_export]
@@ -148,4 +148,4 @@ This article sets up the groundwork for the macro that we want to build. Our goa
 query!(from db select title, rating where rating > 9 or artist == "Tool");
 ```
 
-In the next part we will make progress toward that goal and explore some more advanced macro techniques.
+In part two we will progress towards that goal and explore some more advanced macro techniques.
