@@ -66,9 +66,9 @@ Once we have the repeating match, we can use it in the expression.
   }
 ```
 
-You might be suprprised by the extra set of parentheses around the repetiont usage. This is actually just a plain tuple.
+You might be suprprised by the extra set of parentheses around the repetition parts. This is actually just a plain tuple.
 
-Because we can return mupltiple fields, we have to create some kind of container. Since we can have fields of multiple types, a vector is out of the question. We could lean on `serde` and require a serializer instance, but that introduces a lot of overhead. A tuple gives us a simple wrapper that's easy to destructure and allows us to handle any number of fields with any mix of types.
+Because we can return multiple fields, we have to create some kind of container. Since we can have fields of multiple types, a vector is out of the question. We could lean on `serde` and require a serializer instance, but that introduces a lot of overhead. A tuple gives us a simple wrapper that's easy to destructure and allows us to handle any number of fields with any mix of types.
 
 And with that, we can execute our query with a multi select:
 
@@ -83,7 +83,7 @@ We have to specify the type here, but if you were to use the values later, Rust'
 
 With the repetition operators the macro gets hard to follow, and it will only get more complicated. This would be the perfect time to look at how we can debug macros.
 
-Rust comes with everything we need built it. To see what marocs expand to, we can run `RUSTFLAGS="-Ztrace_macros" cargo run` (note that you will need nightly rust version). This gets pretty noisy, however, since it expands _all_ macros in the entire program. To limit what expands, we can use a macro `trace_macros!`:
+Rust comes with everything we need to accomplish this built in. To see what macros expand to, we can run `RUSTFLAGS="-Ztrace_macros" cargo run` (note that you will need to use a nightly Rust version). This gets pretty noisy, however, since it expands _all_ macros in the entire program. To limit what expands, we can use a macro `trace_macros!`:
 
 ```rust
 trace_macros!(true);
@@ -108,7 +108,7 @@ So far we only have a `select` macro which is not much of a query. Let's make ou
 query!(from db select title, rating where rating = 10 and artist = "Teddy Swims");
 ```
 
-We us `=` for comparison, and `and` as a way to support multiple comparisons. Just like with select, we will start by only supporting these two operators and work up to supporting others.
+We use `=` for comparison, and `and` as a way to support multiple comparisons. Just like with `select` we will start by only supporting these two operators and work up to supporting others.
 
 ### Matching where clause
 
@@ -123,7 +123,7 @@ macro_rules! query {
 }
 ```
 
-We will leave our earlier `select` without `where` arm as is, and start a new arm that includes `where`. This should look very familiar although slightly expanded. Our second repetition matcher captures two values (`$test_field` and `$value`) and uses a multi character separator (` and `) before the repetition operator. Both of these demonstrate the power and flexibility of macro matchers.
+We will leave our earlier `select` without `where` arm as is, and start a new arm that includes `where`. This should look very familiar although slightly expanded. Our second repetition matcher captures two values (`$test_field` and `$value`) and uses a multi-character separator (` and `) before the repetition operator. Both of these demonstrate the power and flexibility of macro matchers.
 
 The only thing we have not seen yet is the use of a new fragment-specifier. The `literal` specifier lets us use the value exactly as it is. A string will be a string, a number a number, etc.
 
@@ -146,7 +146,7 @@ To do the comparison, we add a call to `.filter` that will run the comparison ba
 
 One thing to note is that we had to put the `&&` outside the repetition parentheses. Unlike the tuple syntax, we can't have a dangling `&&` at the end of our conditional and putting it outside the parentheses will skip adding it to the last item.
 
-With this arm implemented our previous select should continue to work and we can put the new `where` syntax to work:
+With this arm implemented, our previous select should continue to work and we can put the new `where` syntax to work:
 
 ```rust
 let results: Vec<(String, i64)> =
@@ -154,7 +154,7 @@ let results: Vec<(String, i64)> =
 // [("Bad Dreams", 10)]
 ```
 
-As expected, we only get one item. As an additional sanity check, we can expand the macro again with `trace_macos!`:
+As expected, we only get one item. As an additional sanity check, we can expand the macro again with `trace_macros!`:
 
 ```rust
 db.into_iter()
