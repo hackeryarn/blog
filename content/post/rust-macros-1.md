@@ -148,4 +148,4 @@ This article sets up the groundwork for the macro that we want to build. Our goa
 query!(from db select title, rating where rating > 9 or artist == "Tool");
 ```
 
-In the next part we will make progress toward that goal and explore some more advanced macro techniques.
+In the [next part](https://hackeryarn.com/post/rust-macros-2/) we will make progress toward that goal and explore some more advanced macro techniques.

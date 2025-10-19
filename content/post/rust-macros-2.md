@@ -168,4 +168,4 @@ And we get the exact result we would expect. Both the condition appear in the `f
 
 This part expands the macro functionality to far more scenarios. It also covers all the major concepts of declarative macros. With these tools, you should be able to write a wide range of declarative macros.
 
-In the next part we will look at handling multiple operators in our `where` clause. This will push our tools to their limit and we will need to use one of the most powerful pattern for declarative macros.
+In the [next part](https://hackeryarn.com/post/rust-macros-3/) we will look at handling multiple operators in our `where` clause. This will push our tools to their limit and we will need to use one of the most powerful pattern for declarative macros.
