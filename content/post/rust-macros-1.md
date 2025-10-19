@@ -5,25 +5,25 @@ draft: false
 ---
 Macros are required to do some very helpful things in Rust, but this isn't an article about any of those things.
 
-I became ennamored with macros many years ago when I read [Practical Common Lisp](https://gigamonkeys.com/book/) and saw the implementation of a SQL DSL that works with built in data structures. The whole implementation took less than a screen of code and absolutely blew away my expectations of what it took to create DSLs.
+I became enamored with macros many years ago when I read [Practical Common Lisp](https://gigamonkeys.com/book/) and saw the implementation of a SQL DSL that works with built in data structures. The whole implementation took less than a screen of code and absolutely blew away my expectations of what it took to create DSLs.
 
 In this article, I will try to share some of that excitement with you while using Rust's macro system. Will this be the most practical and useful macro you can write? Absolutely not. I only hope to show you some possibilities of this powerful tool.
 
 ## Prior art
 
-Rust's macros build on top of a long legacy of syntax macros primarily seen in the Lisp language family. Unlige Go, C, and Assembly macros, which work as a pre-processor step on raw strings, Rust's macros work dircectly on the AST ([Abstract Syntax Tree](https://en.wikipedia.org/wiki/Abstract_syntax_tree)). This means that Tokenization and AST parsing has already occurred, so you can be sure that the what you work with is at least shaped like hypothetican Rust code.
+Rust's macros build on top of a long legacy of syntax macros primarily seen in the Lisp language family. Unlike Go, C, and Assembly macros, which work as a pre-processor step on raw strings, Rust's macros work directly on the AST ([Abstract Syntax Tree](https://en.wikipedia.org/wiki/Abstract_syntax_tree)). This means that Tokenization and AST parsing has already occurred, so you can be sure that the what you work with is at least shaped like hypothetical Rust code.
 
 Unlike the Lisp family of languages, Rust had some additional challenges to overcome with their macro implementation.
 
-Lisp has a syntax that's basically an AST, so it is extremely easy to consume and produce an AST, because it looks like normar code. Rust, on the other hand, looks nothing like Lisp or an AST, so it needs a way to elegantly handle these conversion steps. That's where the `macro_rules!` macro comes in, which will be the focus of this article.
+Lisp has a syntax that's basically an AST, so it is extremely easy to consume and produce an AST, because it looks like normal code. Rust, on the other hand, looks nothing like Lisp or an AST, so it needs a way to elegantly handle these conversion steps. That's where the `macro_rules!` macro comes in, which will be the focus of this article.
 
 The other challenge within `macro_rules!` comes from Rust's goal to provide as much help and correctness as possible. Rust actually supports types (technically fragment-specifiers) in macros. We will see more of this later, but it goes towards making macros easier to write, reason about, and maintain.
 
-Without further ado, let's jump into using `macro_rules!` and declerative macros.
+Without further ado, let's jump into using `macro_rules!` and declarative macros.
 
 ## Macro design process
 
-Since every time we write a macro, we creat a DSL it's important to keep some rules and processes in mind. With that in mind, these are the typical steps that we should follow when writing macros:
+Since every time we write a macro, we create a DSL it's important to keep some rules and processes in mind. With that in mind, these are the typical steps that we should follow when writing macros:
 
 - Evaluate if you need a macro
 - Design the simplest possible invocation first (determine what your DSL looks like)
@@ -39,7 +39,7 @@ Before we start writing a macro, we should always evaluate if it is the best cho
 
 Macros bring a lot of complexity in writing and debugging them. You are introducing another compilation step in your code, and often times erasing some of Rust's ability to help you write correct code. On top of all this, making code generic enough for macros can lead to far more complex types than you could accomplish with a little more boilerplate.
 
-Because of this overhead, you have to really consider the tradeoffs that you're making. Rust is a powerful language with lots of abstractions. Often times, the existing tools can get you to your goal without resorting to macros.
+Because of this overhead, you have to really consider the trade offs that you're making. Rust is a powerful language with lots of abstractions. Often times, the existing tools can get you to your goal without resorting to macros.
 
 In our case, we are writing the macro for practice, so these concerns don't apply here.
 
