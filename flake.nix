@@ -20,6 +20,7 @@
         };
         buildInputs = with pkgs; [
           hugo
+          mermaid-cli
         ];
       in
       with pkgs;
