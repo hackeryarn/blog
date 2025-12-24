@@ -1,40 +1,52 @@
 ---
-title: "What async really mean for your python web app performance?"
+title: "What async really mean for your python web app?"
 date: 2025-11-27
 draft: false
 ---
 
-There is a lot of hype about Python getting async support. This opens up many new possibilities, but nothing in software comes for free. So how will switching to async really impact yous application?
+The Python community is a buzz with excitement about better async support. If you have an existing service, you might wonder if you're missing out. Benchmarks show higher throughput and promise the ability to handle more requests with less hardware. So will this be a free lunch for your existing service?
 
-One of the most popular web framework in Python in Django, and it support both sync and async modes. This makes it the ideal candidate for seeing what switching to async can bring to your project. To round out the comparison, I also wanted to see how these results compare to FastAPI, which really pushes the limits of speed for async python web application.
+As often happens, the reality differs from expectations. Unless you run in a highly distributed environment and your service is the bottleneck, needing 10 instances just to keep up with all the traffic, you probably won't see the benefits that most async benchmarks promise. In fact, you might see worse performance with the switch.
 
-A lot of async benchmarks will just put a wait time to test async. This misses a big part in keeping the benchmark realistic. When we run servers and they experience load, the underlying resources also experience load -- this could be a database or an external API. When we put more load on there resources, performance characteristics become more complicated than just a wait time. I want to capture some of that nuance with these benchmarks.
+> If your service runs in a highly distributed environment, and you have sophisticated caching and event sourcing systems setup, you will probably get many of the promised benefits. But, at that point, why are you even running Python for your service?
 
 ## Benchmarking method
-To get realistic results, I wanted to test three scenarios:
-- Static content: This is a run of the web server with a database setup but no hits to the database. We just generate and return some static content.
-- Database read I/O: In this case, I actually hit the database (I am using PostgreSQL) to read data and use that data in generating the content.
-- Database update I/O: I use this case to create high contention in the database by using `SELECT FOR UPDATE` and locking the table.
+The disconnect with 80% of services and async benchmarks comes from the general design of the small to medium sized service. These service will talk directly to a database and as traffic increases, the load on the database grows much faster than the load on the web service. This load distribution shifts the bottleneck from the service to the database. To see the implications of async under these conditions, we need to look at benchmarks that mirror the same configuration.
 
-To run the actual benchmarks, I am using the same method as [the article](https://blog.baro.dev/p/the-future-of-python-web-services-looks-gil-free) that pushed me to write this post:
-- [Granian](https://github.com/emmett-framework/granian) as the server since it can run using threads or processes (I was going to include free-threads benchmarks here, but psycopg cannot run using free-threads, yet)
+The setup for these benchmarks involves Django with a PostgreSQL database. Django is one of the most popular web frameworks in the world, and it gives us the ability to easily switch between sync and async configurations. While PostgreSQL is one of the most popular databases and gives realistic characteristics for the different types of load we want to simulate.
+
+For another point of comparison, the benchmarks also include FastAPI. It's a newer framework built form the ground up for the async era.
+
+To get a full range of service conditions, I will test three scenarios:
+- Static content: Runs the service with a database setup but no hits to the database.
+- Database read I/O: Queries the database to read data and uses that data to generate a response.
+- Database update I/O: Creates high contention in the database by using `SELECT FOR UPDATE` and locking the table for an update, and use the results to generate a response.
+
+To run the benchmarks, I use the same method as [the article](https://blog.baro.dev/p/the-future-of-python-web-services-looks-gil-free) (which pushed me to write this post):
+- [Granian](https://github.com/emmett-framework/granian) as the server since it can run using threads or processes.
     - Using the command `granian --interface <asgi or wsgi> --workers <1 or 2> --blocking-threads 32 --port 3000 <application>`.
-- [rewrk](https://github.com/lnx-search/rewrk) to run the actual load test. This is a very straightforward load testing cli app.
+    - I wanted to include free-threads benchmarks here, but `psycopg` cannot run with free-threads, yet. Once support lands and stabilizes, I will make a follow up article that includes free-thread benchmarks.
+- [rewrk](https://github.com/lnx-search/rewrk) to run the load test. 
     - Using the command `rewrk -d 30s -c 64 --host <host with route>`.
-- System76 Darter Pro
+- System76 Darter Pro as the laptop for test execution
   - NixOS unstable
   - 12th Gen Intel® Core™ i7-1260P × 16
   - 64 GiB of RAM
   - Python 3.14
-  - Postgres 18
+  - PostgreSQL 18
 
-You can find all code used [here].
+I will show the most relevant code snippets throughout the article, but the curious can find all the code [here].
 
 ## Results
-To get a clear picture, I wanted to evaluate a few different setups:
-- Sync Django: Django using the default setting for everything and running with WSGI.
-- Async Django: Mostly default Django settings but using ASGI and Async.
+The results include four different project configurations:
+- Sync Django: Default Django setting running with WSGI.
+- Sync Django Pooled: The same as Sync Django, but using a pooled database connection.
+    - While setting up the load tests, I found out that Django does not pool connections by default, but it does require pooled connections to run in async mode. This configuration closes the configuration gap between the sync and async setups.
+- Async Django: Default Django settings for async mode running with ASGI.
 - FastAPI: Default setting for both FastAPI and SqlAlchemy.
+    - I chose to use the JSON output here, despite the Django benchmarks not using JSON, since it's the most likely use case when running FastAPI in production.
+
+> WSGI and ASGI are the production grade web servers suggested by most python web frameworks including Django. WSGI handles synchronous services while ASGI handles asynchronous services.
 
 ### Static content
 To get the simplest, but least meaningful benchmark, I wanted to start with static HTML content.
@@ -66,7 +78,7 @@ The RPS (Requests per second) had a couple surprises. Async Django had an order 
 
 Less surprisingly, FastAPI had much better RPS performance than either Django version. It's in the name after all.
 
-When it came to latency, we start to see an advantage of async request handling. Both FastAPI and Async Django had almost no outliers, while Sync Django saw some a few requests take much longer than others. This is a very nice property when you want to make sure users get consistent performance.
+When it came to latency, we start to see an advantage of async request handling. Both FastAPI and Async Django had almost no outliers, while Sync Django saw some a few requests take much longer than others. This is a great advantage of async. Tail latency can become a horrible sticking point when a portion of the user base thinks the site is unresponsive, so smoothing out the curve at the cost of a slower average might be a worthy trade off.
 
 ### Database reads
 Although the previous section gives us some baseline, even the simplest app, unless you're building a static site, will need to connect to a database. So let's connect to a database and perform some reads as part of our load test.
@@ -126,7 +138,7 @@ The other thing to note here is the massive performance improvement that we see 
 
 The latency for all of these mostly evens out. Since we are just waiting on the DB and Postgres is a battle tested database, we see very even latency across all benchmarks.
 
-## Contentious database writes
+### Contentious database writes
 Reads are fairly easy to reason about and generally run quickly. They make a realistic and simple performance sample set. One of the worst situation for a web app, on the other hand, is when we see highly contentious writes.
 
 To re-create this situation, we can add a new `views` field to the `Quote` table. This field will store a count of how many times the specific quote was viewed. Since we have multiple workers and threads trying to write to this field at the same time, we need to use a database transaction with a `SELECT FOR UPDATE` to make sure that we always have consistent data in this column.
@@ -184,4 +196,4 @@ Since we are creating contention, the more processes try to access the resource 
 ## Conclusion
 All in all, you should be judicious with your use of async. It's new in the eco system and many of the libraries and frameworks have been optimized for the sync flow. There are definitely cases where async makes sense, but your web app might now be one of those. By the time that processing takes long enough to make up for the async overhead (1s+ processing time), you probably need to address the performance in a different way than just being able to process more long running end points. Even big application should have few in any endpoint that take over 1s to complete.
 
-If you take one thing away from this article its that: you should always use a pooled database connection. Across all the tests, that one thing made the biggest difference with no negative side effects. The only cost you pay is the memory cost of keeping multiple connections open, but if you look at what you gain, the hardware cost is well worth it. 
+If you take one thing away from this article its that: you should always use a pooled database connection. Across all the tests, that one thing made the biggest difference with no negative side effects. Even the tail latency (slow 1% of requests) became much better when we added pooling. The only cost you pay is the memory cost of keeping multiple connections open, but if you look at what you gain, the hardware cost is well worth it. 
