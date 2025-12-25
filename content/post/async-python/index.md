@@ -8,10 +8,11 @@ The Python community is a buzz with excitement about better async support. If yo
 
 As often happens, the reality differs from expectations. Unless you run in a highly distributed environment and your service is the bottleneck, needing 10 instances just to keep up with all the traffic, you probably won't see the benefits that most async benchmarks promise. In fact, you might see worse performance with the switch.
 
-> If your service runs in a highly distributed environment, and you have sophisticated caching and event sourcing systems setup, you will probably get many of the promised benefits. But, at that point, why are you even running Python for your service?
 
 ## Benchmarking method
 The disconnect with 80% of services and async benchmarks comes from the general design of the small to medium sized service. These service will talk directly to a database and as traffic increases, the load on the database grows much faster than the load on the web service. This load distribution shifts the bottleneck from the service to the database. To see the implications of async under these conditions, we need to look at benchmarks that mirror the same configuration.
+
+> If your service runs in a highly distributed environment, and you have sophisticated caching and event sourcing systems setup which makes the service the bottleneck, these benchmarks won't matter as much to you.
 
 The setup for these benchmarks involves Django with a PostgreSQL database. Django is one of the most popular web frameworks in the world, and it gives us the ability to easily switch between sync and async configurations. While PostgreSQL is one of the most popular databases and gives realistic characteristics for the different types of load we want to simulate.
 
@@ -49,16 +50,16 @@ The results include four different project configurations:
 > WSGI and ASGI are the production grade web servers suggested by most python web frameworks including Django. WSGI handles synchronous services while ASGI handles asynchronous services.
 
 ### Static content
-To get the simplest, but least meaningful benchmark, I wanted to start with static HTML content.
+Getting a baseline of static content gives us an upper bound of what each configuration can do without the database to slow down the server.
 
-For Django, the two views were almost identical. I only had to add the `async` keyword to make the async version work:
+The sync and async Django views look almost identical. We only need to add the `async` keyword to make the async version work:
 
 ```python
 async def index(request):
     return HttpResponse("Hello, world. This is the index.")
 ```
 
-For FastAPI, the route was just as simple:
+The FastAPI implementation is just as straight forward:
 ```python
 @app.get("/")
 async def read_root():
@@ -74,11 +75,15 @@ async def read_root():
 | FastAPI       | 1       | 26287 | 2.43ms      | 9.38ms      | 2.72ms |
 | FastAPI       | 2       | 37353 | 1.71ms      | 7.25ms      | 2.43ms |
 
-The RPS (Requests per second) had a couple surprises. Async Django had an order of magnitude worse performance compared to Sync Django. Async isn't free, but this is a massive shift. Another thing to note, is that adding a worker doubled the performance of Async Django but modestly increased the performance of FastAPI and Sync Django.
+> This table does not include Sync Django Pooled because it makes no difference when we don't hit the database.
 
-Less surprisingly, FastAPI had much better RPS performance than either Django version. It's in the name after all.
+The most obvious thing here is that FastAPI far outperform Django across all metrics. The developers behind FastAPI worked hard to make sure it performs well under these exacts conditions, and it shows. Now that we addressed the elephant in the room, let's focus on the more nuanced Django benchmarks.
 
-When it came to latency, we start to see an advantage of async request handling. Both FastAPI and Async Django had almost no outliers, while Sync Django saw some a few requests take much longer than others. This is a great advantage of async. Tail latency can become a horrible sticking point when a portion of the user base thinks the site is unresponsive, so smoothing out the curve at the cost of a slower average might be a worthy trade off.
+The RPS (Requests per second) metric had a couple surprises. Async Django performed an order of magnitude slower than Sync Django. Async isn't free, but this massive difference is surprising. Conversely, the async version starts making up ground with smoother scaling than the Sync Django version. As we add workers, we see a modest increase in throughput for Sync Django, but a doubling throughput for Async Django.
+
+When it comes to latency, we start to see an advantage of async request handling. Async Django has no outliers and a median close to the average. Sync Django, on the other hand, saw massive difference in tail latency. The slowest requests took over 100x longer than the average.
+
+The latency metrics shows and important tradeoff between the two configurations. When we use async, we trade average performance for consistency. In many scenarios we should make this tradeoff, but with a 10x slow down with Async Django, we have to weigh the option carefully. 
 
 ### Database reads
 Although the previous section gives us some baseline, even the simplest app, unless you're building a static site, will need to connect to a database. So let's connect to a database and perform some reads as part of our load test.
