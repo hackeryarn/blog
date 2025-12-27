@@ -6,7 +6,7 @@ draft: false
 
 The Python community is a buzz with excitement about better async support. If you have an existing service, you might wonder if you're missing out. Benchmarks show higher throughput and promise the ability to handle more requests with less hardware. Will a switch to async be a free lunch for your existing service?
 
-As often happens, the reality differs from expectations. Unless you run in a highly distributed environment and your service is the bottleneck, needing 10 instances just to keep up with all the traffic, you probably won't see the benefits that most benchmarks promise. In fact, you might see worse performance with the switch.
+As often happens, the reality differs from expectations. Unless you run in a highly distributed environment and your service is the bottleneck, needing 10 instances just to keep up with all the traffic, you probably won't see the benefits that most benchmarks promise. In fact, you might see worse performance by switching.
 
 
 ## Benchmarking method
@@ -190,11 +190,11 @@ async def quote_views(request):
 | Async Django  | 1       | 156 | 408ms       | 542ms       | 427ms  |
 | Async Django  | 2       | 169 | 378ms       | 824ms       | 518ms  |
 
-All of the configuration performed very close to each other. But because the table lock only allows a singe process to write to the table at a time, we see that Sync Django comes out ahead of any of the other configurations. It has the least overhead for this scenario and there fore can process the requests the fastest.
+This benchmark turned out to be the great equalizer. All the benchmarks had almost the same RPS. Even when we added more workers, the contention prevent us from processing more requests.
 
-Since we are creating contention, the more processes try to access the resource at once, the worse the overall latency becomes. This is why we are seeing the latency max and median grow as we add workers. Despite this growth, having a pooled or async connection, which can grab the connections concurrently and be ready to go right away, we see much better max patency and median performance over all.
+Also, our latency problem with Sync Django came back. When compared to async, Sync Django had significantly higher tail latency. The interesting part here came from Sync Django Pooled. Introducing database pooling solved sync latency problem without the need for any code changes. This puts the sync configuration on equal footing with the async configuration without requiring any code changes.
 
 ## Conclusion
-All in all, you should be judicious with your use of async. It's new in the eco system and many of the libraries and frameworks have been optimized for the sync flow. There are definitely cases where async makes sense, but your web app might now be one of those. By the time that processing takes long enough to make up for the async overhead (1s+ processing time), you probably need to address the performance in a different way than just being able to process more long running end points. Even big application should have few in any endpoint that take over 1s to complete.
+These benchmarks show just how much Django and the Python ecosystem at large has been optimized for sync web servers. Sync Django Pooled outperformed or matched all other configurations. Even FastAPI only performed better when it was the sole bottleneck.
 
-If you take one thing away from this article its that: you should always use a pooled database connection. Across all the tests, that one thing made the biggest difference with no negative side effects. Even the tail latency (slow 1% of requests) became much better when we added pooling. The only cost you pay is the memory cost of keeping multiple connections open, but if you look at what you gain, the hardware cost is well worth it. 
+If your service talks to a database directly, it is unlikely that your service is the bottleneck. To get the best perfomance you should stick with a sync webserver and ensure that you pool your database connections. As the ecosystem stands, async introduces too much overhead to make sense. This will shift as async support continues to improve, but for now you probably don't need to go changing your web server.
