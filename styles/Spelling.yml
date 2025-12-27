@@ -1,0 +1,7 @@
+#file: noinspection IncorrectFormatting
+---
+extends: spelling
+level: error
+message: "Did you really mean '%s'?"
+filters:
+  - "[aA]sync"
