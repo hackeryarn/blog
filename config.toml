@@ -31,20 +31,10 @@ pygmentsCodefencesGuessSyntax = true
   identifier = "home"
   url = "/"
 [[menu.main]]
-  name = "Archives"
-  weight = 20
-  identifier = "archives"
-  url = "/post/"
-[[menu.main]]
   name = "Tags"
   weight = 30
   identifier = "tags"
   url = "/tags/"
-[[menu.main]]
-  name = "Categories"
-  weight = 40
-  identifier = "categories"
-  url = "/categories/"
 [[menu.main]]
   name = "Donate"
   weight = 50
@@ -153,7 +143,7 @@ pygmentsCodefencesGuessSyntax = true
     alipay = "/path/to/your/alipay-qr-code.png"           # 支付宝二维码
 
   [params.social]                                         # 社交链接
-    c-twitter = "https://twitter.com/hackeryarn"
+    p-mastodon = "https://mastodon.social/@hackeryarn"
     e-linkedin = "https://www.linkedin.com/in/achernyak"
     g-github = "https://github.com/hackeryarn"
 

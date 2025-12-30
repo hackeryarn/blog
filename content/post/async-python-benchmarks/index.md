@@ -1,13 +1,18 @@
 ---
-title: "What async really mean for your python web app?"
-date: 2025-12-28
+title: "What async really means for your python web app?"
+date: 2025-12-30
 draft: false
-tags:
+keywords:
     - python
     - async
     - benchmarks
     - web
     - django
+tags:
+    - python
+    - django
+    - benchmarks
+description: Python continues to get better async support and with that comes pressure to switch. See the realistic effects that switching to async would have on your web servers.
 ---
 
 The Python community is abuzz with excitement about better async support. If you have an existing service, you might wonder if you're missing out. Benchmarks show higher throughput and promise the ability to handle more requests with less hardware. Will a switch to async be a free lunch for your existing service?
@@ -40,7 +45,7 @@ To run the benchmarks, I use the same method as [the article](https://blog.baro.
   - Python 3.14
   - PostgreSQL 18
 
-I show the most relevant code snippets in the article, but the curious can find all the code [here].
+I show the most relevant code snippets in the article, but the curious can find [all the code here].
 
 ## Results
 The results include four different project configurations:
