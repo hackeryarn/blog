@@ -2,8 +2,13 @@
 title: Easy Universal Haskell Development Environment
 date: 2016-02-06
 draft: false
-categories: [Haskell]
-tags: [setup, guide]
+tags:
+  - tutorial
+  - haskell
+keywords:
+  - tutorial
+  - haskell
+  - environment setup
 ---
 
 Haskell is notoriously difficult to setup, which probably led to many people being scared away from ever getting started. However, there has been a lot of work done to address these short comings. And there is a way to setup a very pleasant environment thanks to the hard work of many projects.

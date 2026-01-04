@@ -1,15 +1,15 @@
 ---
 title: Making Redux Easy
 date: 2019-02-11
-categories:
-  - JavaScript
-  - React
-  - Redux
-tags:
-  - opinion
-  - experiment
-  - guide
 published: 2019-02-11
+tags:
+  - tutorial
+  - javascript
+keywords:
+  - tutorial
+  - javascript
+  - react
+  - redux
 ---
 
 [React](https://reactjs.org/) and [Redux](https://redux.js.org/) are a top choice for front end projects. [React](https://reactjs.org/) provides fast

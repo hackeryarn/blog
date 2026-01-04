@@ -2,9 +2,11 @@
 title: Distrobox in practice
 date: 2023-09-17
 tags:
+  - tutorial
   - linux
   - containers
 keywords:
+  - tutorial
   - linux
   - distrobox
   - containers

@@ -1,20 +1,15 @@
 ---
 title: The Right Abstraction for Lambdas
-date: 2019-02-24
-categories:
-  - Go
-  - Golang
-  - JS
-  - JavaScript
-  - Nodejs
-  - Node
-  - Express
-  - Lambda
-  - Serverless
-tags:
-  - opinion
-  - guide
 published: 2019-02-24
+tags:
+  - discussion
+  - development
+keywords:
+  - discussion
+  - development
+  - lambdas
+  - go
+  - aws
 ---
 
 Serverless functions are a great alternative for many light tasks that would

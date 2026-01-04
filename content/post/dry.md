@@ -4,7 +4,7 @@ date: 2023-06-10
 published: 2023-06-10
 tags:
   - discussion
-  - patterns
+  - development
 keywords:
   - dry
   - development
