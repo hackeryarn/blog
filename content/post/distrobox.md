@@ -1,8 +1,15 @@
 ---
 title: Distrobox in practice
 date: 2023-09-17
-categories: [Linux]
-tags: [linux,distrobox,containers,docker,podman]
+tags:
+  - linux
+  - containers
+keywords:
+  - linux
+  - distrobox
+  - containers
+  - docker
+  - podman
 published: 2023-09-17
 ---
 

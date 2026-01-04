@@ -2,8 +2,14 @@
 title: How Lodash Worked Itself Out of a Job
 date: 2017-06-25
 draft: false
-categories: [JavaScript]
-tags: [opinion]
+tags:
+  - javascript
+keywords:
+  - javascript
+  - lodash
+  - web development
+  - ramdajs
+  - es6
 ---
 
 I really loved lodash. It brough the joy of compact functional code to

@@ -2,14 +2,19 @@
 title: ClojureScript Setup for Leiningen Project With Emacs
 date: 2017-07-15
 draft: false
-categories: [ClojureScript]
-tags: [setup, guide]
+tags:
+    - clojure
+    - tutorial
+    - emacs
+keywords:
+    - clojurescript
+    - clojure
+    - leiningen
+    - emacs
+    - tutorial
 ---
 
-A good development environment if fundamental to being productive. This is
-especially true for Lisps. A good environment can
-greatly speed up your development process and allow you to utilize the full
-power of Clojure or any other Lisp.
+A good development environment will boost your productivity in any language. A good Clojure development environment will make you 10x more productive.
 
 This tutorial is focused on a [ClojureScript](https://clojurescript.org/) environment for a [Leiningen](https://leiningen.org/) based
 project being developed in [Emacs](https://www.gnu.org/software/emacs/).

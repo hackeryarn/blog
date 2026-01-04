@@ -2,6 +2,13 @@
 title: "Let's write a macro in Rust - Part 1"
 date: 2025-08-17
 draft: false
+tags:
+  - tutorial
+  - rust
+keywords:
+  - rust
+  - tutorial
+  - macros
 ---
 Macros are required to do some very helpful things in Rust, but this isn't an article about any of those things.
 

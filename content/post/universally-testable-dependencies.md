@@ -1,9 +1,14 @@
 ---
 title: "Universally Testable Dependencies in JavaScript"
 date: 2018-06-01
-draft: false
-categories: [JavaScript, Testing]
-tags: [guide, testing]
+tags:
+    - tutorial
+    - javascript
+    - testing
+keywords:
+    - tutorial
+    - javascript
+    - testing
 ---
 
 JavaScript dependencies are notoriously hard to mock and test across framework
@@ -20,7 +25,7 @@ dependencies are still managed by the module using them. However, it
 solves the dependency problem for testing which is the focus of this
 article.
 
-# Why Do You Need DI?
+## Why Do You Need DI?
 At the most basic level, you need DI to avoid testing your dependencies.
 Not testing dependencies is a good idea for two reasons:
 
@@ -31,7 +36,7 @@ your module's control, they can perform actions your module shouldn't be concern
 
 Your tests will be less complicated and faster if you avoid tesing dependencies because of the reasons mentioned above.
 
-# Setting Up Your Code to Enable DI
+## Setting Up Your Code to Enable DI
 *I am using [Babel](https://babeljs.io/) and
 [Jest](https://facebook.github.io/jest/) throughout this guide. However,
 you can easily adapt this technique to any JavaScript setup.*
@@ -63,7 +68,7 @@ You will have the same level of testability across
 node application using the `require` syntax, and front end application using
 the ES6 `import` syntax without extra code.
 
-# Using the `deps` Object in Your Tests
+## Using the `deps` Object in Your Tests
 With your module exporting all of its dependencies, your tests can
 easily mock or replace anything in the `deps` object.
 
@@ -106,7 +111,7 @@ In fact, we don't have to use the mocks at all! We could write our
 own function with custom validators and set it as
 `deps.longRunningFunction`.
 
-# Wrapping Up
+## Wrapping Up
 This technique helped me immensely when maintaining long running or large
 JavaScript projects. It provided a minimal code approach that is easy to
 follow even when you are brand new to the code base. I hope you found this

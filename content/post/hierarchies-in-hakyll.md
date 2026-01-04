@@ -1,0 +1,159 @@
+---
+title: Hierarchies in Hakyll
+published: 2019-03-27
+tags:
+  - tutorial
+  - haskell
+keywords:
+  - tutorial
+  - haskell
+  - hakyll
+  - static site
+---
+Creating hierarchy in a blog is a useful technique. It allows you to
+have different sections by type of content. It lets users navigate by
+their interests quickly. It makes your blog organized.
+
+My need for a hierarchy came when working on another blog - [Daily
+Reading Notes](https://dailyreadingnotes.com). That blog involves notes
+on books I read daily. Since each book has multiple reading notes, I
+wanted to allow two forms of navigation: by a grouping of all notes for
+a particular book and by posted date. The groupings also needed to be
+dynamic. I didn\'t want to write code or updated configurations every
+time I added a new book.
+
+[Hakyll](https://jaspervdj.be/hakyll/) didn\'t support this out of the
+box, and I didn\'t find examples of anyone using similar layouts. So, I
+created my own approach which I am now sharing.
+
+# Structuring the posts directory
+
+In order to build a dynamic hierarchy, the directory structures needs to
+support association of the books with their related posts.
+
+We start our implementation by creating a page and a folder with the
+name of the book inside the `posts` directory. This naming convention
+allows us to link the book\'s page to the folder containing the posts.
+
+Our directory structure should have the following layout:
+
+``` text
+posts
++-- book-title.md
++-- book-title
+|   +-- post1.md
+|   +-- post2.md
+```
+
+# Matching the Routes
+
+With the directory structure in place, we can proceed to creating
+matchers for the books and posts pages.
+
+For the books pages, we match all the files in the `posts` directory
+while ignoring directories and their contents. We also set the extension
+of these file to `html`. The extension need to be specified because the
+original files are written in markdown.
+
+For the posts pages, we use `posts/*/*` as the matcher string. The first
+`*` tells `match` to look inside any directory within `posts`. The
+second `*` tells `match` to gets all the files inside the subdirectory.
+These file are also written in markdown and need their extension set to
+`html`.
+
+The matchers with extensions look like this:
+
+``` haskell
+main :: IO ()
+main =
+hakyll $ do
+match "posts/*" $ do
+  route $ setExtension "html"
+  ...
+match "posts/*/*"
+  route $ setExtension "html"
+  ...
+```
+
+# Getting the Posts for a Book
+
+Now that we are matching the books and posts pages, we need to group the
+posts by their respective book. For this purpose, we write a small
+helper function that takes the output of
+[Hakyll\'s](https://jaspervdj.be/hakyll/) `getResourceFilePath`
+function.
+
+Our function takes the file path for the book page, strips out
+everything but the file name, and add a glob pattern to the end.
+
+``` haskell
+getBookFolder :: FilePath -> Pattern
+getBookFolder = fromGlob . (++ "/*") . takeWhile (/= '.') . drop 3 . show
+```
+
+We use this function in the books pages matcher to get a list of the
+book\'s posts as an input for the newly created `bookCtx`.
+
+Creating the `bookCtx` goes in the `compile` block:
+
+``` haskell
+main :: IO ()
+main =
+  hakyll $ do
+    match "posts/*" $ do
+      route $ setExtension "html"
+      compile $ do
+        filepath <- getResourceFilePath
+        posts <- recentFirst =<< loadAll (getBookFolder filepath)
+        let bookCtx = listField "posts" defaultContext (return posts)
+        ...
+```
+
+This `compile` block is similar to the auto generated example that lists
+all the posts. Except, we generate the path for the posts relatively to
+the current file.
+
+# Applying Templates
+
+In the final step, we apply templates to both outputs. The book pages
+need a new template that uses the `posts` list context field we
+generated in the previous step. The posts can continue using the default
+`post` template. In addition to the individual templates, both the
+matchers will need the default template and the `relativizeUrls` helper.
+
+The final output of the two matchers looks like this:
+
+``` haskell
+main :: IO ()
+main =
+  hakyll $ do
+    match "posts/*" $ do
+      route $ setExtension "html"
+      compile $ do
+        filepath <- getResourceFilePath
+        posts <- recentFirst =<< loadAll (getBookFolder filepath)
+        let bookCtx = listField "posts" defaultContext (return posts)
+        getResourceBody >>= applyAsTemplate bookCtx >>=
+          loadAndApplyTemplate "templates/book.html" bookCtx >>=
+          loadAndApplyTemplate "templates/default.html" bookCtx >>=
+          relativizeUrls
+    match "posts/*/*" $ do
+      route $ setExtension "html"
+      compile $
+        pandocCompiler >>= loadAndApplyTemplate "templates/post.html" postCtx >>=
+        loadAndApplyTemplate "templates/default.html" postCtx >>=
+        relativizeUrls
+```
+
+# Wrapping up
+
+With these matchers in place, we have a hierarchy of books containing
+the posts related to them. We can add books by creating a new page and
+folder with the name of the book. This setup made it easy for me to
+maintain a hierarchical site. I hope it does the same for you.
+
+The final result of a book page looks like this: [The Lean Startup book
+page](https://dailyreadingnotes.com/posts/the-lean-startup.html). The
+full code for [Daily Reading Notes](https://dailyreadingnotes.com/) is
+available on
+[github](https://github.com/hackeryarn/daily-reading-notes/tree/develop).

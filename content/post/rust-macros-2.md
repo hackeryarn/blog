@@ -2,6 +2,13 @@
 title: "Let's write a macro in Rust - Part 2"
 date: 2025-08-24
 draft: false
+tags:
+  - tutorial
+  - rust
+keywords:
+  - rust
+  - tutorial
+  - macros
 ---
 
 In the [last part](https://hackeryarn.com/post/rust-macros-1/) we covered the very basics of macros and implemented a single argument query select. This was a good start, but only scratched the surface of what macros can do.

@@ -1,9 +1,17 @@
 ---
 title: Type safe Django app, Part 3
 date: 2022-04-16
-categories: [Python]
-tags: [django, python, types]
 published: 2022-04-16
+draft: false
+tags:
+  - django
+  - python
+  - tutorial
+keywords:
+  - django
+  - python
+  - tutorial
+  - returns
 ---
 
 In [Part 2](https://hackeryarn.com/post/django-returns-2/) we got a taste of

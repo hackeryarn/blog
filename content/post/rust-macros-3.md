@@ -2,6 +2,13 @@
 title: "Let's write a macro in Rust - Part 3"
 date: 2025-10-05
 draft: false
+tags:
+  - tutorial
+  - rust
+keywords:
+  - rust
+  - tutorial
+  - macros
 ---
 
 In the [last part](https://hackeryarn.com/post/rust-macros-2/) we covered all the fundamental techniques in writing macros. This enables us to write just about any macro we could think of, but knowing a few tricks can make the process much easier.
